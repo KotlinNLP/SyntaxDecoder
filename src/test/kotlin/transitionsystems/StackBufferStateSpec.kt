@@ -1,4 +1,10 @@
-/*
+/* Copyright 2017-present The KotlinNLP Authors. All Rights Reserved.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * ------------------------------------------------------------------*/
+
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.context
 import org.jetbrains.spek.api.dsl.describe
@@ -7,8 +13,6 @@ import org.jetbrains.spek.api.dsl.on
 import transitionsystems.Utils
 import com.kotlinnlp.transitionsystems.StackBufferState
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-
 
 object StackBufferStateSpec: Spek({
 
@@ -17,10 +21,10 @@ object StackBufferStateSpec: Spek({
     context("initialization with empty Sentence") {
 
       val sentence = Utils.buildEmptySentence()
-      val state = StackBufferState(sentence, goldDependencyTree = null)
+      val state = StackBufferState(sentence)
 
       it("should be the finale state") {
-        assertEquals(true, state.isFinal)
+        assertEquals(true, state.isTerminal)
       }
 
       on("clone") {
@@ -40,10 +44,10 @@ object StackBufferStateSpec: Spek({
     context("initialization with Sentence of 5 Tokens") {
 
       val sentence = Utils.buildSentence5()
-      val state = StackBufferState(sentence, goldDependencyTree = null)
+      val state = StackBufferState(sentence)
 
       it("should not be the finale state") {
-        assertEquals(false, state.isFinal)
+        assertEquals(false, state.isTerminal)
       }
 
       on("clone") {
@@ -64,11 +68,7 @@ object StackBufferStateSpec: Spek({
 
       val sentence = Utils.buildSentence5()
 
-      val state = StackBufferState(sentence, goldDependencyTree = Utils.buildDependencyTree())
-
-      it("should contain a not-null missingDependents") {
-        assertNotNull(state.missingDependents)
-      }
+      val state = StackBufferState(sentence)
 
       on("clone") {
         val clonedState = state.clone()
@@ -80,5 +80,3 @@ object StackBufferStateSpec: Spek({
     }
   }
 })
-
-  */

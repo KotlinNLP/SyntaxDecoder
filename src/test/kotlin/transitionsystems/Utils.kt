@@ -1,7 +1,11 @@
+/* Copyright 2017-present The KotlinNLP Authors. All Rights Reserved.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * ------------------------------------------------------------------*/
+
 package transitionsystems
-
-
-import com.kotlinnlp.transitionsystems.DependencyTree
 
 /**
  *
@@ -17,20 +21,4 @@ object Utils {
    *
    */
   fun buildSentence5(): List<Int> = arrayListOf(1, 2, 3, 4, 5)
-
-  /**
-   *
-   */
-  fun buildDependencyTree(): DependencyTree {
-
-    val dependencyTree = DependencyTree()
-
-    dependencyTree.setArc(dependentId = 5, governorId = 4)
-    dependencyTree.setArc(dependentId = 4, governorId = 3)
-    dependencyTree.setArc(dependentId = 3, governorId = 2)
-    dependencyTree.setArc(dependentId = 2, governorId = 1)
-    dependencyTree.setArc(dependentId = 1, governorId = null)
-
-    return dependencyTree
-  }
 }

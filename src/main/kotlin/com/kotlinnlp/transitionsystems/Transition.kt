@@ -21,7 +21,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * Transition abstraction that allows you to ignore which transition-system you are using.
    */
-  inner abstract class Action(val id: Int = -1, var score: Double) {
+  inner abstract class Action internal constructor(val id: Int = -1, var score: Double) {
 
     /**
      * @return the state on which this action operates.
@@ -57,7 +57,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Shift Action.
    */
-  inner class Shift(id: Int, score: Double) : Action(id, score) {
+  inner class Shift internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
      * @param state the state on which to apply this action.
@@ -73,7 +73,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Unshift Action.
    */
-  inner class Unshift(id: Int, score: Double) : Action(id, score) {
+  inner class Unshift internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
      * @param state the state on which to apply this action.
@@ -89,7 +89,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Relocate Action (can be used to abstract the Swap transition).
    */
-  inner class Relocate(id: Int, score: Double) : Action(id, score) {
+  inner class Relocate internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
      * @param state the state on which to apply this action.
@@ -105,7 +105,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * NoArc Action.
    */
-  inner class NoArc(id: Int, score: Double) : Action(id, score) {
+  inner class NoArc internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
      * @param state the state on which to apply this action.
@@ -121,7 +121,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Arc Action.
    */
-  inner class Arc(id: Int, score: Double) : Action(id, score), DependencyRelation {
+  inner class Arc internal constructor(id: Int, score: Double) : Action(id, score), DependencyRelation {
 
     /**
      * The dependent id.

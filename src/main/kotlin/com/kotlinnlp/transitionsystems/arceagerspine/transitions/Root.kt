@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.arceagerspine.transitions
 
 import com.kotlinnlp.transitionsystems.State
 import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineState
 import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineTransition
 import com.kotlinnlp.transitionsystems.utils.pop
@@ -21,6 +22,11 @@ import com.kotlinnlp.transitionsystems.utils.pop
  * @property state the [State] on which this transition operates.
  */
 class Root(state: ArcEagerSpineState) : ArcEagerSpineTransition(state), SyntacticDependency {
+
+  /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  override val type: Type = Type.ROOT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
@@ -52,11 +58,6 @@ class Root(state: ArcEagerSpineState) : ArcEagerSpineTransition(state), Syntacti
   override fun perform(state: ArcEagerSpineState) {
     state.stack.pop()
   }
-
-  /**
-   * @return a new Action tied to this transition.
-   */
-  override fun buildAction(id: Int, score: Double): Action = this.buildArc(id = id, score = score)
 
   /**
    * @return the string representation of this transition.

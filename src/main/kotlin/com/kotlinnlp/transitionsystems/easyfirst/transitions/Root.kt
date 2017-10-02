@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.easyfirst.transitions
 
 import com.kotlinnlp.transitionsystems.PendingListState
 import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstTransition
 
 /**
@@ -17,6 +18,11 @@ import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstTransition
  * @property state the [State] on which this transition operates
  */
 class Root(state: PendingListState) : EasyFirstTransition(state) {
+
+  /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  override val type: Type = Type.ROOT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
@@ -47,11 +53,6 @@ class Root(state: PendingListState) : EasyFirstTransition(state) {
   override fun perform(state: PendingListState) {
     state.pendingList.clear()
   }
-
-  /**
-   * @return a new Action tied to this transition.
-   */
-  override fun buildAction(id: Int, score: Double): Action = this.buildArc(id = id, score = score)
 
   /**
    * @return the string representation of this transition.

@@ -17,6 +17,20 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 ) {
 
   /**
+   * The Transition type.
+   */
+  enum class Type {
+    SHIFT,
+    RELOCATE,
+    WAIT,
+    UNSHIFT,
+    NO_ARC,
+    ARC_LEFT,
+    ARC_RIGHT,
+    ROOT
+  }
+
+  /**
    * The Action.
    *
    * Transition abstraction that allows you to ignore which transition-system you are using.
@@ -167,6 +181,11 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   }
 
   /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  abstract val type: Type
+
+  /**
    * The priority of the transition in case of spurious-ambiguities.
    */
   abstract val priority: Int
@@ -224,7 +243,13 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Action] tied to this transition.
    */
-  abstract protected fun buildAction(id: Int = -1, score: Double = 0.0): Action
+  private fun buildAction(id: Int = -1, score: Double = 0.0): Action = when (this.type) {
+    Type.ARC_LEFT, Type.ARC_RIGHT, Type.ROOT -> this.buildArc(id, score)
+    Type.NO_ARC -> this.buildNoArc(id, score)
+    Type.RELOCATE -> this.buildRelocate(id, score)
+    Type.SHIFT, Type.WAIT -> this.buildShift(id, score)
+    Type.UNSHIFT -> this.buildUnshift(id, score)
+  }
 
   /**
    * @param id the id of the action
@@ -232,7 +257,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Shift] tied to this transition.
    */
-  protected fun buildShift(id: Int = -1, score: Double = 0.0) = this.Shift(id = id, score = score)
+  private fun buildShift(id: Int = -1, score: Double = 0.0) = this.Shift(id = id, score = score)
 
   /**
    * @param id the id of the action
@@ -240,7 +265,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Unshift] tied to this transition.
    */
-  protected fun buildUnshift(id: Int = -1, score: Double = 0.0) = this.Unshift(id = id, score = score)
+  private fun buildUnshift(id: Int = -1, score: Double = 0.0) = this.Unshift(id = id, score = score)
 
   /**
    * @param id the id of the action
@@ -248,7 +273,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Relocate] tied to this transition.
    */
-  protected fun buildRelocate(id: Int = -1, score: Double = 0.0) = this.Relocate(id = id, score = score)
+  private fun buildRelocate(id: Int = -1, score: Double = 0.0) = this.Relocate(id = id, score = score)
 
   /**
    * @param id the id of the action
@@ -256,7 +281,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Arc] tied to this transition.
    */
-  protected fun buildNoArc(id: Int = -1, score: Double = 0.0) = this.NoArc(id = id, score = score)
+  private fun buildNoArc(id: Int = -1, score: Double = 0.0) = this.NoArc(id = id, score = score)
 
   /**
    * @param id the id of the action
@@ -264,5 +289,5 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Arc] tied to this transition.
    */
-  protected fun buildArc(id: Int = -1, score: Double = 0.0) = this.Arc(id = id, score = score)
+  private fun buildArc(id: Int = -1, score: Double = 0.0) = this.Arc(id = id, score = score)
 }

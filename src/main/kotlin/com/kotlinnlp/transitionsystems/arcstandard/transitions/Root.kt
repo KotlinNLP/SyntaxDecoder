@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.arcstandard.transitions
 
 import com.kotlinnlp.transitionsystems.StackBufferState
 import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcstandard.ArcStandardTransition
 import com.kotlinnlp.transitionsystems.utils.pop
 
@@ -20,6 +21,11 @@ import com.kotlinnlp.transitionsystems.utils.pop
  * @property state the [State] on which this transition operates.
  */
 class Root(state: StackBufferState) : ArcStandardTransition(state), SyntacticDependency {
+
+  /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  override val type: Type = Type.ROOT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
@@ -50,11 +56,6 @@ class Root(state: StackBufferState) : ArcStandardTransition(state), SyntacticDep
   override fun perform(state: StackBufferState) {
     state.stack.pop()
   }
-
-  /**
-   * @return a new Action tied to this transition.
-   */
-  override fun buildAction(id: Int, score: Double): Action = this.buildArc(id = id, score = score)
 
   /**
    * @return the string representation of this transition.

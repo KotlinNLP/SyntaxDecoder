@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.arcswift.transitions
 
 import com.kotlinnlp.transitionsystems.StackBufferState
 import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcswift.ArcSwiftTransition
 import com.kotlinnlp.transitionsystems.utils.removeFirst
 
@@ -21,6 +22,11 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
  * @property k the position of the k-th node of the stack.
  */
 class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), SyntacticDependency {
+
+  /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  override val type: Type = Type.ARC_RIGHT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
@@ -66,11 +72,6 @@ class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), 
     state.stack = ArrayList(state.stack.slice(this.k .. state.stack.lastIndex))
     state.stack.add(0, state.buffer.removeFirst())
   }
-
-  /**
-   * @return a new Action tied to this transition.
-   */
-  override fun buildAction(id: Int, score: Double): Action = this.buildArc(id = id, score = score)
 
   /**
    * @return the string representation of this transition.

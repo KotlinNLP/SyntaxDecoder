@@ -8,6 +8,7 @@
 package com.kotlinnlp.transitionsystems.arceagerspine.transitions
 
 import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineState
 import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineTransition
 import com.kotlinnlp.transitionsystems.utils.removeFirst
@@ -20,6 +21,11 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
  * @property state the [State] on which this transition operates
  */
 class Shift(state: ArcEagerSpineState) : ArcEagerSpineTransition(state) {
+
+  /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  override val type: Type = Type.SHIFT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
@@ -41,11 +47,6 @@ class Shift(state: ArcEagerSpineState) : ArcEagerSpineTransition(state) {
   override fun perform(state: ArcEagerSpineState) {
     state.stack.add(ArcEagerSpineState.StackElement(state.buffer.removeFirst()))
   }
-
-  /**
-   * @return a new Action tied to this transition.
-   */
-  override fun buildAction(id: Int, score: Double): Action = this.buildShift(id = id, score = score)
 
   /**
    * @return the string representation of this transition.

@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.arceagerspine.transitions
 
 import com.kotlinnlp.transitionsystems.State
 import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineState
 import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineTransition
 import com.kotlinnlp.transitionsystems.utils.pop
@@ -21,6 +22,11 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
  * @property k the position of the k-th node in the right spine of the topmost element in the stack.
  */
 class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(state), SyntacticDependency {
+
+  /**
+   * The Transition type, from which depends the building of the related [Action].
+   */
+  override val type: Type = Type.ARC_LEFT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
@@ -62,11 +68,6 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
 
     if (state.stack.size > 1 && state.buffer.isEmpty()) this.unshift(state)
   }
-
-  /**
-   * @return a new Action tied to this transition.
-   */
-  override fun buildAction(id: Int, score: Double): Action = this.buildArc(id = id, score = score)
 
   /**
    * @return the string representation of this transition.

@@ -8,7 +8,6 @@
 package com.kotlinnlp.transitionsystems.arceagerspine
 
 import com.kotlinnlp.transitionsystems.*
-import com.kotlinnlp.transitionsystems.arceagerspine.transitions.*
 import kotlin.reflect.KClass
 
 /**
@@ -22,52 +21,7 @@ class ArcEagerSpine : TransitionSystem<ArcEagerSpineState, ArcEagerSpineTransiti
   override val stateClass: KClass<ArcEagerSpineState> = ArcEagerSpineState::class
 
   /**
-   * @param state the state from which to extract valid transitions.
-   *
-   * @return a list of valid transitions for the given [state].
+   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
    */
-  override fun getValidTransitions(state: ArcEagerSpineState): List<ArcEagerSpineTransition> {
-
-    val transitions = ArrayList<ArcEagerSpineTransition>()
-
-    transitions.addRoot(state)
-    transitions.addShift(state)
-    transitions.addArcLeft(state)
-    transitions.addArcsRight(state)
-
-    return transitions
-  }
-
-  /**
-   * Add Root transition (if allowed).
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addRoot(state: ArcEagerSpineState){
-    val root = Root(state)
-    if (root.isAllowed) this.add(root)
-  }
-
-  /**
-   * Add Shift transition (if allowed).
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addShift(state: ArcEagerSpineState){
-    val shift = Shift(state)
-    if (shift.isAllowed) this.add(shift)
-  }
-
-  /**
-   * Add ArcLeft transition (if allowed).
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addArcLeft(state: ArcEagerSpineState){
-    val arcLeft = ArcLeft(state)
-    if (arcLeft.isAllowed) this.add(arcLeft)
-  }
-
-  /**
-   * Add multiple ArcRight transitions (if allowed)
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addArcsRight(state: ArcEagerSpineState) {
-    if (state.stack.isNotEmpty() && state.buffer.isNotEmpty()) {
-      state.stack.last().indices.forEach { k -> this.add(ArcRight(state, k)) }
-    }
-  }
+  override val transitionsGenerator = ArcEagerSpineTransitionsGenerator()
 }

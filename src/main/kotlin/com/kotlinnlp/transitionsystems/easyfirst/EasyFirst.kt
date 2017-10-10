@@ -8,7 +8,6 @@
 package com.kotlinnlp.transitionsystems.easyfirst
 
 import com.kotlinnlp.transitionsystems.*
-import com.kotlinnlp.transitionsystems.easyfirst.transitions.*
 import kotlin.reflect.KClass
 
 /**
@@ -24,36 +23,7 @@ class EasyFirst : TransitionSystem<PendingListState, EasyFirstTransition>() {
   override val stateClass: KClass<PendingListState> = PendingListState::class
 
   /**
-   * @param state the state from which to extract valid transitions.
-   *
-   * @return a list of valid transitions for the given [state].
+   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
    */
-  override fun getValidTransitions(state: PendingListState): List<EasyFirstTransition> {
-
-    val transitions = ArrayList<EasyFirstTransition>()
-
-    transitions.addRoot(state)
-    transitions.addArcs(state)
-
-    return transitions
-  }
-
-  /**
-   * Add Root transition (if allowed).
-   */
-  private fun ArrayList<EasyFirstTransition>.addRoot(state: PendingListState){
-    val root = Root(state)
-    if (root.isAllowed) this.add(root)
-  }
-
-  /**
-   * Add multiple arc-left and arc-right transitions.
-   */
-  private fun ArrayList<EasyFirstTransition>.addArcs(state: PendingListState) {
-
-    for (i in 0 until state.pendingList.lastIndex) {
-      this.add(ArcLeft(state, i))
-      this.add(ArcRight(state, i))
-    }
-  }
+  override val transitionsGenerator = EasyFirstTransitionsGenerator()
 }

@@ -8,7 +8,6 @@
 package com.kotlinnlp.transitionsystems.arcstandard
 
 import com.kotlinnlp.transitionsystems.*
-import com.kotlinnlp.transitionsystems.arcstandard.transitions.*
 import kotlin.reflect.KClass
 
 /**
@@ -25,16 +24,7 @@ class ArcStandard : TransitionSystem<StackBufferState, ArcStandardTransition>() 
   override val stateClass: KClass<StackBufferState> = StackBufferState::class
 
   /**
-   * @param state the state from which to extract valid transitions.
-   *
-   * @return a list of valid transitions for the given [state].
+   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
    */
-  override fun getValidTransitions(state: StackBufferState): List<ArcStandardTransition> {
-    return listOf(
-      Root(state),
-      Shift(state),
-      ArcLeft(state),
-      ArcRight(state)
-    ).filter { it.isAllowed }
-  }
+  override val transitionsGenerator = ArcStandardTransitionsGenerator()
 }

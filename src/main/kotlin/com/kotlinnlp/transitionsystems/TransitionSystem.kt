@@ -20,6 +20,11 @@ abstract class TransitionSystem<StateType: State<StateType>, TransitionType: Tra
   abstract protected val stateClass: KClass<StateType>
 
   /**
+   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
+   */
+  abstract protected val transitionsGenerator: TransitionsGenerator<StateType, TransitionType>
+
+  /**
    * Initialization function, mapping an ordered list of [tokens] to an initial state.
    *
    * @param tokens the list of tokens used to initialize the state.
@@ -33,5 +38,5 @@ abstract class TransitionSystem<StateType: State<StateType>, TransitionType: Tra
    *
    * @return a list of valid transitions for the given [state].
    */
-  abstract fun getValidTransitions(state: StateType): List<TransitionType>
+  fun getValidTransitions(state: StateType): List<TransitionType> = this.transitionsGenerator.generate(state)
 }

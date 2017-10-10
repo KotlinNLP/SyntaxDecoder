@@ -18,16 +18,18 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
   /**
    * The Transition type.
+   *
+   * @property direction
    */
-  enum class Type {
-    SHIFT,
-    RELOCATE,
-    WAIT,
-    UNSHIFT,
-    NO_ARC,
-    ARC_LEFT,
-    ARC_RIGHT,
-    ROOT
+  enum class Type(val direction: Deprel.Position) {
+    SHIFT(direction = Deprel.Position.NULL),
+    RELOCATE(direction = Deprel.Position.NULL),
+    WAIT(direction = Deprel.Position.NULL),
+    UNSHIFT(direction = Deprel.Position.NULL),
+    NO_ARC(direction = Deprel.Position.NULL),
+    ARC_LEFT(direction = Deprel.Position.LEFT),
+    ARC_RIGHT(direction = Deprel.Position.RIGHT),
+    ROOT(direction = Deprel.Position.ROOT)
   }
 
   /**

@@ -9,7 +9,6 @@ package com.kotlinnlp.transitionsystems.easyfirst.transitions
 
 import com.kotlinnlp.transitionsystems.PendingListState
 import com.kotlinnlp.transitionsystems.State
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstTransition
 
 /**
@@ -20,7 +19,7 @@ import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstTransition
 class Root(state: PendingListState) : EasyFirstTransition(state) {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ROOT
 
@@ -30,12 +29,12 @@ class Root(state: PendingListState) : EasyFirstTransition(state) {
   override val priority: Int = 0
 
   /**
-   *
+   * The governor id.
    */
   override val governorId: Int? = null
 
   /**
-   *
+   * The dependent id.
    */
   override val dependentId: Int get() = this.state.pendingList.last()
 

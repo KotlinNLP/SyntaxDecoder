@@ -9,7 +9,6 @@ package com.kotlinnlp.transitionsystems.arcstandard.transitions
 
 import com.kotlinnlp.transitionsystems.StackBufferState
 import com.kotlinnlp.transitionsystems.SyntacticDependency
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcstandard.ArcStandardTransition
 import com.kotlinnlp.transitionsystems.utils.pop
 
@@ -23,7 +22,7 @@ import com.kotlinnlp.transitionsystems.utils.pop
 class Root(state: StackBufferState) : ArcStandardTransition(state), SyntacticDependency {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ROOT
 

@@ -10,7 +10,6 @@ package com.kotlinnlp.transitionsystems.archybrid.transitions
 import com.kotlinnlp.transitionsystems.StackBufferState
 import com.kotlinnlp.transitionsystems.State
 import com.kotlinnlp.transitionsystems.SyntacticDependency
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.archybrid.ArcHybridTransition
 import com.kotlinnlp.transitionsystems.utils.pop
 
@@ -24,7 +23,7 @@ import com.kotlinnlp.transitionsystems.utils.pop
 class Root(state: StackBufferState) : ArcHybridTransition(state), SyntacticDependency {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ROOT
 

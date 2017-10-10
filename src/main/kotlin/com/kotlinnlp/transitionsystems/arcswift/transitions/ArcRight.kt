@@ -9,7 +9,6 @@ package com.kotlinnlp.transitionsystems.arcswift.transitions
 
 import com.kotlinnlp.transitionsystems.StackBufferState
 import com.kotlinnlp.transitionsystems.SyntacticDependency
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcswift.ArcSwiftTransition
 import com.kotlinnlp.transitionsystems.utils.removeFirst
 
@@ -24,7 +23,7 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
 class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), SyntacticDependency {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ARC_RIGHT
 

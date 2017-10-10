@@ -7,7 +7,6 @@
 
 package com.kotlinnlp.transitionsystems.arcspine.transitions
 
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcspine.ArcSpineState
 import com.kotlinnlp.transitionsystems.arcspine.ArcSpineTransition
 import com.kotlinnlp.transitionsystems.utils.removeFirst
@@ -20,7 +19,7 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
 class Shift(state: ArcSpineState) : ArcSpineTransition(state) {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.SHIFT
 

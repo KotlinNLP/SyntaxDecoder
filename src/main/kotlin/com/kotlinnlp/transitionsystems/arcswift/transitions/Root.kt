@@ -9,7 +9,6 @@ package com.kotlinnlp.transitionsystems.arcswift.transitions
 
 import com.kotlinnlp.transitionsystems.StackBufferState
 import com.kotlinnlp.transitionsystems.SyntacticDependency
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcswift.ArcSwiftTransition
 
 /**
@@ -22,7 +21,7 @@ import com.kotlinnlp.transitionsystems.arcswift.ArcSwiftTransition
 class Root(state: StackBufferState): ArcSwiftTransition(state), SyntacticDependency {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ROOT
 

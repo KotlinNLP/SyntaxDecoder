@@ -9,7 +9,6 @@ package com.kotlinnlp.transitionsystems.easyfirst.transitions
 
 import com.kotlinnlp.transitionsystems.PendingListState
 import com.kotlinnlp.transitionsystems.State
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstTransition
 
 /**
@@ -20,7 +19,7 @@ import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstTransition
 class ArcLeft(state: PendingListState, val i: Int) : EasyFirstTransition(state) {
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ARC_LEFT
 

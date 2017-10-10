@@ -8,7 +8,6 @@
 package com.kotlinnlp.transitionsystems.arcspine.transitions
 
 import com.kotlinnlp.transitionsystems.SyntacticDependency
-import com.kotlinnlp.transitionsystems.Transition.Action
 import com.kotlinnlp.transitionsystems.arcspine.ArcSpineState
 import com.kotlinnlp.transitionsystems.arcspine.ArcSpineTransition
 import com.kotlinnlp.transitionsystems.utils.pop
@@ -23,7 +22,7 @@ import com.kotlinnlp.transitionsystems.utils.secondToLast
 class ArcRight(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), SyntacticDependency{
 
   /**
-   * The Transition type, from which depends the building of the related [Action].
+   * The Transition type, from which depends the building of the related Action.
    */
   override val type: Type = Type.ARC_RIGHT
 

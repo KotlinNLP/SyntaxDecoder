@@ -55,17 +55,17 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
      */
     fun apply(): StateType {
 
-      val state = this@Transition.apply()
+      this@Transition.perform()
 
-      this.perform(state) // call after the transition has been performed
+      this.perform() // call after the transition has been performed
 
-      return state
+      return this.state
     }
 
     /**
-     * @param state the state on which to apply this action
+     * Perform this [Action] modifying the DependencyTree of its [state].
      */
-    abstract protected fun perform(state: StateType)
+    abstract protected fun perform()
   }
 
   /**
@@ -74,9 +74,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Shift internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * @param state the state on which to apply this action.
+     * Perform this [Action] modifying the DependencyTree of its [state].
      */
-    override fun perform(state: StateType) = Unit
+    override fun perform() = Unit
 
     /**
      * @return its string representation.
@@ -90,9 +90,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Unshift internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * @param state the state on which to apply this action.
+     * Perform this [Action] modifying the DependencyTree of its [state].
      */
-    override fun perform(state: StateType) = Unit
+    override fun perform() = Unit
 
     /**
      * @return its string representation.
@@ -106,9 +106,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Relocate internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * @param state the state on which to apply this action.
+     * Perform this [Action] modifying the DependencyTree of its [state].
      */
-    override fun perform(state: StateType) = Unit
+    override fun perform() = Unit
 
     /**
      * @return its string representation.
@@ -122,9 +122,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class NoArc internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * @param state the state on which to apply this action.
+     * Perform this [Action] modifying the DependencyTree of its [state].
      */
-    override fun perform(state: StateType) = Unit
+    override fun perform() = Unit
 
     /**
      * @return its string representation.
@@ -165,9 +165,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     }
 
     /**
-     * @param state the state on which to apply this action
+     *
      */
-    override fun perform(state: StateType) {
+    override fun perform() {
       state.dependencyTree.setArc(
         dependentId = this.dependentId,
         governorId = this.governorId,
@@ -211,18 +211,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     }
 
     return action
-  }
-
-  /**
-   * Apply this transition on a given [state].
-   *
-   * @return the modified state
-   */
-  internal fun apply(): StateType {
-
-    this.perform()
-
-    return this.state
   }
 
   /**

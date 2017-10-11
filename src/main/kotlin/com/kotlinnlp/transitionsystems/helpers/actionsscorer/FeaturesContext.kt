@@ -10,4 +10,4 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 /**
  *
  */
-interface FeaturesContext<SelfType: FeaturesContext<SelfType>>
+interface FeaturesContext

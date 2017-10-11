@@ -10,8 +10,8 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 import com.kotlinnlp.transitionsystems.state.State
 
 /**
+ * The [FeaturesContext] based on [state].
+ *
  * @property state a [State]
  */
-data class StateFeaturesContext<StateType: State<StateType>>(
-  val state: StateType
-) : FeaturesContext<StateFeaturesContext<StateType>>
+data class StateFeaturesContext<StateType : State<StateType>>(val state: StateType) : FeaturesContext

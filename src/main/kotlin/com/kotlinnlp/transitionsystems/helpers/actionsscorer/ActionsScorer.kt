@@ -15,12 +15,8 @@ import com.kotlinnlp.transitionsystems.Transition
  *
  * @property featuresExtractor a [FeaturesExtractor]
  */
-abstract class ActionsScorer<
-  StateType: State<StateType>,
-  TransitionType: Transition<TransitionType, StateType>,
-  FeaturesType: Features<FeaturesType>,
-  FeaturesContextType: FeaturesContext<FeaturesContextType>>(
-  protected val featuresExtractor: FeaturesExtractor<FeaturesType, FeaturesContextType>
+abstract class ActionsScorer<StateType : State<StateType>, TransitionType : Transition<TransitionType, StateType>>(
+  protected val featuresExtractor: FeaturesExtractor
 ) {
 
   /**

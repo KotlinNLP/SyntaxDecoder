@@ -11,10 +11,15 @@ import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 
 /**
+ * The [FeaturesContext] based on [state] and [transition].
+ *
  * @property state a [State]
  * @property transition a [Transition]
  */
-data class TransitionFeaturesContext<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
+data class TransitionFeaturesContext<
+  StateType : State<StateType>,
+  TransitionType : Transition<TransitionType, StateType>>
+(
   val state: StateType,
   val transition: Transition<TransitionType, StateType>
-) : FeaturesContext<TransitionFeaturesContext<StateType, TransitionType>>
+) : FeaturesContext

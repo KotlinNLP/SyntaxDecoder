@@ -26,13 +26,15 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
  * @property actionsGenerator
  * @property actionsScorer
  * @property bestActionSelector
+ * @property verbose
  */
-class GreedyDecoder<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
+class GreedyDecoder<StateType : State<StateType>, TransitionType : Transition<TransitionType, StateType>>(
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  private val actionsScorer: ActionsScorer<StateType, TransitionType, *, *>,
+  private val actionsScorer: ActionsScorer<StateType, TransitionType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType>,
-  private val verbose: Boolean = false){
+  private val verbose: Boolean = false
+) {
 
   /**
    * @param tokens a list of tokens id

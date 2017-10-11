@@ -8,6 +8,6 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 /**
- *
+ * The features extracted from a [FeaturesExtractor], used as input of the [ActionsScorer].
  */
-interface Features<SelfType: Features<SelfType>>
+interface Features

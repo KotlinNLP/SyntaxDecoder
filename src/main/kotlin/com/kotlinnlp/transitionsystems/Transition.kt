@@ -51,13 +51,11 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     val transition: SelfType = this@Transition as SelfType
 
     /**
-     * @param cloneState whether to apply this action to a copy of the [State] of this action.
-     *
-     * @return the current state (or a new one if cloned) after the execution of this action.
+     * @return the state modified by this [Action]
      */
-    fun apply(cloneState: Boolean = false): StateType {
+    fun apply(): StateType {
 
-      val state = this@Transition.apply(cloneState)
+      val state = this@Transition.apply()
 
       this.perform(state) // call after the transition has been performed
 
@@ -218,26 +216,20 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Apply this transition on a given [state].
    *
-   * @param cloneState a Boolean indicating if the transition must be applied to a clone of the [state]
-   *
-   * @return the modified state or a new one if [cloneState] is true
+   * @return the modified state
    */
-  internal fun apply(cloneState: Boolean = false): StateType {
+  internal fun apply(): StateType {
 
-    val state: StateType = if (cloneState) this.state.clone() else this.state
+    this.perform()
 
-    this.perform(state)
-
-    return state
+    return this.state
   }
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  abstract protected fun perform(state: StateType)
+  abstract protected fun perform()
 
   /**
    * @param id the id of the action

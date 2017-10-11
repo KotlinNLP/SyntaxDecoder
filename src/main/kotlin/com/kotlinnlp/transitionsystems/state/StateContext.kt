@@ -30,5 +30,5 @@ interface StateContext<
   /**
    * @return a copy of this [StateContext]
    */
-  fun clone(): SelfType
+  fun copy(): SelfType
 }

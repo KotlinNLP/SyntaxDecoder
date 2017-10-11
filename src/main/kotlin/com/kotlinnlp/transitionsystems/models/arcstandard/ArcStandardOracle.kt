@@ -10,6 +10,7 @@ package com.kotlinnlp.transitionsystems.models.arcstandard
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.arcstandard.transitions.*
 import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 
 /**

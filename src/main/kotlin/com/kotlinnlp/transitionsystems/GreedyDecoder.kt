@@ -11,6 +11,7 @@ import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
  * The GreedyDecoder.

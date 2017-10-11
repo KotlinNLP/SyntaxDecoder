@@ -10,6 +10,7 @@ package com.kotlinnlp.transitionsystems.models.arcswift
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.arcswift.transitions.*
 import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 
 /**

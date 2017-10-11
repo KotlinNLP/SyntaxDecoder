@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.utils
 
-import com.kotlinnlp.transitionsystems.Deprel
+import com.kotlinnlp.transitionsystems.syntax.Deprel
 
 /**
  * Groups the elements of the original deprels collection by the Deprel.Position property.

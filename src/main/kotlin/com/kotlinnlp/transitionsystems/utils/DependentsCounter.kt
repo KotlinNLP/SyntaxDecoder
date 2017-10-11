@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.utils
 
-import com.kotlinnlp.transitionsystems.DependencyTree
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
  * The DependentsCounter.

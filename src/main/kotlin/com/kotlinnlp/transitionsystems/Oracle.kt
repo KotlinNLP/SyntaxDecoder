@@ -8,6 +8,10 @@
 package com.kotlinnlp.transitionsystems
 
 import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.syntax.DependencyRelation
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
+import com.kotlinnlp.transitionsystems.syntax.Deprel
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 
 /**
  * The Oracle.

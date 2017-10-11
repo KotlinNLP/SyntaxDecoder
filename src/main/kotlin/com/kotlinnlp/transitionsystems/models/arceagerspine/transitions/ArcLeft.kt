@@ -8,7 +8,7 @@
 package com.kotlinnlp.transitionsystems.models.arceagerspine.transitions
 
 import com.kotlinnlp.transitionsystems.state.State
-import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.models.arceagerspine.ArcEagerSpineState
 import com.kotlinnlp.transitionsystems.models.arceagerspine.ArcEagerSpineTransition
 import com.kotlinnlp.transitionsystems.utils.removeLast

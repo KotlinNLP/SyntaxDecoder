@@ -8,7 +8,7 @@
 package com.kotlinnlp.transitionsystems.models.arcstandard.transitions
 
 import com.kotlinnlp.transitionsystems.state.StackBufferState
-import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandardTransition
 import com.kotlinnlp.transitionsystems.utils.pop
 

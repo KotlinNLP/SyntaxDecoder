@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.arcspine.transitions
 
-import com.kotlinnlp.transitionsystems.SyntacticDependency
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineState
 import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineTransition
 import com.kotlinnlp.transitionsystems.utils.pop
@@ -19,7 +19,7 @@ import com.kotlinnlp.transitionsystems.utils.secondToLast
  * @property state the [State] on which this transition operates.
  * @property k the position of the k-th node in the right spine of the topmost element in the stack.
  */
-class ArcRight(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), SyntacticDependency{
+class ArcRight(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

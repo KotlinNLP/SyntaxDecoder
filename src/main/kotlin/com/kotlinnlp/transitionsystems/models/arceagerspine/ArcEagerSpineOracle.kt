@@ -12,6 +12,7 @@ import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.ArcLeft
 import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.ArcRight
 import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.Root
 import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.Shift
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.subListFrom
 
 /**

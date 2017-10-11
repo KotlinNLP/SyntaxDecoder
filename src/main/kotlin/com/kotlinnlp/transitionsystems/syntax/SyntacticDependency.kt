@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems
+package com.kotlinnlp.transitionsystems.syntax
 
 /**
  * Defines a syntactic dependency through a dependent and its governor.

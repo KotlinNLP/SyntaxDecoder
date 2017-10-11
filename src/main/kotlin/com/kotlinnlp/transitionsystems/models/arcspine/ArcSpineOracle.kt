@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.models.arcspine
 
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.arcspine.transitions.*
+import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 import com.kotlinnlp.transitionsystems.utils.secondToLast
 

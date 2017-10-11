@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.state
 
-import com.kotlinnlp.transitionsystems.DependencyTree
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
  * The State.

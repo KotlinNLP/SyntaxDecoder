@@ -34,13 +34,11 @@ class Shift(state: ArcSpineState) : ArcSpineTransition(state) {
   override val isAllowed: Boolean get() = this.state.buffer.isNotEmpty()
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: ArcSpineState) {
-    state.stack.add(ArcSpineState.StackElement(state.buffer.removeFirst()))
+  override fun perform() {
+    this.state.stack.add(ArcSpineState.StackElement(this.state.buffer.removeFirst()))
   }
 
   /**

@@ -44,13 +44,11 @@ class Root(state: PendingListState) : EasyFirstTransition(state) {
   override val isAllowed: Boolean get() = this.state.pendingList.size == 1
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: PendingListState) {
-    state.pendingList.clear()
+  override fun perform() {
+    this.state.pendingList.clear()
   }
 
   /**

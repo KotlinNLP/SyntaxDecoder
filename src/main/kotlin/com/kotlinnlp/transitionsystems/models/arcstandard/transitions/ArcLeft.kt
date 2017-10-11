@@ -48,13 +48,11 @@ class ArcLeft(state: StackBufferState) : ArcStandardTransition(state), Syntactic
   override val isAllowed: Boolean get() = this.state.stack.size > 1
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: StackBufferState) {
-    state.stack.removeAt(state.stack.lastIndex - 1) // remove the dependent
+  override fun perform() {
+    this.state.stack.removeAt(this.state.stack.lastIndex - 1) // remove the dependent
   }
 
   /**

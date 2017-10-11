@@ -62,14 +62,12 @@ class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), 
   init { require(this.k >= 0) }
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: StackBufferState) {
-    state.stack = ArrayList(state.stack.slice(this.k .. state.stack.lastIndex))
-    state.stack.add(0, state.buffer.removeFirst())
+  override fun perform() {
+    this.state.stack = ArrayList(this.state.stack.slice(this.k .. this.state.stack.lastIndex))
+    this.state.stack.add(0, this.state.buffer.removeFirst())
   }
 
   /**

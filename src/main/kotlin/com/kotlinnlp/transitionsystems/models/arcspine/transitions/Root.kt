@@ -47,13 +47,11 @@ class Root(state: ArcSpineState) : ArcSpineTransition(state), SyntacticDependenc
   override val isAllowed: Boolean get() = this.state.stack.size == 1 && this.state.buffer.isEmpty()
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: ArcSpineState) {
-    state.stack.pop()
+  override fun perform() {
+    this.state.stack.pop()
   }
 
   /**

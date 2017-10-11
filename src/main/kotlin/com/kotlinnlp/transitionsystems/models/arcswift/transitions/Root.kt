@@ -48,13 +48,11 @@ class Root(state: StackBufferState): ArcSwiftTransition(state), SyntacticDepende
       this.state.unattachedStackElements.size == 1
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: StackBufferState) {
-    state.stack.clear()
+  override fun perform() {
+    this.state.stack.clear()
   }
 
   /**

@@ -44,13 +44,11 @@ class ArcRight(state: PendingListState, val i: Int) : EasyFirstTransition(state)
   override val isAllowed: Boolean get() = this.i in 0 .. this.state.pendingList.size
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: PendingListState) {
-    state.pendingList.removeAt(this.i + 1) // remove the dependent
+  override fun perform() {
+    this.state.pendingList.removeAt(this.i + 1) // remove the dependent
   }
 
   /**

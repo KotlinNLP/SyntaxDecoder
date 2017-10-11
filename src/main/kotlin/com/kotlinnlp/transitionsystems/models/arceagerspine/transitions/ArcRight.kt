@@ -56,16 +56,14 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
   init { require(this.k >= 0) }
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: ArcEagerSpineState) {
+  override fun perform() {
 
-    state.stack.last().insert(this.k + 1, state.buffer.removeFirst())
+    this.state.stack.last().insert(this.k + 1, this.state.buffer.removeFirst())
 
-    if (state.stack.size > 1 && state.buffer.isEmpty()) this.unshift(state)
+    if (this.state.stack.size > 1 && this.state.buffer.isEmpty()) this.unshift()
   }
 
   /**
@@ -74,9 +72,7 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
   override fun toString(): String = "arc-right(${this.k})"
 
   /**
-   * Perform an unshift on a given [state].
-   *
-   * @param state the state on which to apply the unshift.
+   * Perform an unshift on its [state].
    */
-  private fun unshift(state: ArcEagerSpineState) = state.buffer.add(state.stack.pop().root)
+  private fun unshift() = this.state.buffer.add(this.state.stack.pop().root)
 }

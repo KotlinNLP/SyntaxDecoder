@@ -48,13 +48,11 @@ class ArcLeft(state: StackBufferState) : ArcHybridTransition(state), SyntacticDe
   override val isAllowed: Boolean get() = this.state.stack.isNotEmpty() && this.state.buffer.isNotEmpty()
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: StackBufferState) {
-    state.stack.removeLast() // remove the dependent
+  override fun perform() {
+    this.state.stack.removeLast() // remove the dependent
   }
 
   /**

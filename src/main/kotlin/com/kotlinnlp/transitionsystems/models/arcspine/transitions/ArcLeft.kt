@@ -54,16 +54,14 @@ class ArcLeft(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), Syn
   init { require(this.k >= 0) }
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: ArcSpineState) {
+  override fun perform() {
     val s0: ArcSpineState.StackElement = this.state.stack.pop()
     val s1: ArcSpineState.StackElement = this.state.stack.pop()
 
-    state.stack.add(s0.addToLeftSpine(this.k, s1.leftSpine))
+    this.state.stack.add(s0.addToLeftSpine(this.k, s1.leftSpine))
   }
 
   /**

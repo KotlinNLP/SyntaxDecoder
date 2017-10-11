@@ -38,13 +38,11 @@ class Shift(state: ArcEagerSpineState) : ArcEagerSpineTransition(state) {
     this.state.buffer.size > 1 || (this.state.buffer.isNotEmpty() && this.state.stack.isEmpty())
 
   /**
-   * Apply this transition on a given [state].
-   * It requires that the transition [isAllowed] on the given [state].
-   *
-   * @param state the state on which to apply this transition.
+   * Apply this transition on its [state].
+   * It requires that the transition [isAllowed] on its [state].
    */
-  override fun perform(state: ArcEagerSpineState) {
-    state.stack.add(ArcEagerSpineState.StackElement(state.buffer.removeFirst()))
+  override fun perform() {
+    this.state.stack.add(ArcEagerSpineState.StackElement(this.state.buffer.removeFirst()))
   }
 
   /**

@@ -7,6 +7,28 @@
 
 package com.kotlinnlp.transitionsystems.utils
 
+import com.kotlinnlp.transitionsystems.Deprel
+
+/**
+ * Groups the elements of the original deprels collection by the Deprel.Position property.
+ *
+ * The returned map preserves the order of the original collection.
+ *
+ * @return a new Map<Deprel.Position, List<Deprel>>
+ */
+fun List<Deprel>.groupByPosition(): Map<Deprel.Position, List<Deprel>> {
+  val result = mutableMapOf<Deprel.Position, List<Deprel>>()
+
+  Deprel.Position.values().forEach { position ->
+    if (position != Deprel.Position.NULL && this.any { it.direction == position }) {
+      result[position] = this.filter { it.direction == position }
+    }
+  }
+
+  return result
+}
+
+
 /**
  * Remove the last element
  */

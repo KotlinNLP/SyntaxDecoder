@@ -5,7 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
+import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.transitionsystems.*
+import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 
 /**
  *
@@ -21,6 +23,11 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
       "error-exploring not supported by ${this.oracle.type} oracle."
     }
   }
+
+  /**
+   *
+   */
+  private val actionsGenerator = ActionsGenerator.Unlabeled<StateType, TransitionType>()
 
   /**
    *
@@ -67,10 +74,7 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
 
     val transitions: List<TransitionType> = this.transitionSystem.getValidTransitions(state)
 
-    return transitions.map {
-      if (this.verbose) println("$it --> ${oracle.hasZeroCost(it)} --> ${oracle.calculateCostOf(it)}")
-      it.actionFactory()
-    }
+    return this.actionsGenerator.generateFrom(transitions)
   }
 
   /**

@@ -6,20 +6,20 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.conllio.CoNLLReader
-import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpine
-import com.kotlinnlp.transitionsystems.arceagerspine.ArcEagerSpineOracle
-import com.kotlinnlp.transitionsystems.archybrid.ArcHybrid
-import com.kotlinnlp.transitionsystems.archybrid.ArcHybridOracle
-import com.kotlinnlp.transitionsystems.arcspine.ArcSpine
-import com.kotlinnlp.transitionsystems.arcspine.ArcSpineNonDetOracle
-import com.kotlinnlp.transitionsystems.arcspine.ArcSpineOracle
-import com.kotlinnlp.transitionsystems.arcstandard.ArcStandard
-import com.kotlinnlp.transitionsystems.arcstandard.ArcStandardNonDetOracle
-import com.kotlinnlp.transitionsystems.arcstandard.ArcStandardOracle
-import com.kotlinnlp.transitionsystems.arcswift.ArcSwift
-import com.kotlinnlp.transitionsystems.arcswift.ArcSwiftOracle
-import com.kotlinnlp.transitionsystems.easyfirst.EasyFirst
-import com.kotlinnlp.transitionsystems.easyfirst.EasyFirstOracle
+import com.kotlinnlp.transitionsystems.models.arceagerspine.ArcEagerSpine
+import com.kotlinnlp.transitionsystems.models.arceagerspine.ArcEagerSpineOracle
+import com.kotlinnlp.transitionsystems.models.archybrid.ArcHybrid
+import com.kotlinnlp.transitionsystems.models.archybrid.ArcHybridOracle
+import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpine
+import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineNonDetOracle
+import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineOracle
+import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandard
+import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandardNonDetOracle
+import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandardOracle
+import com.kotlinnlp.transitionsystems.models.arcswift.ArcSwift
+import com.kotlinnlp.transitionsystems.models.arcswift.ArcSwiftOracle
+import com.kotlinnlp.transitionsystems.models.easyfirst.EasyFirst
+import com.kotlinnlp.transitionsystems.models.easyfirst.EasyFirstOracle
 
 /**
  * Test the coverage a [TransitionSystem] for the language with the tree-bank given as first argument.

@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.arcspine.transitions
 
-import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.SyntacticDependency
 import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineState
 import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineTransition

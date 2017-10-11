@@ -8,6 +8,7 @@
 import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
+import com.kotlinnlp.transitionsystems.state.State
 
 /**
  *

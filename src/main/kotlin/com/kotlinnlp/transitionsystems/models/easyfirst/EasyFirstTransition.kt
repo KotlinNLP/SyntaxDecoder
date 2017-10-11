@@ -7,8 +7,8 @@
 
 package com.kotlinnlp.transitionsystems.models.easyfirst
 
-import com.kotlinnlp.transitionsystems.PendingListState
-import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.state.PendingListState
+import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.SyntacticDependency
 import com.kotlinnlp.transitionsystems.Transition
 

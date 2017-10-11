@@ -10,6 +10,7 @@ package com.kotlinnlp.transitionsystems
 import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
+import com.kotlinnlp.transitionsystems.state.State
 
 /**
  * The GreedyDecoder.

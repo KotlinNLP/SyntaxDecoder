@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.arcstandard.transitions
 
-import com.kotlinnlp.transitionsystems.StackBufferState
+import com.kotlinnlp.transitionsystems.state.StackBufferState
 import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandardTransition
 import com.kotlinnlp.transitionsystems.utils.removeFirst
 

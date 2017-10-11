@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.arceagerspine
 
-import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 
 /**

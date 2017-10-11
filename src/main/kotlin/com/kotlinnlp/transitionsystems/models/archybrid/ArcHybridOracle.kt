@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.models.archybrid
 
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.archybrid.transitions.*
+import com.kotlinnlp.transitionsystems.state.StackBufferState
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 
 /**

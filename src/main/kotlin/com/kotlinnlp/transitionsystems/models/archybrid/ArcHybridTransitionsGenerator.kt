@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.archybrid
 
-import com.kotlinnlp.transitionsystems.StackBufferState
+import com.kotlinnlp.transitionsystems.state.StackBufferState
 import com.kotlinnlp.transitionsystems.helpers.TransitionsGenerator
 import com.kotlinnlp.transitionsystems.models.archybrid.transitions.ArcLeft
 import com.kotlinnlp.transitionsystems.models.archybrid.transitions.ArcRight

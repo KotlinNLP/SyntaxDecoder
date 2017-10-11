@@ -7,6 +7,8 @@
 
 package com.kotlinnlp.transitionsystems
 
+import com.kotlinnlp.transitionsystems.state.State
+
 /**
  * The State Transition.
  *

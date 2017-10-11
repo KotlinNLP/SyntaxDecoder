@@ -8,7 +8,7 @@
 package com.kotlinnlp.transitionsystems.helpers
 
 import com.kotlinnlp.transitionsystems.Deprel
-import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.SyntacticDependency
 import com.kotlinnlp.transitionsystems.Transition
 

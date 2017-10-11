@@ -7,8 +7,8 @@
 
 package com.kotlinnlp.transitionsystems.models.arcstandard
 
-import com.kotlinnlp.transitionsystems.StackBufferState
-import com.kotlinnlp.transitionsystems.State
+import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 
 /**

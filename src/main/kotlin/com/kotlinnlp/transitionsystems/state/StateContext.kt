@@ -12,12 +12,20 @@ package com.kotlinnlp.transitionsystems.state
  *
  * @property state the [State] of this context
  */
-interface StateContext<SelfType: StateContext<SelfType, StateType>, StateType: State<StateType>> {
+interface StateContext<
+  SelfType: StateContext<SelfType, StateType, ItemType>,
+  StateType: State<StateType>,
+  ItemType: StateItem<*, *>> {
 
   /**
    * The [State] of this context.
    */
   val state: StateType
+
+  /**
+   * The list of items that compose the [state].
+   */
+  val items: List<ItemType>
 
   /**
    * @return a copy of this [StateContext]

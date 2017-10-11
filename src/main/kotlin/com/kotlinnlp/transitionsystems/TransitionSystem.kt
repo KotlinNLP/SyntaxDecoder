@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.transitionsystems
 
+import com.kotlinnlp.transitionsystems.helpers.TransitionsGenerator
 import kotlin.reflect.KClass
 
 /**

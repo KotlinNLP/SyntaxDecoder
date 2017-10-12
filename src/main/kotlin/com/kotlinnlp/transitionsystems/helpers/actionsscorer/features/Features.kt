@@ -8,7 +8,7 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer.features
 
 /**
- * The features extracted from a [FeaturesExtractor], used as input of the [ActionsScorer].
+ * The features extracted from a FeaturesExtractor, used as input of the ActionsScorer.
  */
 interface Features<out ErrorsType: FeaturesErrors, out RelevanceType: FeaturesRelevance> {
 

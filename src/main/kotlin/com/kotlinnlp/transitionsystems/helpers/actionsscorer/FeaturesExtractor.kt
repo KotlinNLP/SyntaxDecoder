@@ -8,6 +8,7 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 
 /**
  * The FeaturesExtractor.

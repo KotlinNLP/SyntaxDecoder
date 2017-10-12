@@ -10,11 +10,12 @@ package com.kotlinnlp.transitionsystems
 import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
+import com.kotlinnlp.transitionsystems.state.ItemsContext
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
- * The GreedyDecoder.
+ * The SyntaxDecoder.
  *
  * Processes the input sentence by means of transitions which incrementally build the dependency tree.
  *
@@ -28,10 +29,14 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
  * @property bestActionSelector
  * @property verbose
  */
-class GreedyDecoder<StateType : State<StateType>, TransitionType : Transition<TransitionType, StateType>>(
+class SyntaxDecoder<
+  StateType : State<StateType>,
+  TransitionType : Transition<TransitionType, StateType>,
+  ContextType: ItemsContext<ContextType>>
+(
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  private val actionsScorer: ActionsScorer<StateType, TransitionType>,
+  private val actionsScorer: ActionsScorer<StateType, TransitionType, *, ContextType, *>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType>,
   private val verbose: Boolean = false
 ) {
@@ -43,9 +48,10 @@ class GreedyDecoder<StateType : State<StateType>, TransitionType : Transition<Tr
    * @return a [DependencyTree]
    */
   fun decode(tokens: List<Int>,
+             context: ContextType,
              beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree {
 
-    val state = this.transitionSystem.getInitialState(tokens = tokens)
+    val state = this.transitionSystem.getInitialState(itemIds = tokens)
 
     while (!state.isTerminal){
       if (this.verbose) { println(state) }

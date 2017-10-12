@@ -40,17 +40,17 @@ class SyntaxDecoder<
 ) {
 
   /**
-   * @param tokens a list of tokens id
+   * @param itemIds a list of item ids
    * @param context input items context
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a [DependencyTree]
    */
-  fun decode(tokens: List<Int>,
+  fun decode(itemIds: List<Int>,
              context: ContextType,
              beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree {
 
-    val state = this.transitionSystem.getInitialState(itemIds = tokens)
+    val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
     while (!state.isTerminal) {
 

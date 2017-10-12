@@ -57,11 +57,7 @@ class SyntaxDecoder<
 
       if (this.verbose) { println(state) }
 
-      val actions = this.actionsGenerator.generateFrom(transitions = this.transitionSystem.getValidTransitions(state))
-
-      this.actionsScorer.score(actions = actions, context = context)
-
-      val bestAction = this.bestActionSelector.select(actions)
+      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(state, context)
 
       beforeApplyAction(bestAction) // external callback
 
@@ -69,6 +65,18 @@ class SyntaxDecoder<
     }
 
     return state.dependencyTree
+  }
+
+  /**
+   *
+   */
+  private fun getBestAction(state: StateType, context: ContextType): Transition<TransitionType, StateType>.Action {
+
+    val actions = this.actionsGenerator.generateFrom(transitions = this.transitionSystem.getValidTransitions(state))
+
+    this.actionsScorer.score(actions = actions, context = context)
+
+    return this.bestActionSelector.select(actions)
   }
 
   /**

@@ -7,6 +7,9 @@
 
 package com.kotlinnlp.transitionsystems.state
 
+import com.kotlinnlp.transitionsystems.state.items.ItemErrors
+import com.kotlinnlp.transitionsystems.state.items.ItemRelevance
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.utils.Clonable
 
 /**

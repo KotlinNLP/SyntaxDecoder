@@ -28,7 +28,7 @@ abstract class State<SelfType: State<SelfType>>(val itemIds: List<Int>) {
   abstract val isTerminal: Boolean
 
   /**
-   * @return a new copy of this [State].
+   * @return a new copy of this [State]
    */
   abstract fun copy(): SelfType
 }

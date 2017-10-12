@@ -7,7 +7,9 @@
 
 package com.kotlinnlp.transitionsystems.state
 
+import com.kotlinnlp.transitionsystems.utils.Clonable
+
 /**
  * The errors object associated to a [StateItem].
  */
-interface ItemErrors
+interface ItemErrors<SelfType: ItemErrors<SelfType>> : Clonable<SelfType>

@@ -7,10 +7,17 @@
 
 package com.kotlinnlp.transitionsystems.state
 
+import com.kotlinnlp.transitionsystems.utils.Clonable
+
 /**
  * The atomic item that composes a [State].
  */
-interface StateItem<out ErrorsType: ItemErrors, out RelevanceType: ItemRelevance> {
+interface StateItem<
+  SelfType: StateItem<SelfType, ErrorsType, RelevanceType>,
+  ErrorsType: ItemErrors<ErrorsType>,
+  RelevanceType: ItemRelevance<RelevanceType>>
+  :
+  Clonable<SelfType> {
 
   /**
    * The unique id of this item.

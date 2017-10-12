@@ -7,7 +7,9 @@
 
 package com.kotlinnlp.transitionsystems.state
 
+import com.kotlinnlp.transitionsystems.utils.Clonable
+
 /**
  * The relevance object associated to a [StateItem].
  */
-interface ItemRelevance
+interface ItemRelevance<SelfType: ItemRelevance<SelfType>> : Clonable<SelfType>

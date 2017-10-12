@@ -32,8 +32,9 @@ abstract class ActionsScorer<
    * Assign a score to each action of the given list.
    *
    * @param actions a list of actions to score
+   * @param context input items context
    */
-  abstract fun score(actions: List<Transition<TransitionType, StateType>.Action>)
+  abstract fun score(actions: List<Transition<TransitionType, StateType>.Action>, context: ContextType)
 
   /**
    * @return a map of Transitions to their related Actions

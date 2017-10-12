@@ -11,6 +11,7 @@ import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
+import com.kotlinnlp.transitionsystems.state.ItemsContext
 
 /**
  * The ActionsScorer.
@@ -21,9 +22,10 @@ abstract class ActionsScorer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   in StateViewType : StateView,
+  ContextType : ItemsContext<ContextType>,
   out FeaturesType : Features<*, *>>
 (
-  protected val featuresExtractor: FeaturesExtractor<StateViewType, FeaturesType>
+  protected val featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
 ) {
 
   /**

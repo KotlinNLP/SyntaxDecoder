@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer
+package com.kotlinnlp.transitionsystems.helpers.actionsscorer.features
 
 /**
- * The relevance object associated to the [Features].
+ * The errors object associated to the [Features].
  */
-interface FeaturesRelevance
+interface FeaturesErrors

@@ -8,12 +8,6 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 /**
- * The FeaturesExtractor.
+ * The view of a State, used to extract features.
  */
-interface FeaturesExtractor<in StateViewType : StateView, out FeaturesType : Features<*, *>> {
-
-  /**
-   *
-   */
-  fun extract(stateView: StateViewType): FeaturesType
-}
+interface StateView

@@ -7,7 +7,11 @@
 
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
+import com.kotlinnlp.transitionsystems.state.State
+
 /**
+ * The [StateView] based on [state] only.
  *
+ * @property state a [State]
  */
-interface FeaturesContext
+data class StateOnlyView<StateType : State<StateType>>(val state: StateType) : StateView

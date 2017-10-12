@@ -18,10 +18,10 @@ import com.kotlinnlp.transitionsystems.Transition
 abstract class ActionsScorer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in FeaturesContextType : FeaturesContext,
+  in StateViewType : StateView,
   out FeaturesType : Features<*, *>>
 (
-  protected val featuresExtractor: FeaturesExtractor<FeaturesContextType, FeaturesType>
+  protected val featuresExtractor: FeaturesExtractor<StateViewType, FeaturesType>
 ) {
 
   /**

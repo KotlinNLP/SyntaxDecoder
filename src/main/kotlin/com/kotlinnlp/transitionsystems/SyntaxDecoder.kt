@@ -53,14 +53,15 @@ class SyntaxDecoder<
 
     val state = this.transitionSystem.getInitialState(itemIds = tokens)
 
-    while (!state.isTerminal){
+    while (!state.isTerminal) {
+
       if (this.verbose) { println(state) }
 
-      val actions = this.getPossibleActions(state)
+      val actions = this.actionsGenerator.generateFrom(transitions = this.transitionSystem.getValidTransitions(state))
 
-      this.scoreActions(actions)
+      this.actionsScorer.score(actions = actions, context = context)
 
-      val bestAction = this.selectBestAction(actions)
+      val bestAction = this.bestActionSelector.select(actions)
 
       beforeApplyAction(bestAction) // external callback
 
@@ -73,25 +74,8 @@ class SyntaxDecoder<
   /**
    *
    */
-  private fun getPossibleActions(state: StateType): List<Transition<TransitionType, StateType>.Action> =
-    this.actionsGenerator.generateFrom(transitions = this.transitionSystem.getValidTransitions(state))
+  private fun applyAction(action: Transition<TransitionType, StateType>.Action) {
 
-  /**
-   *
-   */
-  private fun selectBestAction(actions: List<Transition<TransitionType, StateType>.Action>):
-    Transition<TransitionType, StateType>.Action = this.bestActionSelector.select(actions)
-
-  /**
-   *
-   */
-  private fun scoreActions(actions: List<Transition<TransitionType, StateType>.Action>)
-    = this.actionsScorer.score(actions)
-
-  /**
-   *
-   */
-  private fun applyAction(action: Transition<TransitionType, StateType>.Action){
     if (this.verbose) println("apply: ${action.transition}")
 
     action.apply()

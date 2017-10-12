@@ -27,8 +27,8 @@ object StackBufferStateSpec: Spek({
         assertEquals(true, state.isTerminal)
       }
 
-      on("clone") {
-        val clonedState = state.clone()
+      on("copy") {
+        val clonedState = state.copy()
 
         it("should contain empty stack and buffer") {
           assertEquals(true, clonedState.stack.isEmpty())
@@ -50,8 +50,8 @@ object StackBufferStateSpec: Spek({
         assertEquals(false, state.isTerminal)
       }
 
-      on("clone") {
-        val clonedState = state.clone()
+      on("copy") {
+        val clonedState = state.copy()
 
         it("should contain the same stack and buffer") {
           assertEquals(true, clonedState.stack == state.stack)
@@ -70,8 +70,8 @@ object StackBufferStateSpec: Spek({
 
       val state = StackBufferState(sentence)
 
-      on("clone") {
-        val clonedState = state.clone()
+      on("copy") {
+        val clonedState = state.copy()
 
         it("should contain the same dependencyTree") {
           assertEquals(true, clonedState.dependencyTree.match(state.dependencyTree))

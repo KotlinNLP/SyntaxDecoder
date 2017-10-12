@@ -32,7 +32,7 @@ class PendingListState(tokens: List<Int>) : State<PendingListState>(tokens) {
   /**
    * @return a new copy of this [State]
    */
-  override fun clone(): PendingListState {
+  override fun copy(): PendingListState {
 
     val clonedState = PendingListState(this.tokens)
 

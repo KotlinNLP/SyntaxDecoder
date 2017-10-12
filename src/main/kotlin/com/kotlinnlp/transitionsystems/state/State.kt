@@ -30,5 +30,5 @@ abstract class State<SelfType: State<SelfType>>(protected val tokens: List<Int>)
   /**
    * @return a new copy of this [State].
    */
-  abstract fun clone(): SelfType
+  abstract fun copy(): SelfType
 }

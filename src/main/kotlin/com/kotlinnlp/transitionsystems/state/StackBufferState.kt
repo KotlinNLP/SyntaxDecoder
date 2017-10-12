@@ -37,7 +37,7 @@ class StackBufferState(tokens: List<Int>) : State<StackBufferState>(tokens) {
   /**
    * @return a new copy of this [State]
    */
-  override fun clone(): StackBufferState {
+  override fun copy(): StackBufferState {
 
     val clonedState = StackBufferState(this.tokens)
 

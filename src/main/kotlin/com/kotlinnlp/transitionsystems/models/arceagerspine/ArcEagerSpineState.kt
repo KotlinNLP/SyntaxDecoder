@@ -67,7 +67,7 @@ class ArcEagerSpineState(tokens: List<Int>) : State<ArcEagerSpineState>(tokens) 
   /**
    * @return a new copy of this [State]
    */
-  override fun clone(): ArcEagerSpineState {
+  override fun copy(): ArcEagerSpineState {
 
     val clonedState = ArcEagerSpineState(this.tokens)
 

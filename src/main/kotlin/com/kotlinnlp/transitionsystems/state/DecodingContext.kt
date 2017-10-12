@@ -10,6 +10,6 @@ package com.kotlinnlp.transitionsystems.state
 import com.kotlinnlp.transitionsystems.utils.Clonable
 
 /**
- * The [ItemsContext] extends the input with adding properties.
+ * The [DecodingContext] extends the input with adding properties.
  */
-interface ItemsContext<SelfType: ItemsContext<SelfType>> : Clonable<SelfType>
+interface DecodingContext<SelfType: DecodingContext<SelfType>> : Clonable<SelfType>

@@ -10,7 +10,7 @@ package com.kotlinnlp.transitionsystems
 import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
-import com.kotlinnlp.transitionsystems.state.ItemsContext
+import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
@@ -31,7 +31,7 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 class SyntaxDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType: ItemsContext<ContextType>>
+  ContextType: DecodingContext<ContextType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,

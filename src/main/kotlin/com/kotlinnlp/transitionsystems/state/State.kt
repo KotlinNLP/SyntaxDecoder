@@ -12,14 +12,14 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 /**
  * The State.
  *
- * @property tokens the list of tokens used to initialize the state.
+ * @property itemIds the list of item ids used to initialize the state
  */
-abstract class State<SelfType: State<SelfType>>(protected val tokens: List<Int>) {
+abstract class State<SelfType: State<SelfType>>(val itemIds: List<Int>) {
 
   /**
    * Contains the set of arcs already created.
    */
-  var dependencyTree: DependencyTree = DependencyTree(this.tokens.size)
+  var dependencyTree: DependencyTree = DependencyTree(this.itemIds.size)
     protected set
 
   /**

@@ -10,9 +10,9 @@ package com.kotlinnlp.transitionsystems.state
 /**
  * The PendingListState.
  *
- * @property tokens the list of tokens used to initialize the state.
+ * @property itemIds the list of item ids used to initialize the state
  */
-class PendingListState(tokens: List<Int>) : State<PendingListState>(tokens) {
+class PendingListState(itemIds: List<Int>) : State<PendingListState>(itemIds) {
 
   /**
    * The PendingList.
@@ -27,14 +27,14 @@ class PendingListState(tokens: List<Int>) : State<PendingListState>(tokens) {
   /**
    * Initialize the state.
    */
-  init { this.tokens.mapTo(this.pendingList, { it }) }
+  init { this.itemIds.mapTo(this.pendingList, { it }) }
 
   /**
    * @return a new copy of this [State]
    */
   override fun copy(): PendingListState {
 
-    val clonedState = PendingListState(this.tokens)
+    val clonedState = PendingListState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
     clonedState.pendingList = ArrayList(this.pendingList)

@@ -13,9 +13,9 @@ import com.kotlinnlp.transitionsystems.utils.removeFrom
 /**
  * The ArcSpine State.
  *
- * @property tokens the list of tokens used to initialize the state.
+ * @property itemIds the list of item ids used to initialize the state
  */
-class ArcSpineState(tokens: List<Int>) : State<ArcSpineState>(tokens) {
+class ArcSpineState(itemIds: List<Int>) : State<ArcSpineState>(itemIds) {
 
   /**
    * StackElement.
@@ -84,14 +84,14 @@ class ArcSpineState(tokens: List<Int>) : State<ArcSpineState>(tokens) {
   /**
    * Initialize the state.
    */
-  init { this.tokens.mapTo(this.buffer, { it }) }
+  init { this.itemIds.mapTo(this.buffer, { it }) }
 
   /**
    * @return a new copy of this [State]
    */
   override fun copy(): ArcSpineState {
 
-    val clonedState = ArcSpineState(this.tokens)
+    val clonedState = ArcSpineState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
     clonedState.buffer = ArrayList(this.buffer)

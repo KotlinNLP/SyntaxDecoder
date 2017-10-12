@@ -27,13 +27,13 @@ abstract class TransitionSystem<StateType: State<StateType>, TransitionType: Tra
   abstract protected val transitionsGenerator: TransitionsGenerator<StateType, TransitionType>
 
   /**
-   * Initialization function, mapping an ordered list of [tokens] to an initial state.
+   * Initialization function, mapping an ordered list of [itemIds] to an initial state.
    *
-   * @param tokens the list of tokens used to initialize the state.
+   * @property itemIds the list of item ids used to initialize the state
    *
-   * @return a new initial [State].
+   * @return a new initialized [State]
    */
-  fun getInitialState(tokens: List<Int>): StateType = this.stateClass.constructors.first().call(tokens)
+  fun getInitialState(itemIds: List<Int>): StateType = this.stateClass.constructors.first().call(itemIds)
 
   /**
    * @param state the state from which to extract valid transitions.

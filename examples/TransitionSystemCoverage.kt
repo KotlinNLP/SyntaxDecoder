@@ -50,7 +50,7 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
 
     this.oracle.initialize(sentence.dependencyTree!!)
 
-    val state = this.transitionSystem.getInitialState(tokens = sentence.tokens)
+    val state = this.transitionSystem.getInitialState(itemIds = sentence.tokens)
 
     while (!state.isTerminal){
       if (this.verbose) { println(state) }

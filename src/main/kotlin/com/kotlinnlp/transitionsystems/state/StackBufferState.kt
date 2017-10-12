@@ -10,9 +10,9 @@ package com.kotlinnlp.transitionsystems.state
 /**
  * The StackBufferState.
  *
- * @property tokens the list of tokens used to initialize the state.
+ * @property itemIds the list of item ids used to initialize the state
  */
-class StackBufferState(tokens: List<Int>) : State<StackBufferState>(tokens) {
+class StackBufferState(itemIds: List<Int>) : State<StackBufferState>(itemIds) {
 
   /**
    * The buffer.
@@ -32,14 +32,14 @@ class StackBufferState(tokens: List<Int>) : State<StackBufferState>(tokens) {
   /**
    * Initialize the state.
    */
-  init { this.tokens.mapTo(this.buffer, { it }) }
+  init { this.itemIds.mapTo(this.buffer, { it }) }
 
   /**
    * @return a new copy of this [State]
    */
   override fun copy(): StackBufferState {
 
-    val clonedState = StackBufferState(this.tokens)
+    val clonedState = StackBufferState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
     clonedState.buffer = ArrayList(this.buffer)

@@ -18,12 +18,12 @@ interface StateItem<out ErrorsType: ItemErrors, out RelevanceType: ItemRelevance
   val id: Int
 
   /**
-   *
+   * The errors associated to this item.
    */
   val errors: ErrorsType
 
   /**
-   *
+   * The relevance associated to this item.
    */
   val relevance: RelevanceType
 }

@@ -10,7 +10,7 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 /**
  * The FeaturesExtractor.
  */
-interface FeaturesExtractor<in FeaturesContextType : FeaturesContext, out FeaturesType : Features> {
+interface FeaturesExtractor<in FeaturesContextType : FeaturesContext, out FeaturesType : Features<*, *>> {
 
   /**
    *

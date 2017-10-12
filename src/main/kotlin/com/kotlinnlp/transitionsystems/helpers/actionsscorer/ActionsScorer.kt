@@ -19,7 +19,7 @@ abstract class ActionsScorer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   in FeaturesContextType : FeaturesContext,
-  out FeaturesType : Features>
+  out FeaturesType : Features<*, *>>
 (
   protected val featuresExtractor: FeaturesExtractor<FeaturesContextType, FeaturesType>
 ) {

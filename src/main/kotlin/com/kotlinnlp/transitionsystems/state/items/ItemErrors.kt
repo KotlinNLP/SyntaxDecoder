@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.state
+package com.kotlinnlp.transitionsystems.state.items
 
 import com.kotlinnlp.transitionsystems.utils.Clonable
 
 /**
- * The relevance object associated to a [StateItem].
+ * The errors object associated to a [StateItem].
  */
-interface ItemRelevance<SelfType: ItemRelevance<SelfType>> : Clonable<SelfType>
+interface ItemErrors<SelfType: ItemErrors<SelfType>> : Clonable<SelfType>

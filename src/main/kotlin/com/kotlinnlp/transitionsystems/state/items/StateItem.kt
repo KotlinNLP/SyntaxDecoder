@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.state
+package com.kotlinnlp.transitionsystems.state.items
 
 import com.kotlinnlp.transitionsystems.utils.Clonable
 

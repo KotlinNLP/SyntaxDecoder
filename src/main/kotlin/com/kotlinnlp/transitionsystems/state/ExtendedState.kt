@@ -24,7 +24,7 @@ data class ExtendedState<
   ContextType: ItemsContext<ContextType>>(
   val state: StateType,
   val items: List<ItemType>,
-  val context: ContextType?
+  val context: ContextType
 ) : Clonable<SelfType> {
 
   /**
@@ -36,6 +36,6 @@ data class ExtendedState<
     return ExtendedState<SelfType, StateType, ItemErrorsType, ItemRelevanceType, ItemType, ContextType>(
       state = this.state.copy(),
       items = this.items.map { it.copy() },
-      context = this.context?.copy()) as SelfType
+      context = this.context.copy()) as SelfType
   }
 }

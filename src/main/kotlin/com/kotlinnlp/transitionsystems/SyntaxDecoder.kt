@@ -27,7 +27,6 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
  * @property actionsGenerator
  * @property actionsScorer
  * @property bestActionSelector
- * @property verbose
  */
 class SyntaxDecoder<
   StateType : State<StateType>,
@@ -37,8 +36,7 @@ class SyntaxDecoder<
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val actionsScorer: ActionsScorer<StateType, TransitionType, *, ContextType, *>,
-  private val bestActionSelector: BestActionSelector<StateType, TransitionType>,
-  private val verbose: Boolean = false
+  private val bestActionSelector: BestActionSelector<StateType, TransitionType>
 ) {
 
   /**
@@ -55,13 +53,11 @@ class SyntaxDecoder<
 
     while (!state.isTerminal) {
 
-      if (this.verbose) { println(state) }
-
       val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(state, context)
 
       beforeApplyAction(bestAction) // external callback
 
-      this.applyAction(bestAction)
+      bestAction.apply()
     }
 
     return state.dependencyTree
@@ -77,15 +73,5 @@ class SyntaxDecoder<
     this.actionsScorer.score(actions = actions, context = context)
 
     return this.bestActionSelector.select(actions)
-  }
-
-  /**
-   *
-   */
-  private fun applyAction(action: Transition<TransitionType, StateType>.Action) {
-
-    if (this.verbose) println("apply: ${action.transition}")
-
-    action.apply()
   }
 }

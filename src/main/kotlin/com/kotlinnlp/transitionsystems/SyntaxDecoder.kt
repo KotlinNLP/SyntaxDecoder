@@ -41,6 +41,7 @@ class SyntaxDecoder<
 
   /**
    * @param tokens a list of tokens id
+   * @param context input items context
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a [DependencyTree]
@@ -64,7 +65,12 @@ class SyntaxDecoder<
   }
 
   /**
+   * Get the best action to apply, given a [state] and an input [context].
    *
+   * @param state a [State]
+   * @param context input items context
+   *
+   * @return the best action to apply to the given [state]
    */
   private fun getBestAction(state: StateType, context: ContextType): Transition<TransitionType, StateType>.Action {
 

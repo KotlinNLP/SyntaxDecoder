@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.arcstandard
 
-import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
 import com.kotlinnlp.transitionsystems.helpers.TransitionsGenerator
 import com.kotlinnlp.transitionsystems.models.arcstandard.transitions.ArcLeft
 import com.kotlinnlp.transitionsystems.models.arcstandard.transitions.ArcRight

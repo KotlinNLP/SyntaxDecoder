@@ -8,7 +8,7 @@
 package com.kotlinnlp.transitionsystems.models.arcstandard
 
 import com.kotlinnlp.transitionsystems.*
-import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
 import kotlin.reflect.KClass
 
 /**

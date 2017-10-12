@@ -5,39 +5,47 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.state
+package com.kotlinnlp.transitionsystems.state.templates
+
+import com.kotlinnlp.transitionsystems.state.State
 
 /**
- * The PendingListState.
+ * The StackBufferState.
  *
  * @property itemIds the list of item ids used to initialize the state
  */
-class PendingListState(itemIds: List<Int>) : State<PendingListState>(itemIds) {
+class StackBufferState(itemIds: List<Int>) : State<StackBufferState>(itemIds) {
 
   /**
-   * The PendingList.
+   * The buffer.
    */
-  var pendingList = ArrayList<Int>()
+  var buffer = ArrayList<Int>()
+
+  /**
+   * The stack.
+   */
+  var stack = ArrayList<Int>()
 
   /**
    * True when the state reach the end.
    */
-  override val isTerminal get() = this.pendingList.isEmpty()
+  override val isTerminal get() = this.stack.isEmpty() && this.buffer.isEmpty()
 
   /**
    * Initialize the state.
    */
-  init { this.itemIds.mapTo(this.pendingList, { it }) }
+  init { this.itemIds.mapTo(this.buffer, { it }) }
 
   /**
    * @return a new copy of this [State]
    */
-  override fun copy(): PendingListState {
+  override fun copy(): StackBufferState {
 
-    val clonedState = PendingListState(this.itemIds)
+    val clonedState = StackBufferState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
-    clonedState.pendingList = ArrayList(this.pendingList)
+    clonedState.buffer = ArrayList(this.buffer)
+    clonedState.stack = ArrayList(this.stack)
 
     return clonedState
   }
@@ -45,5 +53,5 @@ class PendingListState(itemIds: List<Int>) : State<PendingListState>(itemIds) {
   /**
    * @return its string representation.
    */
-  override fun toString(): String = this.pendingList.toString()
+  override fun toString(): String = "S ${this.stack} B ${this.buffer}"
 }

@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.archybrid
 
-import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 

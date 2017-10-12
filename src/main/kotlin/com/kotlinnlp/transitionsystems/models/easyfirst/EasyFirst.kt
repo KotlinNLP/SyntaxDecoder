@@ -8,7 +8,7 @@
 package com.kotlinnlp.transitionsystems.models.easyfirst
 
 import com.kotlinnlp.transitionsystems.*
-import com.kotlinnlp.transitionsystems.state.PendingListState
+import com.kotlinnlp.transitionsystems.state.templates.PendingListState
 import kotlin.reflect.KClass
 
 /**

@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.arcswift
 
-import com.kotlinnlp.transitionsystems.state.StackBufferState
+import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
 import com.kotlinnlp.transitionsystems.helpers.TransitionsGenerator
 import com.kotlinnlp.transitionsystems.models.arcswift.transitions.ArcLeft
 import com.kotlinnlp.transitionsystems.models.arcswift.transitions.ArcRight

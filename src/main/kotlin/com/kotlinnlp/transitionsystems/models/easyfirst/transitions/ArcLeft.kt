@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.models.easyfirst.transitions
 
-import com.kotlinnlp.transitionsystems.state.PendingListState
+import com.kotlinnlp.transitionsystems.state.templates.PendingListState
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.models.easyfirst.EasyFirstTransition
 

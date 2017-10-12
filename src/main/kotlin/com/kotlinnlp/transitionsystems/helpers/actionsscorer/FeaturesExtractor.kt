@@ -14,7 +14,10 @@ import com.kotlinnlp.transitionsystems.state.ItemsContext
 /**
  * The FeaturesExtractor.
  */
-interface FeaturesExtractor<in StateViewType : StateView, out FeaturesType : Features<*, *>> {
+interface FeaturesExtractor<
+  in StateViewType : StateView,
+  ContextType : ItemsContext<ContextType>,
+  out FeaturesType : Features<*, *>> {
 
   /**
    * Extract features using the given [stateView] and an optional [itemsContext].
@@ -24,5 +27,5 @@ interface FeaturesExtractor<in StateViewType : StateView, out FeaturesType : Fea
    *
    * @return the extracted [Features]
    */
-  fun extract(stateView: StateViewType, itemsContext: ItemsContext<*>?): FeaturesType
+  fun extract(stateView: StateViewType, itemsContext: ContextType): FeaturesType
 }

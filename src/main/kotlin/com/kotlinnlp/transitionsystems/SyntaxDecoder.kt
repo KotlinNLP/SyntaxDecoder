@@ -40,6 +40,8 @@ class SyntaxDecoder<
 ) {
 
   /**
+   * Decode the syntax of the given items building a dependency tree.
+   *
    * @param itemIds a list of item ids
    * @param context input items context
    * @param beforeApplyAction callback called before applying the best action (optional)

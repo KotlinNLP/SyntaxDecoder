@@ -42,43 +42,23 @@ abstract class ActionsScorerTrainable<
   Trainable {
 
   /**
-   * The last scored actions.
-   */
-  lateinit private var lastScoredActions: List<Transition<TransitionType, StateType>.Action>
-
-  /**
-   * The [ExtendedState] of the last scored actions.
-   */
-  lateinit private var lastExtendedState: ExtendedStateType
-
-  /**
-   * Assign scores to the given [actions] using the [extendedState] and save them into [lastScoredActions] and
-   * [lastExtendedState].
+   * Backward errors through this [ActionsScorer], starting from the output actions, eventually accumulating them into
+   * proper structures.
+   * Errors are required to be already set into the output proper.
    *
-   * @param actions a list of actions to score
-   * @param extendedState the extended state containing items, context and state
+   * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
-  override fun score(actions: List<Transition<TransitionType, StateType>.Action>, extendedState: ExtendedStateType) {
+  override fun backward(propagateToInput: Boolean) {
 
-    this.assignScore(actions = actions, extendedState = extendedState)
+    this.propagateErrors()
 
-    this.lastScoredActions = actions
-    this.lastExtendedState = extendedState
+    if (this.featuresExtractor is FeaturesExtractorTrainable) {
+      this.featuresExtractor.backward(propagateToInput = propagateToInput)
+    }
   }
 
   /**
-   * Set the 'error' property of the last scored actions.
+   * Propagate errors through this [ActionsScorer], setting its features errors.
    */
-  fun setErrors() {
-    this.assignErrors(actions = this.lastScoredActions, extendedState = this.lastExtendedState)
-  }
-
-  /**
-   * Assign errors to the last scored actions.
-   *
-   * @param actions a list with the last scored actions
-   * @param extendedState the extended state of the last scored actions
-   */
-  abstract fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                            extendedState: ExtendedStateType)
+  abstract fun propagateErrors()
 }

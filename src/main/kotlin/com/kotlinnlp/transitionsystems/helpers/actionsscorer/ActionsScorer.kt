@@ -38,7 +38,7 @@ abstract class ActionsScorer<
    * @param actions a list of actions to score
    * @param extendedState the extended state containing items, context and state
    */
-  abstract protected fun score(actions: List<Transition<TransitionType, StateType>.Action>,
+  abstract fun score(actions: List<Transition<TransitionType, StateType>.Action>,
                                extendedState: ExtendedStateType)
 
   /**

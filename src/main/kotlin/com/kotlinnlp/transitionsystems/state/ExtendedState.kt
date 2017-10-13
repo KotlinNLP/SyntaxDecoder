@@ -16,12 +16,12 @@ import com.kotlinnlp.transitionsystems.utils.Clonable
  * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [DecodingContext].
  */
 data class ExtendedState<
-  SelfType: ExtendedState<SelfType, StateType, ItemErrorsType, ItemRelevanceType, ItemType, ContextType>,
-  StateType: State<StateType>,
-  ItemErrorsType: ItemErrors<ItemErrorsType>,
-  ItemRelevanceType: ItemRelevance<ItemRelevanceType>,
-  ItemType: StateItem<ItemType, ItemErrorsType, ItemRelevanceType>,
-  ContextType: DecodingContext<ContextType>>(
+  SelfType : ExtendedState<SelfType, StateType, ItemErrorsType, ItemRelevanceType, ItemType, ContextType>,
+  StateType : State<StateType>,
+  ItemErrorsType : ItemErrors<ItemErrorsType>,
+  ItemRelevanceType : ItemRelevance<ItemRelevanceType>,
+  ItemType : StateItem<ItemType, ItemErrorsType, ItemRelevanceType>,
+  ContextType : DecodingContext<ContextType>>(
   val state: StateType,
   val items: List<ItemType>,
   val context: ContextType

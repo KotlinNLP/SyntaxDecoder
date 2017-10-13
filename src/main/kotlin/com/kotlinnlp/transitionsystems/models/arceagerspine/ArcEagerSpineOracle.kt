@@ -82,7 +82,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
 
     if (this.isDependentReachable && !this.isArcCorrect) cost += 1
 
-    cost += state.stack.last().sumBy {
+    cost += this.state.stack.last().sumBy {
       reachableDependents.intersect(goldDependencyTree.dependents[it].right).size
     }
 

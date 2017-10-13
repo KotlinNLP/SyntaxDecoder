@@ -17,10 +17,10 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
  *
  * (σ|ik| . . . |i1, j|β, A) ⇒ (σ|ik|j, β, A ∪ {(ik → j)})
  *
- * @property state the [State] on which this transition operates.
- * @property k the position of the k-th node of the stack.
+ * @property state the [State] on which this transition operates
+ * @property governorStackIndex the position in the stack of the governor element
  */
-class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), SyntacticDependency {
+class ArcRight(state: StackBufferState, val governorStackIndex: Int): ArcSwiftTransition(state), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,7 +35,7 @@ class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), 
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack[this.k]
+  override val governorId: Int get() = this.state.stack[this.governorStackIndex]
 
   /**
    * The dependent id.
@@ -47,31 +47,31 @@ class ArcRight(state: StackBufferState, val k: Int): ArcSwiftTransition(state), 
    */
   override val isAllowed: Boolean get () =
     this.state.buffer.isNotEmpty()
-      && this.k <= this.state.stack.lastIndex
-      && (this.k == 0 || this.attachedElementsUntilK)
+      && this.governorStackIndex <= this.state.stack.lastIndex
+      && (this.governorStackIndex == 0 || this.attachedElementsUntilK)
 
   /**
-   * True if all the elements until k are already attached
+   * True if all the elements until [governorStackIndex] are already attached.
    */
   private val attachedElementsUntilK: Boolean get() =
-    this.state.stack.subList(0, this.k - 1).all { this.state.dependencyTree.isAttached(it) }
+    this.state.stack.subList(0, this.governorStackIndex - 1).all { this.state.dependencyTree.isAttached(it) }
 
   /**
-   * Ensures that the value of 'k' is within the limits.
+   * Ensures that the value of 'governorStackIndex' is within the limits.
    */
-  init { require(this.k >= 0) }
+  init { require(this.governorStackIndex >= 0) }
 
   /**
    * Apply this transition on its [state].
    * It requires that the transition [isAllowed] on its [state].
    */
   override fun perform() {
-    this.state.stack = ArrayList(this.state.stack.slice(this.k .. this.state.stack.lastIndex))
+    this.state.stack = ArrayList(this.state.stack.slice(this.governorStackIndex.. this.state.stack.lastIndex))
     this.state.stack.add(0, this.state.buffer.removeFirst())
   }
 
   /**
-   * @return the string representation of this transition.
+   * @return the string representation of this transition
    */
-  override fun toString(): String = "arc-right(${this.k})"
+  override fun toString(): String = "arc-right(${this.governorStackIndex})"
 }

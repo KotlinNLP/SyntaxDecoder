@@ -43,10 +43,10 @@ abstract class ActionsScorerTrainable<
 
   /**
    * Backward errors through this [ActionsScorer], starting from the output actions, eventually accumulating them into
-   * proper structures.
-   * Errors are required to be already set into the output proper.
+   * proper structures, and call the backward of the [featuresExtractor] if it is [Trainable].
+   * Errors are required to be already set into the output actions properly.
    *
-   * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
+   * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   override fun backward(propagateToInput: Boolean) {
 

@@ -18,7 +18,7 @@ interface Trainable : ExampleScheduling, BatchScheduling, EpochScheduling {
 
   /**
    * Backward errors through this object, starting from the output, eventually accumulating them into proper structures.
-   * Errors are required to be already set into the output.
+   * Errors are required to be already set into the output properly.
    *
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */

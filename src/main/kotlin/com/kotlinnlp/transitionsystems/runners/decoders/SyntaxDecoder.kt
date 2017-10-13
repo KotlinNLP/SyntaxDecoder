@@ -9,6 +9,9 @@ package com.kotlinnlp.transitionsystems.runners.decoders
 
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.TransitionSystem
+import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
+import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
@@ -36,9 +39,12 @@ abstract class SyntaxDecoder<
   ItemType : StateItem<ItemType, *, *>,
   ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
 (
-  protected val transitionSystem: TransitionSystem<
+  protected val transitionSystem: TransitionSystem<StateType, TransitionType>,
+  private val itemsFactory: ItemsFactory<ItemType>,
+  private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
+  private val actionsScorer: ActionsScorer<
     StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  private val itemsFactory: ItemsFactory<ItemType>
+  private val bestActionSelector: BestActionSelector<StateType, TransitionType>
 ) {
 
   /**
@@ -72,4 +78,21 @@ abstract class SyntaxDecoder<
   abstract protected fun decodeInitialState(
     extendedState: ExtendedStateType,
     beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree
+
+  /**
+   * Get the best action to apply, given a [State] and an [ExtendedState].
+   *
+   * @param extendedState the [ExtendedState] containing items, context and state
+   *
+   * @return the best action to apply to the given state
+   */
+  protected fun getBestAction(extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
+
+    val actions = this.actionsGenerator.generateFrom(
+      transitions = this.transitionSystem.generateTransitions(extendedState.state))
+
+    this.actionsScorer.score(actions = actions, extendedState = extendedState)
+
+    return this.bestActionSelector.select(actions)
+  }
 }

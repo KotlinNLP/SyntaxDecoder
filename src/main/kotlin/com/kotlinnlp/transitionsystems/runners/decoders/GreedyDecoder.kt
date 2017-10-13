@@ -9,6 +9,9 @@ package com.kotlinnlp.transitionsystems.runners.decoders
 
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.TransitionSystem
+import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
+import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
@@ -37,14 +40,20 @@ class GreedyDecoder<
   ItemType : StateItem<ItemType, *, *>,
   ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
 (
-  transitionSystem: TransitionSystem<
+  transitionSystem: TransitionSystem<StateType, TransitionType>,
+  itemsFactory: ItemsFactory<ItemType>,
+  actionsGenerator: ActionsGenerator<StateType, TransitionType>,
+  actionsScorer: ActionsScorer<
     StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  itemsFactory: ItemsFactory<ItemType>
-) : SyntaxDecoder<
-  StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>(
-  transitionSystem,
-  itemsFactory
-) {
+  bestActionSelector: BestActionSelector<StateType, TransitionType>
+) :
+  SyntaxDecoder<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>(
+    transitionSystem,
+    itemsFactory,
+    actionsGenerator,
+    actionsScorer,
+    bestActionSelector
+  ) {
 
   /**
    * @param extendedState the [ExtendedState] containing items, context and state
@@ -55,7 +64,7 @@ class GreedyDecoder<
 
     while (!extendedState.state.isTerminal) {
 
-      val bestAction: Transition<TransitionType, StateType>.Action = this.transitionSystem.getBestAction(extendedState)
+      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(extendedState)
 
       beforeApplyAction(bestAction) // external callback
 

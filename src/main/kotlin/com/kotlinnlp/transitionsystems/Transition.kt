@@ -45,12 +45,12 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner abstract class Action internal constructor(val id: Int = -1, var score: Double) {
 
     /**
-     * @return the state on which this action operates.
+     * The state on which this action operates.
      */
     val state: StateType = this@Transition.state
 
     /**
-     * @return the [Transition] from which this [Action] originated.
+     * The [Transition] from which this [Action] originated.
      */
     @Suppress("UNCHECKED_CAST")
     val transition: SelfType = this@Transition as SelfType

@@ -7,11 +7,12 @@
 
 package com.kotlinnlp.transitionsystems
 
-import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
-import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
@@ -23,40 +24,40 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
  * on the input sentence, to which transitions are applied repeatedly generating new states
  * until the final state is reached.
  *
- * @property transitionSystem
- * @property actionsGenerator
- * @property actionsScorer
- * @property bestActionSelector
+ * @property transitionSystem a [TransitionSystem]
  */
 class SyntaxDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType: DecodingContext<ContextType>>
+  in StateViewType : StateView,
+  ContextType : DecodingContext<ContextType>,
+  out FeaturesType : Features<*, *>,
+  ItemType : StateItem<ItemType, *, *>,
+  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
 (
-  private val transitionSystem: TransitionSystem<StateType, TransitionType>,
-  private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  private val actionsScorer: ActionsScorer<StateType, TransitionType, *, ContextType, *>,
-  private val bestActionSelector: BestActionSelector<StateType, TransitionType>
+  private val transitionSystem: TransitionSystem<
+    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>
 ) {
 
   /**
    * Decode the syntax of the given items building a dependency tree.
    *
    * @param itemIds a list of item ids
-   * @param context input items context
+   * @param extendedState the [ExtendedState] containing items, context and state
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a [DependencyTree]
    */
   fun decode(itemIds: List<Int>,
-             context: ContextType,
+             extendedState: ExtendedStateType,
              beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree {
 
     val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
     while (!state.isTerminal) {
 
-      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(state, context)
+      val bestAction: Transition<TransitionType, StateType>.Action
+        = this.transitionSystem.getBestAction(state = state, extendedState = extendedState)
 
       beforeApplyAction(bestAction) // external callback
 
@@ -64,22 +65,5 @@ class SyntaxDecoder<
     }
 
     return state.dependencyTree
-  }
-
-  /**
-   * Get the best action to apply, given a [state] and an input [context].
-   *
-   * @param state a [State]
-   * @param context input items context
-   *
-   * @return the best action to apply to the given [state]
-   */
-  private fun getBestAction(state: StateType, context: ContextType): Transition<TransitionType, StateType>.Action {
-
-    val actions = this.actionsGenerator.generateFrom(transitions = this.transitionSystem.getValidTransitions(state))
-
-    this.actionsScorer.score(actions = actions, context = context)
-
-    return this.bestActionSelector.select(actions)
   }
 }

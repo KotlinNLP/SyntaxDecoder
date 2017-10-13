@@ -7,14 +7,35 @@
 
 package com.kotlinnlp.transitionsystems
 
+import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
+import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.TransitionsGenerator
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
+import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 import kotlin.reflect.KClass
 
 /**
  * The TransitionSystem.
  */
-abstract class TransitionSystem<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>> {
+abstract class TransitionSystem<
+  StateType : State<StateType>,
+  TransitionType : Transition<TransitionType, StateType>,
+  in StateViewType : StateView,
+  ContextType : DecodingContext<ContextType>,
+  out FeaturesType : Features<*, *>,
+  ItemType : StateItem<ItemType, *, *>,
+  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+(
+  private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
+  private val actionsScorer: ActionsScorer<
+    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
+  private val bestActionSelector: BestActionSelector<StateType, TransitionType>
+) {
 
   /**
    * The [KClass] of the StateType used in the [getInitialState] function.
@@ -36,9 +57,19 @@ abstract class TransitionSystem<StateType: State<StateType>, TransitionType: Tra
   fun getInitialState(itemIds: List<Int>): StateType = this.stateClass.constructors.first().call(itemIds)
 
   /**
-   * @param state the state from which to extract valid transitions.
+   * Get the best action to apply, given a [State] and an [ExtendedState].
    *
-   * @return a list of valid transitions for the given [state].
+   * @param state a [State]
+   * @param extendedState the [ExtendedState] containing items, context and state
+   *
+   * @return the best action to apply to the given [state]
    */
-  fun getValidTransitions(state: StateType): List<TransitionType> = this.transitionsGenerator.generate(state)
+  fun getBestAction(state: StateType, extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
+
+    val actions = this.actionsGenerator.generateFrom(transitions = this.transitionsGenerator.generate(state))
+
+    this.actionsScorer.score(actions = actions, extendedState = extendedState)
+
+    return this.bestActionSelector.select(actions)
+  }
 }

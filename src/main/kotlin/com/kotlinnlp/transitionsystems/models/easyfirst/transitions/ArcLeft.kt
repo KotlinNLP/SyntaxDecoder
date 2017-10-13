@@ -10,13 +10,15 @@ package com.kotlinnlp.transitionsystems.models.easyfirst.transitions
 import com.kotlinnlp.transitionsystems.state.templates.PendingListState
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.models.easyfirst.EasyFirstTransition
+import com.kotlinnlp.transitionsystems.models.easyfirst.FocusedArc
 
 /**
  * The ArcLeft transition.
  *
  * @property state the [State] on which this transition operates
+ * @property pendingListFocus the index of the focus element in the pending list
  */
-class ArcLeft(state: PendingListState, val i: Int) : EasyFirstTransition(state) {
+class ArcLeft(state: PendingListState, override val pendingListFocus: Int) : FocusedArc, EasyFirstTransition(state) {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -31,28 +33,28 @@ class ArcLeft(state: PendingListState, val i: Int) : EasyFirstTransition(state) 
   /**
    * The governor id.
    */
-  override val governorId: Int get() = state.pendingList[this.i + 1]
+  override val governorId: Int get() = state.pendingList[this.pendingListFocus + 1]
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = state.pendingList[this.i]
+  override val dependentId: Int get() = state.pendingList[this.pendingListFocus]
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.i in 0 .. this.state.pendingList.size
+  override val isAllowed: Boolean get() = this.pendingListFocus in 0 .. this.state.pendingList.size
 
   /**
    * Apply this transition on its [state].
    * It requires that the transition [isAllowed] on its [state].
    */
   override fun perform() {
-    this.state.pendingList.removeAt(this.i) // remove the dependent
+    this.state.pendingList.removeAt(this.pendingListFocus) // remove the dependent
   }
 
   /**
-   * @return the string representation of this transition.
+   * @return the string representation of this transition
    */
-  override fun toString(): String = "arc-left(${this.i})"
+  override fun toString(): String = "arc-left(${this.pendingListFocus})"
 }

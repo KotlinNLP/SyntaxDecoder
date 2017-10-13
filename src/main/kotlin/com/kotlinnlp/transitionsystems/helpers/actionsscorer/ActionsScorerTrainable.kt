@@ -9,7 +9,6 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.FeaturesErrors
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.State
@@ -22,12 +21,11 @@ import com.kotlinnlp.transitionsystems.state.State
 abstract class ActionsScorerTrainable<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  out FeaturesErrorsType : FeaturesErrors,
   in StateViewType : StateView,
   ContextType : DecodingContext<ContextType>,
-  out FeaturesType : Features<FeaturesErrorsType, *>>
+  out FeaturesType : Features<*, *>>
 (
   featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
 ) :
   ActionsScorer<StateType, TransitionType, StateViewType, ContextType, FeaturesType>(featuresExtractor),
-  Trainable<FeaturesErrorsType>
+  Trainable

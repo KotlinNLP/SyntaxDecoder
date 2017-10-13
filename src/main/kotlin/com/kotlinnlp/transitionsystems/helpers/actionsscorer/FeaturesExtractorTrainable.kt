@@ -8,7 +8,6 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.FeaturesErrors
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 
@@ -18,8 +17,7 @@ import com.kotlinnlp.transitionsystems.state.DecodingContext
 interface FeaturesExtractorTrainable<
   in StateViewType : StateView,
   ContextType : DecodingContext<ContextType>,
-  out InputErrorsType : FeaturesErrors,
   out FeaturesType : Features<*, *>>
   :
   FeaturesExtractor<StateViewType, ContextType, FeaturesType>,
-  Trainable<InputErrorsType>
+  Trainable

@@ -14,7 +14,7 @@ import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.ExampleS
 /**
  * Define a trainable object, with time scheduling and errors propagation.
  */
-interface Trainable<out InputErrorsType> : ExampleScheduling, BatchScheduling, EpochScheduling {
+interface Trainable : ExampleScheduling, BatchScheduling, EpochScheduling {
 
   /**
    * Backward errors through this object, starting from the output, eventually accumulating them into proper structures.

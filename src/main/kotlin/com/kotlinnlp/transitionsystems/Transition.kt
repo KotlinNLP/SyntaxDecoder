@@ -56,6 +56,11 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     val transition: SelfType = this@Transition as SelfType
 
     /**
+     * The error of the [score].
+     */
+    var error: Double = 0.0
+
+    /**
      * @return the state modified by this [Action]
      */
     fun apply(): StateType {

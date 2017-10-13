@@ -7,8 +7,6 @@
 
 package com.kotlinnlp.transitionsystems.state
 
-import com.kotlinnlp.transitionsystems.state.items.ItemErrors
-import com.kotlinnlp.transitionsystems.state.items.ItemRelevance
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.utils.Clonable
 
@@ -16,11 +14,9 @@ import com.kotlinnlp.transitionsystems.utils.Clonable
  * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [DecodingContext].
  */
 data class ExtendedState<
-  SelfType : ExtendedState<SelfType, StateType, ItemErrorsType, ItemRelevanceType, ItemType, ContextType>,
+  SelfType : ExtendedState<SelfType, StateType, ItemType, ContextType>,
   StateType : State<StateType>,
-  ItemErrorsType : ItemErrors<ItemErrorsType>,
-  ItemRelevanceType : ItemRelevance<ItemRelevanceType>,
-  ItemType : StateItem<ItemType, ItemErrorsType, ItemRelevanceType>,
+  ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>>(
   val state: StateType,
   val items: List<ItemType>,
@@ -33,7 +29,7 @@ data class ExtendedState<
   override fun copy(): SelfType {
 
     @Suppress("UNCHECKED_CAST")
-    return ExtendedState<SelfType, StateType, ItemErrorsType, ItemRelevanceType, ItemType, ContextType>(
+    return ExtendedState<SelfType, StateType, ItemType, ContextType>(
       state = this.state.copy(),
       items = this.items.map { it.copy() },
       context = this.context.copy()) as SelfType

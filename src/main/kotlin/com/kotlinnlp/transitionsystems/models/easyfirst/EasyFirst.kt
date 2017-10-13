@@ -24,7 +24,7 @@ class EasyFirst : TransitionSystem<PendingListState, EasyFirstTransition>() {
   override val stateClass: KClass<PendingListState> = PendingListState::class
 
   /**
-   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
+   * The TransitionsGenerator used to generate the next valid transitions given a [State].
    */
   override val transitionsGenerator = EasyFirstTransitionsGenerator()
 }

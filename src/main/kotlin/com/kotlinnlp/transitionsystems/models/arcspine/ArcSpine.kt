@@ -21,7 +21,7 @@ class ArcSpine : TransitionSystem<ArcSpineState, ArcSpineTransition>() {
   override val stateClass: KClass<ArcSpineState> = ArcSpineState::class
 
   /**
-   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
+   * The TransitionsGenerator used to generate the next valid transitions given a [State].
    */
   override val transitionsGenerator = ArcSpineTransitionsGenerator()
 }

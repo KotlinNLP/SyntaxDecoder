@@ -21,7 +21,7 @@ class ArcEagerSpine : TransitionSystem<ArcEagerSpineState, ArcEagerSpineTransiti
   override val stateClass: KClass<ArcEagerSpineState> = ArcEagerSpineState::class
 
   /**
-   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
+   * The TransitionsGenerator used to generate the next valid transitions given a [State].
    */
   override val transitionsGenerator = ArcEagerSpineTransitionsGenerator()
 }

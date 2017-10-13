@@ -25,7 +25,7 @@ class ArcStandard : TransitionSystem<StackBufferState, ArcStandardTransition>() 
   override val stateClass: KClass<StackBufferState> = StackBufferState::class
 
   /**
-   * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
+   * The TransitionsGenerator used to generate the next valid transitions given a [State].
    */
   override val transitionsGenerator = ArcStandardTransitionsGenerator()
 }

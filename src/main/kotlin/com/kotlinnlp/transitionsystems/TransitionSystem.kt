@@ -61,7 +61,7 @@ abstract class TransitionSystem<
    *
    * @param extendedState the [ExtendedState] containing items, context and state
    *
-   * @return the best action to apply to the given [state]
+   * @return the best action to apply to the given state
    */
   fun getBestAction(extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
 

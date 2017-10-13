@@ -12,6 +12,8 @@ import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 
 /**
  * The ActionsScorer.
@@ -23,18 +25,32 @@ abstract class ActionsScorer<
   TransitionType : Transition<TransitionType, StateType>,
   in StateViewType : StateView,
   ContextType : DecodingContext<ContextType>,
-  out FeaturesType : Features<*, *>>
+  out FeaturesType : Features<*, *>,
+  ItemType : StateItem<ItemType, *, *>,
+  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
 (
   protected val featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
 ) {
 
   /**
-   * Assign a score to each action of the given list.
+   * Assign scores to the given [actions] using the [extendedState].
    *
    * @param actions a list of actions to score
-   * @param context input items context
+   * @param extendedState the extended state containing items, context and state
    */
-  abstract fun score(actions: List<Transition<TransitionType, StateType>.Action>, context: ContextType)
+  open fun score(actions: List<Transition<TransitionType, StateType>.Action>, extendedState: ExtendedStateType) {
+
+    this.assignScore(actions = actions, extendedState = extendedState)
+  }
+
+  /**
+   * Abstract fun that assign a score to each action of the given list.
+   *
+   * @param actions a list of actions to score
+   * @param extendedState the extended state containing items, context and state
+   */
+  abstract protected fun assignScore(actions: List<Transition<TransitionType, StateType>.Action>,
+                                     extendedState: ExtendedStateType)
 
   /**
    * @return a map of Transitions to their related Actions

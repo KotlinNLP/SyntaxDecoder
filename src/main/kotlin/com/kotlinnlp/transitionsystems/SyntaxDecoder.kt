@@ -12,21 +12,20 @@ import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.ItemsFactory
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
- * The SyntaxDecoder.
+ * The [SyntaxDecoder] decodes the implicit syntax of a list of items building a dependency tree.
  *
- * Processes the input sentence by means of transitions which incrementally build the dependency tree.
- *
- * The algorithm uses a transition-based system. The system is initialized to an initial state based
- * on the input sentence, to which transitions are applied repeatedly generating new states
- * until the final state is reached.
+ * It uses a transition-based system that evolves an initial state by means of transitions until a final state is
+ * reached.
  *
  * @property transitionSystem a [TransitionSystem]
+ * @property itemsFactory the factory of new [StateItem]s
  */
-class SyntaxDecoder<
+abstract class SyntaxDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   in StateViewType : StateView,
@@ -35,35 +34,40 @@ class SyntaxDecoder<
   ItemType : StateItem<ItemType, *, *>,
   ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
 (
-  private val transitionSystem: TransitionSystem<
-    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>
+  protected val transitionSystem: TransitionSystem<
+    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
+  private val itemsFactory: ItemsFactory<ItemType>
 ) {
 
   /**
    * Decode the syntax of the given items building a dependency tree.
    *
    * @param itemIds a list of item ids
-   * @param extendedState the [ExtendedState] containing items, context and state
+   * @param context a generic [DecodingContext] used to decode
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a [DependencyTree]
    */
   fun decode(itemIds: List<Int>,
-             extendedState: ExtendedStateType,
+             context: ContextType,
              beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree {
 
-    val state: StateType = this.transitionSystem.getInitialState(itemIds)
+    @Suppress("UNCHECKED_CAST")
+    val extendedState: ExtendedStateType = ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>(
+      state = this.transitionSystem.getInitialState(itemIds),
+      items = itemIds.map { id -> this.itemsFactory(id) },
+      context = context) as ExtendedStateType
 
-    while (!state.isTerminal) {
-
-      val bestAction: Transition<TransitionType, StateType>.Action
-        = this.transitionSystem.getBestAction(state = state, extendedState = extendedState)
-
-      beforeApplyAction(bestAction) // external callback
-
-      bestAction.apply()
-    }
-
-    return state.dependencyTree
+    return this.decodeInitialState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
   }
+
+  /**
+   * Decode the syntax starting from an initial state building a dependency tree.
+   *
+   * @param extendedState the [ExtendedState] containing items, context and state
+   * @param beforeApplyAction callback called before applying the best action (optional)
+   */
+  abstract protected fun decodeInitialState(
+    extendedState: ExtendedStateType,
+    beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree
 }

@@ -11,7 +11,9 @@ import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 
 /**
  * The ActionsScorer that implements [Trainable].
@@ -23,9 +25,60 @@ abstract class ActionsScorerTrainable<
   TransitionType : Transition<TransitionType, StateType>,
   in StateViewType : StateView,
   ContextType : DecodingContext<ContextType>,
-  out FeaturesType : Features<*, *>>
+  out FeaturesType : Features<*, *>,
+  ItemType : StateItem<ItemType, *, *>,
+  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
 (
   featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
 ) :
-  ActionsScorer<StateType, TransitionType, StateViewType, ContextType, FeaturesType>(featuresExtractor),
-  Trainable
+  ActionsScorer<
+    StateType,
+    TransitionType,
+    StateViewType,
+    ContextType,
+    FeaturesType,
+    ItemType,
+    ExtendedStateType>(featuresExtractor),
+  Trainable {
+
+  /**
+   * The last scored actions.
+   */
+  lateinit private var lastScoredActions: List<Transition<TransitionType, StateType>.Action>
+
+  /**
+   * The [ExtendedState] of the last scored actions.
+   */
+  lateinit private var lastExtendedState: ExtendedStateType
+
+  /**
+   * Assign scores to the given [actions] using the [extendedState] and save them into [lastScoredActions] and
+   * [lastExtendedState].
+   *
+   * @param actions a list of actions to score
+   * @param extendedState the extended state containing items, context and state
+   */
+  override fun score(actions: List<Transition<TransitionType, StateType>.Action>, extendedState: ExtendedStateType) {
+
+    this.assignScore(actions = actions, extendedState = extendedState)
+
+    this.lastScoredActions = actions
+    this.lastExtendedState = extendedState
+  }
+
+  /**
+   * Set the 'error' property of the last scored actions.
+   */
+  fun setErrors() {
+    this.assignErrors(actions = this.lastScoredActions, extendedState = this.lastExtendedState)
+  }
+
+  /**
+   * Assign errors to the last scored actions.
+   *
+   * @param actions a list with the last scored actions
+   * @param extendedState the extended state of the last scored actions
+   */
+  abstract fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+                            extendedState: ExtendedStateType)
+}

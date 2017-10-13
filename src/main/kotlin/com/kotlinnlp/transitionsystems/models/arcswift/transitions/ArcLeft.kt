@@ -16,10 +16,10 @@ import com.kotlinnlp.transitionsystems.models.arcswift.ArcSwiftTransition
  *
  * (σ|ik| . . . |i1, j|β, A) ⇒ (σ, j|β, A ∪ {(j → ik)})
  *
- * @property state the [State] on which this transition operates.
- * @property k the position of the k-th node of the stack.
+ * @property state the [State] on which this transition operates
+ * @property dependentStackIndex the position in the stack of the dependent element
  */
-class ArcLeft(state: StackBufferState, val k: Int) : ArcSwiftTransition(state), SyntacticDependency {
+class ArcLeft(state: StackBufferState, val dependentStackIndex: Int) : ArcSwiftTransition(state), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -39,30 +39,30 @@ class ArcLeft(state: StackBufferState, val k: Int) : ArcSwiftTransition(state), 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.state.stack[this.k]
+  override val dependentId: Int get() = this.state.stack[this.dependentStackIndex]
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.buffer.isNotEmpty() && this.k <= this.state.stack.lastIndex &&
-      this.state.dependencyTree.isUnattached(this.state.stack[this.k])
+    this.state.buffer.isNotEmpty() && this.dependentStackIndex <= this.state.stack.lastIndex &&
+      this.state.dependencyTree.isUnattached(this.state.stack[this.dependentStackIndex])
 
   /**
-   * Ensures that the value of 'k' is within the limits.
+   * Ensures that the value of 'dependentStackIndex' is within the limits.
    */
-  init { require(this.k >= 0) }
+  init { require(this.dependentStackIndex >= 0) }
 
   /**
    * Apply this transition on its [state].
    * It requires that the transition [isAllowed] on its [state].
    */
   override fun perform() {
-    this.state.stack = ArrayList(this.state.stack.slice(this.k + 1 .. this.state.stack.lastIndex))
+    this.state.stack = ArrayList(this.state.stack.slice(this.dependentStackIndex + 1 .. this.state.stack.lastIndex))
   }
 
   /**
    * @return the string representation of this transition.
    */
-  override fun toString(): String = "arc-left(${this.k})"
+  override fun toString(): String = "arc-left(${this.dependentStackIndex})"
 }

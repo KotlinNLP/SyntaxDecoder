@@ -33,24 +33,13 @@ abstract class ActionsScorer<
 ) {
 
   /**
-   * Assign scores to the given [actions] using the [extendedState].
+   * Assign scores to the given [actions] using the [extendedState] as context.
    *
    * @param actions a list of actions to score
    * @param extendedState the extended state containing items, context and state
    */
-  open fun score(actions: List<Transition<TransitionType, StateType>.Action>, extendedState: ExtendedStateType) {
-
-    this.assignScore(actions = actions, extendedState = extendedState)
-  }
-
-  /**
-   * Abstract fun that assign a score to each action of the given list.
-   *
-   * @param actions a list of actions to score
-   * @param extendedState the extended state containing items, context and state
-   */
-  abstract protected fun assignScore(actions: List<Transition<TransitionType, StateType>.Action>,
-                                     extendedState: ExtendedStateType)
+  abstract protected fun score(actions: List<Transition<TransitionType, StateType>.Action>,
+                               extendedState: ExtendedStateType)
 
   /**
    * @return a map of Transitions to their related Actions

@@ -1,0 +1,67 @@
+/* Copyright 2017-present The KotlinNLP Authors. All Rights Reserved.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * ------------------------------------------------------------------*/
+
+package com.kotlinnlp.transitionsystems.runners.decoders
+
+import com.kotlinnlp.transitionsystems.Transition
+import com.kotlinnlp.transitionsystems.TransitionSystem
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
+import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
+import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.ItemsFactory
+import com.kotlinnlp.transitionsystems.state.items.StateItem
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
+
+/**
+ * The GreedyDecoder decodes the syntax of a list of items building a dependency tree.
+ *
+ * It uses a transition-based system that evolves an initial state by means of transitions until a final state is
+ * reached.
+ *
+ * The transition applied to a state is chosen with a greedy approach, looking for the best local one.
+ *
+ * @property transitionSystem a [TransitionSystem]
+ */
+class GreedyDecoder<
+  StateType : State<StateType>,
+  TransitionType : Transition<TransitionType, StateType>,
+  in StateViewType : StateView,
+  ContextType : DecodingContext<ContextType>,
+  out FeaturesType : Features<*, *>,
+  ItemType : StateItem<ItemType, *, *>,
+  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+(
+  transitionSystem: TransitionSystem<
+    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
+  itemsFactory: ItemsFactory<ItemType>
+) : SyntaxDecoder<
+  StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>(
+  transitionSystem,
+  itemsFactory
+) {
+
+  /**
+   * @param extendedState the [ExtendedState] containing items, context and state
+   */
+  override fun decodeInitialState(
+    extendedState: ExtendedStateType,
+    beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit): DependencyTree {
+
+    while (!extendedState.state.isTerminal) {
+
+      val bestAction: Transition<TransitionType, StateType>.Action = this.transitionSystem.getBestAction(extendedState)
+
+      beforeApplyAction(bestAction) // external callback
+
+      bestAction.apply()
+    }
+
+    return extendedState.state.dependencyTree
+  }
+}

@@ -101,7 +101,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     cost += reachableDependents.intersect(
       goldDependencyTree.dependents[this.dependentId].left).size
 
-    cost += this.state.stack.last().subListFrom(this.k + 1)?.sumBy {
+    cost += this.state.stack.last().subListFrom(this.governorSpineIndex + 1)?.sumBy {
       reachableDependents.intersect(goldDependencyTree.dependents[it].right).size
     } ?: 0
 
@@ -149,7 +149,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     reachableDependents.remove(this.dependentId)
     reachableDependents.removeAll(goldDependencyTree.dependents[this.dependentId].left)
 
-    this.state.stack.last().subListFrom(this.k + 1)?.forEach {
+    this.state.stack.last().subListFrom(this.governorSpineIndex + 1)?.forEach {
       reachableDependents.removeAll(goldDependencyTree.dependents[it].right)
     }
   }

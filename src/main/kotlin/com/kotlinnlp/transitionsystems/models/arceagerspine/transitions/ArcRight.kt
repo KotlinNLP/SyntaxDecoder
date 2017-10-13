@@ -17,10 +17,13 @@ import com.kotlinnlp.transitionsystems.utils.removeFirst
 /**
  * The ArcRight transition.
  *
- * @property state the [State] on which this transition operates.
- * @property k the position of the k-th node in the right spine of the topmost element in the stack.
+ * @property state the [State] on which this transition operates
+ * @property governorSpineIndex the index of the governor within the right spine of the topmost element in the stack
  */
-class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(state), SyntacticDependency {
+class ArcRight(
+  state: ArcEagerSpineState,
+  val governorSpineIndex: Int
+) : ArcEagerSpineTransition(state), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,7 +38,7 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack.last()[this.k]
+  override val governorId: Int get() = this.state.stack.last()[this.governorSpineIndex]
 
   /**
    * The dependent id.
@@ -48,12 +51,12 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
   override val isAllowed: Boolean get() =
     this.state.buffer.isNotEmpty() &&
       this.state.stack.isNotEmpty() &&
-      this.state.stack.last().size >= this.k
+      this.state.stack.last().size >= this.governorSpineIndex
 
   /**
-   * Ensures that the value of 'k' is within the limits.
+   * Ensures that the value of 'governorSpineIndex' is within the limits.
    */
-  init { require(this.k >= 0) }
+  init { require(this.governorSpineIndex >= 0) }
 
   /**
    * Apply this transition on its [state].
@@ -61,7 +64,7 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
    */
   override fun perform() {
 
-    this.state.stack.last().insert(this.k + 1, this.state.buffer.removeFirst())
+    this.state.stack.last().insert(this.governorSpineIndex + 1, this.state.buffer.removeFirst())
 
     if (this.state.stack.size > 1 && this.state.buffer.isEmpty()) this.unshift()
   }
@@ -69,7 +72,7 @@ class ArcRight(state: ArcEagerSpineState, val k: Int) : ArcEagerSpineTransition(
   /**
    * @return the string representation of this transition.
    */
-  override fun toString(): String = "arc-right(${this.k})"
+  override fun toString(): String = "arc-right(${this.governorSpineIndex})"
 
   /**
    * Perform an unshift on its [state].

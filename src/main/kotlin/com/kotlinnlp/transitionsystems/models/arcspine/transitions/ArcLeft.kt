@@ -18,9 +18,9 @@ import com.kotlinnlp.transitionsystems.utils.secondToLast
  * The ArcLeft transition.
  *
  * @property state the [State] on which this transition operates.
- * @property k the position of the k-th node in the left spine of the topmost element in the stack.
+ * @property governorSpineIndex the index of the governor within the left spine of the topmost element in the stack
  */
-class ArcLeft(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), SyntacticDependency {
+class ArcLeft(state: ArcSpineState, val governorSpineIndex: Int) : ArcSpineTransition(state), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,7 +35,7 @@ class ArcLeft(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), Syn
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack.last().leftSpine[this.k]
+  override val governorId: Int get() = this.state.stack.last().leftSpine[this.governorSpineIndex]
 
   /**
    * The dependent id.
@@ -46,12 +46,12 @@ class ArcLeft(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), Syn
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.stack.size > 1 && this.state.stack.last().leftSpine.size >= this.k
+    this.state.stack.size > 1 && this.state.stack.last().leftSpine.size >= this.governorSpineIndex
 
   /**
-   * Ensures that the value of 'k' is within the limits.
+   * Ensures that the value of 'governorSpineIndex' is within the limits.
    */
-  init { require(this.k >= 0) }
+  init { require(this.governorSpineIndex >= 0) }
 
   /**
    * Apply this transition on its [state].
@@ -61,11 +61,11 @@ class ArcLeft(state: ArcSpineState, val k: Int) : ArcSpineTransition(state), Syn
     val s0: ArcSpineState.StackElement = this.state.stack.pop()
     val s1: ArcSpineState.StackElement = this.state.stack.pop()
 
-    this.state.stack.add(s0.addToLeftSpine(this.k, s1.leftSpine))
+    this.state.stack.add(s0.addToLeftSpine(this.governorSpineIndex, s1.leftSpine))
   }
 
   /**
    * @return the string representation of this transition.
    */
-  override fun toString(): String = "arc-left(${this.k})"
+  override fun toString(): String = "arc-left(${this.governorSpineIndex})"
 }

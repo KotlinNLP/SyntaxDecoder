@@ -12,7 +12,7 @@ import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 
 /**
- * The FeaturesExtractor that implements [Trainable].
+ * The [FeaturesExtractor] that implements [Trainable].
  */
 interface FeaturesExtractorTrainable<
   in StateViewType : StateView,

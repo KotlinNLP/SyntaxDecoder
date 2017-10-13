@@ -34,7 +34,8 @@ class ActionsScorerTrainer<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>(
+  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+(
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
@@ -77,6 +78,9 @@ class ActionsScorerTrainer<
       context = context) as ExtendedStateType
 
     while (!state.isTerminal) {
+
+      this.actionsScorer.newExample()
+
       this.processState(
         extendedState = extendedState,
         propagateToInput = propagateToInput,

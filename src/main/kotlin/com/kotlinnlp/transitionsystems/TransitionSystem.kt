@@ -59,14 +59,14 @@ abstract class TransitionSystem<
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].
    *
-   * @param state a [State]
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return the best action to apply to the given [state]
    */
-  fun getBestAction(state: StateType, extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
+  fun getBestAction(extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
 
-    val actions = this.actionsGenerator.generateFrom(transitions = this.transitionsGenerator.generate(state))
+    val actions = this.actionsGenerator.generateFrom(
+      transitions = this.transitionsGenerator.generate(extendedState.state))
 
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
 

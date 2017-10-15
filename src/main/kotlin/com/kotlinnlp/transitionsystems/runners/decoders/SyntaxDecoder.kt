@@ -44,7 +44,8 @@ abstract class SyntaxDecoder<
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val actionsScorer: ActionsScorer<
     StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  private val bestActionSelector: BestActionSelector<StateType, TransitionType>
+  private val bestActionSelector: BestActionSelector<
+    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>
 ) {
 
   /**
@@ -94,6 +95,6 @@ abstract class SyntaxDecoder<
 
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
 
-    return this.bestActionSelector.select(actions)
+    return this.bestActionSelector.select(actions = actions, extendedState = extendedState)
   }
 }

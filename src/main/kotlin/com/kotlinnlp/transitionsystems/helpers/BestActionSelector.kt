@@ -9,19 +9,28 @@ package com.kotlinnlp.transitionsystems.helpers
 
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
+import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 
 /**
  * BestActionSelector.
  */
-interface BestActionSelector<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>> {
+interface BestActionSelector<
+  StateType: State<StateType>,
+  TransitionType: Transition<TransitionType, StateType>,
+  ItemType : StateItem<ItemType, *, *>,
+  ContextType : DecodingContext<ContextType>,
+  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
 
   /**
    * @param actions a list of Actions
+   * @param extendedState the extended state of the last scored actions
    *
    * @return the best action among the given [actions]
    */
-  fun select(actions: List<Transition<TransitionType, StateType>.Action>):
-    Transition<TransitionType, StateType>.Action
+  fun select(actions: List<Transition<TransitionType, StateType>.Action>,
+             extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action
 
   /**
    * Sort the actions by their 'score' and then by their 'priority'.

@@ -43,7 +43,8 @@ class ActionsScorerTrainer<
     StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<
     StateType, TransitionType, ItemType, ContextType, ExtendedStateType>,
-  private val bestActionSelector: BestActionSelector<StateType, TransitionType>,
+  private val bestActionSelector: BestActionSelector<
+    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
 ) {
 
@@ -109,7 +110,8 @@ class ActionsScorerTrainer<
     this.actionsErrorsSetter.assignErrors(actions = actions, extendedState = extendedState)
     this.actionsScorer.backward(propagateToInput = propagateToInput)
 
-    val bestAction: Transition<TransitionType, StateType>.Action = this.bestActionSelector.select(actions)
+    val bestAction: Transition<TransitionType, StateType>.Action
+      = this.bestActionSelector.select(actions = actions, extendedState = extendedState)
 
     if (beforeApplyAction != null) beforeApplyAction(bestAction, extendedState)
 

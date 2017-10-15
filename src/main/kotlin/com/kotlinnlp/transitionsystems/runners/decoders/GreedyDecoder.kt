@@ -45,7 +45,8 @@ class GreedyDecoder<
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   actionsScorer: ActionsScorer<
     StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  bestActionSelector: BestActionSelector<StateType, TransitionType>
+  bestActionSelector: BestActionSelector<
+    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>
 ) :
   SyntaxDecoder<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>(
     transitionSystem,

@@ -108,7 +108,10 @@ class ActionsScorerTrainer<
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
 
     this.actionsErrorsSetter.assignErrors(actions = actions, extendedState = extendedState)
-    this.actionsScorer.backward(propagateToInput = propagateToInput)
+
+    if (this.actionsErrorsSetter.areErrorsRelevant) {
+      this.actionsScorer.backward(propagateToInput = propagateToInput)
+    }
 
     val bestAction: Transition<TransitionType, StateType>.Action
       = this.bestActionSelector.select(actions = actions, extendedState = extendedState)

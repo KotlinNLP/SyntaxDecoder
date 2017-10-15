@@ -100,7 +100,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    * @return the cost of this transition.
    */
   private fun Shift.calculateCost(): Int =
-    if (ArcHybrid().getValidTransitions(this.state)
+    if (ArcHybridTransitionsGenerator().generate(this.state)
       .filter { it is ArcLeft || it is ArcRight }
       .none { hasZeroCost(this) }) 0 else 1
 }

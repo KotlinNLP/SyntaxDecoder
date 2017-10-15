@@ -106,7 +106,7 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
    * @return True if there are any zero-cost arc-transition in the given [state] configuration.
    */
   private fun thereAreCorrectArcs(state: StackBufferState): Boolean =
-    ArcSwift().getValidTransitions(state)
+    ArcSwiftTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
       .any { hasZeroCost(it) }
 }

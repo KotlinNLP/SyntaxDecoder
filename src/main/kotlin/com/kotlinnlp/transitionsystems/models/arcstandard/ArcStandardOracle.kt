@@ -108,7 +108,7 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
    * @return True if there are any zero-cost arc-transition in the given [state] configuration.
    */
   protected fun thereAreCorrectArcs(state: StackBufferState): Boolean =
-    ArcStandard().getValidTransitions(state)
+    ArcStandardTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
       .any { hasZeroCost(it) }
 }

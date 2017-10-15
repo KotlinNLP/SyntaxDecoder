@@ -8,12 +8,30 @@
 package com.kotlinnlp.transitionsystems.models.arcspine
 
 import com.kotlinnlp.transitionsystems.Oracle
+import com.kotlinnlp.transitionsystems.OracleFactory
 import com.kotlinnlp.transitionsystems.models.arcspine.transitions.Shift
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
  * The ArcSpine Non Deterministic Oracle
  */
 class ArcSpineNonDetOracle : ArcSpineOracle() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<ArcSpineState, ArcSpineTransition>{
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition>
+      = ArcSpineNonDetOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

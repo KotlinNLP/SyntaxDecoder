@@ -10,6 +10,7 @@ package com.kotlinnlp.transitionsystems.models.easyfirst
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.easyfirst.transitions.*
 import com.kotlinnlp.transitionsystems.state.templates.PendingListState
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 
 /**
@@ -22,6 +23,22 @@ import com.kotlinnlp.transitionsystems.utils.DependentsCounter
  * and is considered complete (resolved).
  */
 class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<PendingListState, EasyFirstTransition>{
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<PendingListState, EasyFirstTransition>
+      = EasyFirstOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

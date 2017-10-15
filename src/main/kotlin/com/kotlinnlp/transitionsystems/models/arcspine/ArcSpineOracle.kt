@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.models.arcspine
 
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.arcspine.transitions.*
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 import com.kotlinnlp.transitionsystems.utils.secondToLast
@@ -17,6 +18,22 @@ import com.kotlinnlp.transitionsystems.utils.secondToLast
  * The ArcSpine Static Oracle.
  */
 open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<ArcSpineState, ArcSpineTransition>{
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition>
+      = ArcSpineOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

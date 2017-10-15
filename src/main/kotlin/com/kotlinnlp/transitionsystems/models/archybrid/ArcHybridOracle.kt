@@ -11,6 +11,7 @@ import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.archybrid.transitions.*
 import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
 import com.kotlinnlp.transitionsystems.syntax.DependencyRelation
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 
 /**
@@ -23,6 +24,22 @@ import com.kotlinnlp.transitionsystems.utils.DependentsCounter
  * and is considered complete (resolved).
  */
 class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<StackBufferState, ArcHybridTransition>{
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcHybridTransition>
+      = ArcHybridOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

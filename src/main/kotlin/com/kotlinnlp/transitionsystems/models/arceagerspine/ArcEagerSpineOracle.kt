@@ -12,6 +12,7 @@ import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.ArcLeft
 import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.ArcRight
 import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.Root
 import com.kotlinnlp.transitionsystems.models.arceagerspine.transitions.Shift
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.subListFrom
 
@@ -19,6 +20,23 @@ import com.kotlinnlp.transitionsystems.utils.subListFrom
  * The ArcEagerSpine Dynamic Oracle.
  */
 class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<ArcEagerSpineState, ArcEagerSpineTransition>{
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override operator fun invoke(goldDependencyTree: DependencyTree): Oracle<
+      ArcEagerSpineState, ArcEagerSpineTransition
+      > = ArcEagerSpineOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

@@ -8,8 +8,10 @@
 package com.kotlinnlp.transitionsystems.models.arcstandard
 
 import com.kotlinnlp.transitionsystems.Oracle
+import com.kotlinnlp.transitionsystems.OracleFactory
 import com.kotlinnlp.transitionsystems.models.arcstandard.transitions.Shift
 import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
  * The ArcStandard Non-Deterministic Oracle.
@@ -19,6 +21,22 @@ import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
  * or if there exists a right dependent of s0 into the buffer.
  */
 open class ArcStandardNonDetOracle : ArcStandardOracle() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<StackBufferState, ArcStandardTransition> {
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcStandardTransition>
+      = ArcStandardNonDetOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

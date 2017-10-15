@@ -10,6 +10,7 @@ package com.kotlinnlp.transitionsystems.models.arcstandard
 import com.kotlinnlp.transitionsystems.*
 import com.kotlinnlp.transitionsystems.models.arcstandard.transitions.*
 import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
+import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 import com.kotlinnlp.transitionsystems.syntax.SyntacticDependency
 import com.kotlinnlp.transitionsystems.utils.DependentsCounter
 
@@ -23,6 +24,22 @@ import com.kotlinnlp.transitionsystems.utils.DependentsCounter
  * and is considered complete (resolved).
  */
 open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>() {
+
+  /**
+   * The OracleFactory.
+   */
+  companion object Factory : OracleFactory<StackBufferState, ArcStandardTransition>{
+
+    /**
+     * Initialize a new Oracle with a [goldDependencyTree].
+     *
+     * @param goldDependencyTree a dependency tree
+     *
+     * @return a new Oracle
+     */
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcStandardTransition>
+      = ArcStandardOracle().initialize(goldDependencyTree)
+  }
 
   /**
    * The type of the Oracle.

@@ -27,10 +27,10 @@ interface StateItem<
   /**
    * The errors associated to this item.
    */
-  val errors: ErrorsType
+  var errors: ErrorsType?
 
   /**
    * The relevance associated to this item.
    */
-  val relevance: RelevanceType
+  var relevance: RelevanceType?
 }

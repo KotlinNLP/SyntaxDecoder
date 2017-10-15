@@ -73,7 +73,7 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
    */
   private fun generatePossibleActions(state: StateType): List<Transition<TransitionType, StateType>.Action>{
 
-    val transitions: List<TransitionType> = this.transitionSystem.getValidTransitions(state)
+    val transitions: List<TransitionType> = this.transitionSystem.generateTransitions(state)
 
     return this.actionsGenerator.generateFrom(transitions)
   }

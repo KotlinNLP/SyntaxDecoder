@@ -24,6 +24,11 @@ interface ActionsErrorsSetter<
   in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
 
   /**
+   * Whether last assigned errors have been considered relevant.
+   */
+  var areErrorsRelevant: Boolean
+
+  /**
    * Assign errors to the given [actions] using the given [extendedState] as context.
    *
    * @param actions a list with the last scored actions

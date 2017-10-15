@@ -27,7 +27,7 @@ abstract class ActionsScorerTrainable<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+  in ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
 (
   featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
 ) :

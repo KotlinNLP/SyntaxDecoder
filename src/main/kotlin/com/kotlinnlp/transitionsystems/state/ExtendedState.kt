@@ -14,24 +14,22 @@ import com.kotlinnlp.transitionsystems.utils.Clonable
  * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [DecodingContext].
  */
 data class ExtendedState<
-  SelfType : ExtendedState<SelfType, StateType, ItemType, ContextType>,
   StateType : State<StateType>,
   ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>>(
   val state: StateType,
   val items: List<ItemType>,
   val context: ContextType
-) : Clonable<SelfType> {
+) : Clonable<ExtendedState<StateType, ItemType, ContextType>> {
 
   /**
    * @return a copy of this [ExtendedState]
    */
-  override fun copy(): SelfType {
+  override fun copy(): ExtendedState<StateType, ItemType, ContextType> {
 
-    @Suppress("UNCHECKED_CAST")
-    return ExtendedState<SelfType, StateType, ItemType, ContextType>(
+    return ExtendedState(
       state = this.state.copy(),
       items = this.items.map { it.copy() },
-      context = this.context.copy()) as SelfType
+      context = this.context.copy())
   }
 }

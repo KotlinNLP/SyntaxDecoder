@@ -34,7 +34,7 @@ class ActionsScorerTrainer<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+  out ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
@@ -72,7 +72,7 @@ class ActionsScorerTrainer<
     val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
     @Suppress("UNCHECKED_CAST")
-    val extendedState: ExtendedStateType = ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>(
+    val extendedState: ExtendedStateType = ExtendedState(
       state = state,
       items = itemIds.map { id -> this.itemsFactory(id) },
       context = context) as ExtendedStateType

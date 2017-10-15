@@ -22,7 +22,7 @@ abstract class ActionsErrorsSetter<
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>,
-  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+  in ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
 (
   protected val oracle: Oracle<StateType, TransitionType>
 ) {

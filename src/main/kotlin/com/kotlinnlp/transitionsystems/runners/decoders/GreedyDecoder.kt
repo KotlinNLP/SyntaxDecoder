@@ -38,7 +38,7 @@ class GreedyDecoder<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  ExtendedStateType : ExtendedState<ExtendedStateType, StateType, ItemType, ContextType>>
+  ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   itemsFactory: ItemsFactory<ItemType>,

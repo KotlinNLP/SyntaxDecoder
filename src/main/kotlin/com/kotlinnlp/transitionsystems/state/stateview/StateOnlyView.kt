@@ -5,9 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview
+package com.kotlinnlp.transitionsystems.state.stateview
+
+import com.kotlinnlp.transitionsystems.state.State
 
 /**
- * The view of a State, used to extract features.
+ * The [StateView] based on [state] only.
+ *
+ * @property state a [State]
  */
-interface StateView
+data class StateOnlyView<StateType : State<StateType>>(val state: StateType) : StateView

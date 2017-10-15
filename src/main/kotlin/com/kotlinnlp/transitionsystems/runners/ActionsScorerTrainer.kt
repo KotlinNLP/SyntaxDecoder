@@ -15,7 +15,7 @@ import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsErrorsSetter
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorerTrainable
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.stateview.StateView
+import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State

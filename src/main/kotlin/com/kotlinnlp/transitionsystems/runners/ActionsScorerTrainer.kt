@@ -15,6 +15,7 @@ import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsErrorsSetter
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorerTrainable
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.sortByScoreAndPriority
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
@@ -102,24 +103,72 @@ class ActionsScorerTrainer<
                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                 extendedState: ExtendedStateType) -> Unit)?) {
 
+    val actions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(extendedState)
+
+    this.calculateAndPropagateErrors(
+      actions = actions,
+      extendedState = extendedState,
+      propagateToInput = propagateToInput)
+
+    this.applyAction(
+      action = this.bestActionSelector.select(actions = actions, extendedState = extendedState),
+      extendedState = extendedState,
+      beforeApplyAction = beforeApplyAction)
+  }
+
+  /**
+   * Generate the possible actions allowed in a given state, assigns them a score and returns them in descending order
+   * according to the score.
+   *
+   * @param extendedState the [ExtendedState] context of the state
+   *
+   * @return a list of Actions
+   */
+  private fun getScoredActions(extendedState: ExtendedStateType): List<Transition<TransitionType, StateType>.Action> {
+
     val actions = this.actionsGenerator.generateFrom(
       transitions = this.transitionSystem.generateTransitions(extendedState.state))
 
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
+
+    actions.sortByScoreAndPriority()
+
+    return actions
+  }
+
+  /**
+   * Calculate and propagate the errors of the [actions] respect to a current state.
+   *
+   * @param extendedState the [ExtendedState] context of the state
+   * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
+   */
+  private fun calculateAndPropagateErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+                                          extendedState: ExtendedStateType,
+                                          propagateToInput: Boolean){
 
     this.actionsErrorsSetter.assignErrors(actions = actions, extendedState = extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
       this.actionsScorer.backward(propagateToInput = propagateToInput)
     }
+  }
 
-    val bestAction: Transition<TransitionType, StateType>.Action
-      = this.bestActionSelector.select(actions = actions, extendedState = extendedState)
+  /**
+   * Apply a given [action] causing an update of the state and the oracle.
+   *
+   * @param action the action to apply
+   * @param extendedState the [ExtendedState] context of the state (including the oracle)
+   * @param beforeApplyAction callback called before applying the [action] (default = null)
+   */
+  private fun applyAction(action: Transition<TransitionType, StateType>.Action,
+                          extendedState: ExtendedStateType,
+                          beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                               extendedState: ExtendedStateType) -> Unit)?) {
 
-    if (beforeApplyAction != null) beforeApplyAction(bestAction, extendedState)
+    if (beforeApplyAction != null) beforeApplyAction(action, extendedState)
 
-    extendedState.oracle!!.updateWith(bestAction.transition)
+    extendedState.oracle!!.updateWith(action.transition)
 
-    bestAction.apply()
+    action.apply()
   }
 }

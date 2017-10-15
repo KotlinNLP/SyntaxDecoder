@@ -13,6 +13,7 @@ import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.sortByScoreAndPriority
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
@@ -90,11 +91,29 @@ abstract class SyntaxDecoder<
    */
   protected fun getBestAction(extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
 
+    val actions: List<Transition<TransitionType, StateType>.Action>
+      = this.getScoredActions(extendedState)
+
+    return this.bestActionSelector.select(actions = actions, extendedState = extendedState)
+  }
+
+  /**
+   * Generate the possible actions allowed in a given state, assigns them a score and returns them in descending order
+   * according to the score.
+   *
+   * @param extendedState the [ExtendedState] context of the state
+   *
+   * @return a list of Actions
+   */
+  private fun getScoredActions(extendedState: ExtendedStateType): List<Transition<TransitionType, StateType>.Action> {
+
     val actions = this.actionsGenerator.generateFrom(
       transitions = this.transitionSystem.generateTransitions(extendedState.state))
 
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
 
-    return this.bestActionSelector.select(actions = actions, extendedState = extendedState)
+    actions.sortByScoreAndPriority()
+
+    return actions
   }
 }

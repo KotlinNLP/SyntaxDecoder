@@ -27,7 +27,7 @@ abstract class ActionsScorer<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  in ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
+  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
 (
   protected val featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
 ) {

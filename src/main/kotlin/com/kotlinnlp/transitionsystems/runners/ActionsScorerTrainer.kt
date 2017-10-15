@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.transitionsystems.runners
 
-import com.kotlinnlp.transitionsystems.Oracle
+import com.kotlinnlp.transitionsystems.OracleFactory
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.TransitionSystem
 import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
@@ -34,7 +34,7 @@ class ActionsScorerTrainer<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  out ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
+  out ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
@@ -44,7 +44,7 @@ class ActionsScorerTrainer<
   private val actionsErrorsSetter: ActionsErrorsSetter<
     StateType, TransitionType, ItemType, ContextType, ExtendedStateType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType>,
-  private val oracle: Oracle<StateType, TransitionType>
+  private val oracleFactory: OracleFactory<StateType, TransitionType>
 ) {
 
   /**
@@ -67,15 +67,14 @@ class ActionsScorerTrainer<
             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                  extendedState: ExtendedStateType) -> Unit)? = null): DependencyTree {
 
-    this.oracle.initialize(goldDependencyTree)
-
     val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
     @Suppress("UNCHECKED_CAST")
     val extendedState: ExtendedStateType = ExtendedState(
       state = state,
       items = itemIds.map { id -> this.itemsFactory(id) },
-      context = context) as ExtendedStateType
+      context = context,
+      oracle = this.oracleFactory(goldDependencyTree)) as ExtendedStateType
 
     while (!state.isTerminal) {
 
@@ -114,7 +113,7 @@ class ActionsScorerTrainer<
 
     if (beforeApplyAction != null) beforeApplyAction(bestAction, extendedState)
 
-    this.oracle.updateWith(bestAction.transition)
+    extendedState.oracle!!.updateWith(bestAction.transition)
 
     bestAction.apply()
   }

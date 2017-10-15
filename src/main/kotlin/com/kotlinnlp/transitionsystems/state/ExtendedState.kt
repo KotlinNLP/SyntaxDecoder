@@ -7,29 +7,41 @@
 
 package com.kotlinnlp.transitionsystems.state
 
+import com.kotlinnlp.transitionsystems.Oracle
+import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.utils.Clonable
 
 /**
  * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [DecodingContext].
+ *
+ * This structure allows you to keep aligned with state the properties that can evolve together with it.
+ *
+ * @property state a [State]
+ * @property items a list of [StateItem]
+ * @property context a [DecodingContext]
+ * @property oracle an [Oracle] (optional)
  */
 data class ExtendedState<
   StateType : State<StateType>,
+  TransitionType: Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>>(
   val state: StateType,
   val items: List<ItemType>,
-  val context: ContextType
-) : Clonable<ExtendedState<StateType, ItemType, ContextType>> {
+  val context: ContextType,
+  val oracle: Oracle<StateType, TransitionType>?
+) : Clonable<ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
 
   /**
    * @return a copy of this [ExtendedState]
    */
-  override fun copy(): ExtendedState<StateType, ItemType, ContextType> {
+  override fun copy(): ExtendedState<StateType, TransitionType, ItemType, ContextType> {
 
     return ExtendedState(
       state = this.state.copy(),
       items = this.items.map { it.copy() },
-      context = this.context.copy())
+      context = this.context.copy(),
+      oracle = this.oracle?.copy())
   }
 }

@@ -37,7 +37,7 @@ abstract class SyntaxDecoder<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  in ExtendedStateType : ExtendedState<StateType, ItemType, ContextType>>
+  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
 (
   protected val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
@@ -61,10 +61,11 @@ abstract class SyntaxDecoder<
              beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree {
 
     @Suppress("UNCHECKED_CAST")
-    val extendedState: ExtendedStateType = ExtendedState(
+    val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
       state = this.transitionSystem.getInitialState(itemIds),
       items = itemIds.map { id -> this.itemsFactory(id) },
-      context = context) as ExtendedStateType
+      context = context,
+      oracle = null) as ExtendedStateType
 
     return this.decodeInitialState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
   }

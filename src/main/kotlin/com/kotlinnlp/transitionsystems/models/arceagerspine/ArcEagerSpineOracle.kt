@@ -38,6 +38,19 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
   }
 
   /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<ArcEagerSpineState, ArcEagerSpineTransition> {
+
+    val clone = ArcEagerSpineOracle()
+
+    clone.loss = this.loss
+    clone.reachableDependents.addAll(this.reachableDependents)
+
+    return clone
+  }
+
+  /**
    * Calculate the cost of the given [transition] in respect of the current state and the oracle configuration.
    * Make sure that the [transition] is allowed before calling the method.
    *

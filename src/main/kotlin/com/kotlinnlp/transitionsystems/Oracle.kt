@@ -94,6 +94,11 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
   }
 
   /**
+   * @return a copy of this Oracle
+   */
+  abstract fun copy(): Oracle<StateType, TransitionType>
+
+  /**
    * True if the transition has zero cost.
    */
   fun hasZeroCost(transition: TransitionType): Boolean = this.calculateCostOf(transition) == 0

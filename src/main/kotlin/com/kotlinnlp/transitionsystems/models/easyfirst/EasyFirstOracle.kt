@@ -41,6 +41,19 @@ class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
   }
 
   /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<PendingListState, EasyFirstTransition> {
+
+    val clone = EasyFirstOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
+  }
+
+  /**
    * Calculate the cost of the given [transition] in respect of the current state and the oracle configuration.
    * Make sure that the [transition] is allowed before calling the method.
    *

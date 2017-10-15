@@ -9,6 +9,7 @@ package com.kotlinnlp.transitionsystems.models.arcstandard
 
 import com.kotlinnlp.transitionsystems.Oracle
 import com.kotlinnlp.transitionsystems.models.arcstandard.transitions.Shift
+import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
 
 /**
  * The ArcStandard Non-Deterministic Oracle.
@@ -23,6 +24,19 @@ open class ArcStandardNonDetOracle : ArcStandardOracle() {
    * The type of the Oracle.
    */
   override val type: Type = Oracle.Type.NON_DETERMINISTIC
+
+  /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<StackBufferState, ArcStandardTransition> {
+
+    val clone = ArcStandardNonDetOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
+  }
 
   /**
    * Calculate the cost of the Shift transition.

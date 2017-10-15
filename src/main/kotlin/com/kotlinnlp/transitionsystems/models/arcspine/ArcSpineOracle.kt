@@ -26,13 +26,26 @@ open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
+  protected lateinit var dependentsCounter: DependentsCounter
 
   /**
    * Initializes the support structures.
    */
   override fun initSupportStructure() {
     this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
+  }
+
+  /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<ArcSpineState, ArcSpineTransition> {
+
+    val clone = ArcSpineOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
   }
 
   /**

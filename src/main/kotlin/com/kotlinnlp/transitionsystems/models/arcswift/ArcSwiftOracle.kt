@@ -42,6 +42,19 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
   }
 
   /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<StackBufferState, ArcSwiftTransition> {
+
+    val clone = ArcSwiftOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
+  }
+
+  /**
    * Calculate the cost of the given [transition] in respect of the current state and the oracle configuration.
    * Make sure that the [transition] is allowed before calling the method.
    *

@@ -42,6 +42,19 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
   }
 
   /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<StackBufferState, ArcHybridTransition> {
+
+    val clone = ArcHybridOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
+  }
+
+  /**
    * Calculate the cost of the given [transition] in respect of the current state and the oracle configuration.
    * Make sure that the [transition] is allowed before calling the method.
    *

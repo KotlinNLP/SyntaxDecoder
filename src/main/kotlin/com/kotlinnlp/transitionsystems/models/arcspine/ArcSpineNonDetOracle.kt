@@ -21,6 +21,19 @@ class ArcSpineNonDetOracle : ArcSpineOracle() {
   override val type: Type = Oracle.Type.NON_DETERMINISTIC
 
   /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<ArcSpineState, ArcSpineTransition> {
+
+    val clone = ArcSpineNonDetOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
+  }
+
+  /**
    * Calculate the cost of the Shift transition.
    *
    * @return the cost of this transition.

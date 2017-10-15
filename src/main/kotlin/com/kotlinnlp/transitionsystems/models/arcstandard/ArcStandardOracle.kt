@@ -32,13 +32,26 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
+  protected lateinit var dependentsCounter: DependentsCounter
 
   /**
    * Initializes the support structures.
    */
   override fun initSupportStructure() {
     this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
+  }
+
+  /**
+   * @return a copy of this Oracle
+   */
+  override fun copy(): Oracle<StackBufferState, ArcStandardTransition> {
+
+    val clone = ArcStandardOracle()
+
+    clone.loss = this.loss
+    clone.dependentsCounter = this.dependentsCounter.clone()
+
+    return clone
   }
 
   /**

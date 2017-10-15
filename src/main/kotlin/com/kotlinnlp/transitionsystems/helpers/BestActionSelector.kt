@@ -31,10 +31,4 @@ interface BestActionSelector<
    */
   fun select(actions: List<Transition<TransitionType, StateType>.Action>,
              extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action
-
-  /**
-   * Sort the actions by their 'score' and then by their 'priority'.
-   */
-  private fun List<Transition<TransitionType, StateType>.Action>.sortByScoreAndPriority() =
-    this.sortedWith(compareByDescending<Transition<*, *>.Action> { it.score }.thenBy { it.transition.priority })
 }

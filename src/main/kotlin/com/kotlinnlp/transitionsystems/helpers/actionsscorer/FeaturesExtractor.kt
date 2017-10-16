@@ -20,12 +20,12 @@ interface FeaturesExtractor<
   out FeaturesType : Features<*, *>> {
 
   /**
-   * Extract features using the given [stateView] and an optional [itemsContext].
+   * Extract features using the given [stateView] and an optional [context].
    *
    * @param stateView a view of the state
-   * @param itemsContext items context (optional)
+   * @param context items context (optional)
    *
    * @return the extracted [Features]
    */
-  fun extract(stateView: StateViewType, itemsContext: ContextType): FeaturesType
+  fun extract(stateView: StateViewType, context: ContextType): FeaturesType
 }

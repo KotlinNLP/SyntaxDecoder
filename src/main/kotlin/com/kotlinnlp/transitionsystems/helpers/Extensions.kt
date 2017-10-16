@@ -14,3 +14,15 @@ import com.kotlinnlp.transitionsystems.Transition
  */
 fun List<Transition<*, *>.Action>.sortByScoreAndPriority() =
   this.sortedWith(compareByDescending<Transition<*, *>.Action> { it.score }.thenBy { it.transition.priority })
+
+/**
+ * Set all the errors at zero.
+ */
+fun List<Transition<*, *>.Action>.resetErrors() =
+  this.forEach { it.error = 0.0 }
+
+/**
+ * Set all the scores at zero.
+ */
+fun List<Transition<*, *>.Action>.resetScores() =
+  this.forEach { it.score = 0.0 }

@@ -15,6 +15,8 @@ import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsErrorsSetter
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorerTrainable
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.BatchScheduling
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.EpochScheduling
 import com.kotlinnlp.transitionsystems.helpers.sortByScoreAndPriority
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
@@ -47,7 +49,7 @@ class ActionsScorerTrainer<
   private val bestActionSelector: BestActionSelector<
     StateType, TransitionType, ItemType, ContextType, ExtendedStateType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
-) {
+) : BatchScheduling, EpochScheduling {
 
   /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].
@@ -170,5 +172,19 @@ class ActionsScorerTrainer<
     extendedState.oracle!!.updateWith(action.transition)
 
     action.apply()
+  }
+
+  /**
+   * Beat the occurrence of a new batch
+   */
+  override fun newBatch() {
+    this.actionsScorer.newBatch()
+  }
+
+  /**
+   * Beat the occurrence of a new epoch
+   */
+  override fun newEpoch() {
+    this.actionsScorer.newEpoch()
   }
 }

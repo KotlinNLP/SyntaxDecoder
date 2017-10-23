@@ -16,7 +16,7 @@ import com.kotlinnlp.transitionsystems.state.items.StateItem
 /**
  * The helper that set errors into actions.
  */
-interface ActionsErrorsSetter<
+abstract class ActionsErrorsSetter<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
@@ -26,7 +26,8 @@ interface ActionsErrorsSetter<
   /**
    * Whether last assigned errors have been considered relevant.
    */
-  var areErrorsRelevant: Boolean
+  abstract var areErrorsRelevant: Boolean
+    protected set
 
   /**
    * Assign errors to the given [actions] using the given [extendedState] as context.
@@ -34,6 +35,6 @@ interface ActionsErrorsSetter<
    * @param actions a list with the last scored actions
    * @param extendedState the extended state of the last scored actions
    */
-  fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                   extendedState: ExtendedStateType)
+  abstract fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+                            extendedState: ExtendedStateType)
 }

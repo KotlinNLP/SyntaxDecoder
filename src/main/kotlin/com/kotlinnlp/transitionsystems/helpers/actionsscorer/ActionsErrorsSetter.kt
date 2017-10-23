@@ -30,6 +30,12 @@ abstract class ActionsErrorsSetter<
     protected set
 
   /**
+   * The current loss, updated after the last assignment.
+   */
+  abstract var currentLoss: Double
+    protected set
+
+  /**
    * Assign errors to the given [actions] using the given [extendedState] as context.
    *
    * @param actions a list with the last scored actions

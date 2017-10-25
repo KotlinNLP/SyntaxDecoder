@@ -168,7 +168,7 @@ class ActionsScorerTrainer<
                           beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                extendedState: ExtendedStateType) -> Unit)?) {
 
-    beforeApplyAction?.invoke(action, extendedState)
+    beforeApplyAction?.invoke(action, extendedState)  // external callback
 
     extendedState.oracle!!.updateWith(action.transition)
 

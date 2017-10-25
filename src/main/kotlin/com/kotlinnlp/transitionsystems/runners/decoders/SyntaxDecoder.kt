@@ -113,8 +113,7 @@ abstract class SyntaxDecoder<
 
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
 
-    actions.sortByScoreAndPriority()
-
-    return actions
+    @Suppress("UNCHECKED_CAST")
+    return actions.sortByScoreAndPriority() as List<Transition<TransitionType, StateType>.Action>
   }
 }

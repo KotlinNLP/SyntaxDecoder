@@ -8,6 +8,7 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.Transition
+import com.kotlinnlp.transitionsystems.helpers.resetErrors
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
@@ -26,14 +27,12 @@ abstract class ActionsErrorsSetter<
   /**
    * Whether last assigned errors have been considered relevant.
    */
-  abstract var areErrorsRelevant: Boolean
-    protected set
+  val areErrorsRelevant: Boolean get() = this.actionsWithErrors.isNotEmpty()
 
   /**
-   * The current loss, updated after the last assignment.
+   * List that contains actions that have an error, updated after the last assignment.
    */
-  abstract var currentLoss: Double
-    protected set
+  protected val actionsWithErrors = mutableListOf<Transition<TransitionType, StateType>.Action>()
 
   /**
    * Assign errors to the given [actions] using the given [extendedState] as context.
@@ -41,6 +40,22 @@ abstract class ActionsErrorsSetter<
    * @param actions a list with the last scored actions
    * @param extendedState the extended state of the last scored actions
    */
-  abstract fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                            extendedState: ExtendedStateType)
+  fun setErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+                extendedState: ExtendedStateType){
+
+    actions.resetErrors()
+
+    this.actionsWithErrors.clear()
+
+    this.assignErrors(actions = actions, extendedState = extendedState)
+  }
+
+  /**
+   * Assign errors to the given [actions] using the given [extendedState] as context.
+   *
+   * @param actions a list with the last scored actions
+   * @param extendedState the extended state of the last scored actions
+   */
+  abstract protected fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+                                      extendedState: ExtendedStateType)
 }

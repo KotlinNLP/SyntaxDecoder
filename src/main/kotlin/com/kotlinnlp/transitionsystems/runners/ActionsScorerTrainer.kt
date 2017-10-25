@@ -148,7 +148,7 @@ class ActionsScorerTrainer<
                                           extendedState: ExtendedStateType,
                                           propagateToInput: Boolean){
 
-    this.actionsErrorsSetter.assignErrors(actions = actions, extendedState = extendedState)
+    this.actionsErrorsSetter.setErrors(actions = actions, extendedState = extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
       this.actionsScorer.backward(propagateToInput = propagateToInput)

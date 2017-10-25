@@ -61,7 +61,7 @@ abstract class SyntaxDecoder<
   fun decode(itemIds: List<Int>,
              context: ContextType,
              beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                  extendedState: ExtendedStateType) -> Unit)?): DependencyTree {
+                                  extendedState: ExtendedStateType) -> Unit)? = null): DependencyTree {
 
     @Suppress("UNCHECKED_CAST")
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(

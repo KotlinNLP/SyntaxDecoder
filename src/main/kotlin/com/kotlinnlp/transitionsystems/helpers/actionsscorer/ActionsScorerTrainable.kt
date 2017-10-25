@@ -50,7 +50,7 @@ abstract class ActionsScorerTrainable<
    */
   override fun backward(propagateToInput: Boolean) {
 
-    this.propagateErrors()
+    this.propagateErrors(propagateToInput)
 
     if (this.featuresExtractor is FeaturesExtractorTrainable) {
       this.featuresExtractor.backward(propagateToInput = propagateToInput)
@@ -60,5 +60,5 @@ abstract class ActionsScorerTrainable<
   /**
    * Propagate errors through this [ActionsScorer], setting its features errors.
    */
-  abstract fun propagateErrors()
+  abstract fun propagateErrors(propagateToInput: Boolean)
 }

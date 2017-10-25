@@ -27,12 +27,8 @@ abstract class ActionsErrorsSetter<
   /**
    * Whether last assigned errors have been considered relevant.
    */
-  val areErrorsRelevant: Boolean get() = this.actionsWithErrors.isNotEmpty()
-
-  /**
-   * List that contains actions that have an error, updated after the last assignment.
-   */
-  protected val actionsWithErrors = mutableListOf<Transition<TransitionType, StateType>.Action>()
+  var areErrorsRelevant: Boolean = false
+    protected set
 
   /**
    * Assign errors to the given [actions] using the given [extendedState] as context.
@@ -45,7 +41,7 @@ abstract class ActionsErrorsSetter<
 
     actions.resetErrors()
 
-    this.actionsWithErrors.clear()
+    this.areErrorsRelevant = false
 
     this.assignErrors(actions = actions, extendedState = extendedState)
   }

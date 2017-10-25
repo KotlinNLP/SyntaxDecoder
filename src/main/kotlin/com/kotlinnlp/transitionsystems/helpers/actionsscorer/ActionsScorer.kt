@@ -10,6 +10,7 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.resetScores
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
@@ -33,13 +34,34 @@ abstract class ActionsScorer<
 ) {
 
   /**
+   * Contains the last scored actions.
+   */
+  protected lateinit var lastScoredActions: List<Transition<TransitionType, StateType>.Action>
+
+  /**
    * Assign scores to the given [actions] using the [extendedState] as context.
    *
    * @param actions a list of actions to score
    * @param extendedState the extended state containing items, context and state
    */
-  abstract fun score(actions: List<Transition<TransitionType, StateType>.Action>,
-                               extendedState: ExtendedStateType)
+  fun score(actions: List<Transition<TransitionType, StateType>.Action>,
+            extendedState: ExtendedStateType) {
+
+    actions.resetScores()
+
+    this.lastScoredActions = actions
+
+    this.assignScore(actions = actions, extendedState = extendedState)
+  }
+
+  /**
+   * Assign scores to the given [actions] using the [extendedState] as context.
+   *
+   * @param actions a list of actions to score
+   * @param extendedState the extended state containing items, context and state
+   */
+  abstract fun assignScore(actions: List<Transition<TransitionType, StateType>.Action>,
+                           extendedState: ExtendedStateType)
 
   /**
    * @return a map of Transitions to their related Actions

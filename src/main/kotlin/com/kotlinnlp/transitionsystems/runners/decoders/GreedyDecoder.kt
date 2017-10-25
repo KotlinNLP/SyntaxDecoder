@@ -61,13 +61,14 @@ class GreedyDecoder<
    */
   override fun decodeInitialState(
     extendedState: ExtendedStateType,
-    beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit): DependencyTree {
+    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                         extendedState: ExtendedStateType) -> Unit)?): DependencyTree {
 
     while (!extendedState.state.isTerminal) {
 
       val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(extendedState)
 
-      beforeApplyAction(bestAction) // external callback
+      beforeApplyAction?.invoke(bestAction, extendedState) // external callback
 
       bestAction.apply()
     }

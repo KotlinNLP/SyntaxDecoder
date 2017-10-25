@@ -38,7 +38,7 @@ abstract class SyntaxDecoder<
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
-  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
+  ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
 (
   protected val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
@@ -60,7 +60,8 @@ abstract class SyntaxDecoder<
    */
   fun decode(itemIds: List<Int>,
              context: ContextType,
-             beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree {
+             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                  extendedState: ExtendedStateType) -> Unit)?): DependencyTree {
 
     @Suppress("UNCHECKED_CAST")
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
@@ -80,7 +81,8 @@ abstract class SyntaxDecoder<
    */
   abstract protected fun decodeInitialState(
     extendedState: ExtendedStateType,
-    beforeApplyAction: (action: Transition<TransitionType, StateType>.Action) -> Unit = {}): DependencyTree
+    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                         extendedState: ExtendedStateType) -> Unit)?): DependencyTree
 
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].

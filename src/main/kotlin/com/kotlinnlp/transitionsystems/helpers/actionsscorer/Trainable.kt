@@ -14,7 +14,7 @@ import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.ExampleS
 /**
  * Define a trainable object, with time scheduling and errors propagation.
  */
-interface Trainable : ExampleScheduling, BatchScheduling, EpochScheduling {
+interface Trainable : ExampleScheduling, BatchScheduling, EpochScheduling, Updatable {
 
   /**
    * Backward errors through this object, starting from the output, eventually accumulating them into proper structures.
@@ -23,9 +23,4 @@ interface Trainable : ExampleScheduling, BatchScheduling, EpochScheduling {
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
   fun backward(propagateToInput: Boolean)
-
-  /**
-   * Update the trainable components of this object.
-   */
-  fun update()
 }

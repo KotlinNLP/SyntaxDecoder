@@ -70,7 +70,7 @@ abstract class SyntaxDecoder<
       context = context,
       oracle = null) as ExtendedStateType
 
-    return this.decodeInitialState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
+    return this.processState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
   }
 
   /**
@@ -79,10 +79,9 @@ abstract class SyntaxDecoder<
    * @param extendedState the [ExtendedState] containing items, context and state
    * @param beforeApplyAction callback called before applying the best action (optional)
    */
-  abstract protected fun decodeInitialState(
-    extendedState: ExtendedStateType,
-    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                         extendedState: ExtendedStateType) -> Unit)?): DependencyTree
+  abstract protected fun processState(extendedState: ExtendedStateType,
+                                      beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                                           extendedState: ExtendedStateType) -> Unit)?): DependencyTree
 
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].

@@ -59,10 +59,9 @@ class GreedyDecoder<
   /**
    * @param extendedState the [ExtendedState] containing items, context and state
    */
-  override fun decodeInitialState(
-    extendedState: ExtendedStateType,
-    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                         extendedState: ExtendedStateType) -> Unit)?): DependencyTree {
+  override fun processState(extendedState: ExtendedStateType,
+                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                                 extendedState: ExtendedStateType) -> Unit)?): DependencyTree {
 
     while (!extendedState.state.isTerminal) {
 

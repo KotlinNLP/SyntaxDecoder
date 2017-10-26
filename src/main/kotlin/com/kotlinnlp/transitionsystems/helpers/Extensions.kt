@@ -8,21 +8,29 @@
 package com.kotlinnlp.transitionsystems.helpers
 
 import com.kotlinnlp.transitionsystems.Transition
+import com.kotlinnlp.transitionsystems.state.State
 
 /**
- * Sort the actions by their 'score' and then by their 'priority'.
+ * A [Comparator] of actions by score and then by transition priority.
  */
-fun List<Transition<*, *>.Action>.sortByScoreAndPriority() =
-  this.sortedWith(compareByDescending<Transition<*, *>.Action> { it.score }.thenBy { it.transition.priority })
+private val scoreTransitionComparator
+  = compareByDescending<Transition<*, *>.Action> { it.score }.thenBy { it.transition.priority }
+
+/**
+ * Sort a list of actions by score and then by transition priority.
+ */
+fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
+  List<Transition<TransitionType, StateType>.Action>.sortByScoreAndPriority()
+  = this.sortedWith(scoreTransitionComparator)
 
 /**
  * Set all the errors at zero.
  */
-fun List<Transition<*, *>.Action>.resetErrors() =
-  this.forEach { it.error = 0.0 }
+fun List<Transition<*, *>.Action>.resetErrors()
+  = this.forEach { it.error = 0.0 }
 
 /**
  * Set all the scores at zero.
  */
-fun List<Transition<*, *>.Action>.resetScores() =
-  this.forEach { it.score = 0.0 }
+fun List<Transition<*, *>.Action>.resetScores()
+  = this.forEach { it.score = 0.0 }

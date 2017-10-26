@@ -14,9 +14,9 @@ import com.kotlinnlp.transitionsystems.models.arcspine.transitions.*
  * in relation with a specific transition.
  *
  * @param state an ArcSpine state
- * @param transition an ArcSpine transition
+ * @property transition an ArcSpine transition
  */
-class ArcSpineVirtualState(private val state: ArcSpineState, private val transition: ArcSpineTransition) {
+class ArcSpineVirtualState(private val state: ArcSpineState, val transition: ArcSpineTransition) {
 
   /**
    * The virtual stack.

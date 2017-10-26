@@ -11,15 +11,12 @@ import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 
 /**
- * The [StateView] based on [state] and [transition].
+ * The [StateView] based on [state] and [transitions].
  *
  * @property state a [State]
- * @property transition a [Transition]
+ * @property transitions a list of [Transition]
  */
-data class StateTransitionView<
-  StateType : State<StateType>,
-  TransitionType : Transition<TransitionType, StateType>>
-(
+data class StateTransitionView<StateType : State<StateType>, TransitionType : Transition<TransitionType, StateType>>(
   val state: StateType,
-  val transition: Transition<TransitionType, StateType>
+  val transitions: List<TransitionType>
 ) : StateView<StateType>

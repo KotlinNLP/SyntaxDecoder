@@ -34,7 +34,7 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 class ActionsScorerTrainer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView,
+  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
   ItemType : StateItem<ItemType, *, *>,
@@ -44,13 +44,14 @@ class ActionsScorerTrainer<
   private val itemsFactory: ItemsFactory<ItemType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val actionsScorer: ActionsScorerTrainable<
-    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  private val actionsErrorsSetter: ActionsErrorsSetter<
-    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>,
-  private val bestActionSelector: BestActionSelector<
-    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>,
+    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>,
+  private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
+  private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
-) : BatchScheduling, EpochScheduling, Updatable {
+) :
+  BatchScheduling,
+  EpochScheduling,
+  Updatable {
 
   /**
    * Count the number of relevant errors.

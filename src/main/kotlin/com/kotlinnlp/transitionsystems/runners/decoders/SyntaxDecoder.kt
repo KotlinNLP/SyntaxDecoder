@@ -34,19 +34,17 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 abstract class SyntaxDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView,
+  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>,
-  ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
+  ItemType : StateItem<ItemType, *, *>>
 (
   protected val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val actionsScorer: ActionsScorer<
-    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  private val bestActionSelector: BestActionSelector<
-    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>
+    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>,
+  private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
 ) {
 
   /**
@@ -58,17 +56,19 @@ abstract class SyntaxDecoder<
    *
    * @return a [DependencyTree]
    */
-  fun decode(itemIds: List<Int>,
-             context: ContextType,
-             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                  extendedState: ExtendedStateType) -> Unit)? = null): DependencyTree {
+  fun decode(
+    itemIds: List<Int>,
+    context: ContextType,
+    beforeApplyAction: ((
+      action: Transition<TransitionType, StateType>.Action,
+      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)? = null
+  ): DependencyTree {
 
-    @Suppress("UNCHECKED_CAST")
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
       state = this.transitionSystem.getInitialState(itemIds),
       items = itemIds.map { id -> this.itemsFactory(id) },
       context = context,
-      oracle = null) as ExtendedStateType
+      oracle = null)
 
     return this.processState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
   }
@@ -79,9 +79,11 @@ abstract class SyntaxDecoder<
    * @param extendedState the [ExtendedState] containing items, context and state
    * @param beforeApplyAction callback called before applying the best action (optional)
    */
-  abstract protected fun processState(extendedState: ExtendedStateType,
-                                      beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                                           extendedState: ExtendedStateType) -> Unit)?): DependencyTree
+  abstract protected fun processState(
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                         extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?
+  ): DependencyTree
 
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].
@@ -90,7 +92,9 @@ abstract class SyntaxDecoder<
    *
    * @return the best action to apply to the given state
    */
-  protected fun getBestAction(extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action {
+  protected fun getBestAction(
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+  ): Transition<TransitionType, StateType>.Action {
 
     val actions: List<Transition<TransitionType, StateType>.Action>
       = this.getScoredActions(extendedState)
@@ -106,7 +110,9 @@ abstract class SyntaxDecoder<
    *
    * @return a list of Actions
    */
-  private fun getScoredActions(extendedState: ExtendedStateType): List<Transition<TransitionType, StateType>.Action> {
+  private fun getScoredActions(
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+  ): List<Transition<TransitionType, StateType>.Action> {
 
     val actions = this.actionsGenerator.generateFrom(
       transitions = this.transitionSystem.generateTransitions(extendedState.state))

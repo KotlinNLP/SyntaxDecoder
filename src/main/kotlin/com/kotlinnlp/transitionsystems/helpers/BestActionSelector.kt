@@ -20,8 +20,7 @@ interface BestActionSelector<
   StateType: State<StateType>,
   TransitionType: Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType>,
-  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
+  ContextType : DecodingContext<ContextType>> {
 
   /**
    * @param actions a list of Actions
@@ -29,6 +28,8 @@ interface BestActionSelector<
    *
    * @return the best action among the given [actions]
    */
-  fun select(actions: List<Transition<TransitionType, StateType>.Action>,
-             extendedState: ExtendedStateType): Transition<TransitionType, StateType>.Action
+  fun select(
+    actions: List<Transition<TransitionType, StateType>.Action>,
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+  ): Transition<TransitionType, StateType>.Action
 }

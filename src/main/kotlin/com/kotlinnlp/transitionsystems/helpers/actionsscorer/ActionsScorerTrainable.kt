@@ -11,7 +11,6 @@ import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
-import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 
@@ -23,22 +22,14 @@ import com.kotlinnlp.transitionsystems.state.items.StateItem
 abstract class ActionsScorerTrainable<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView,
+  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>,
-  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
+  ItemType : StateItem<ItemType, *, *>>
 (
-  featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
+  featuresExtractor: FeaturesExtractor<StateType, TransitionType, ItemType, ContextType, StateViewType, FeaturesType>
 ) :
-  ActionsScorer<
-    StateType,
-    TransitionType,
-    StateViewType,
-    ContextType,
-    FeaturesType,
-    ItemType,
-    ExtendedStateType>(featuresExtractor),
+  ActionsScorer<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>(featuresExtractor),
   Trainable {
 
   /**
@@ -52,7 +43,7 @@ abstract class ActionsScorerTrainable<
 
     this.propagateErrors(propagateToInput)
 
-    if (this.featuresExtractor is FeaturesExtractorTrainable) {
+    if (this.featuresExtractor is Trainable) {
       this.featuresExtractor.backward(propagateToInput = propagateToInput)
     }
   }

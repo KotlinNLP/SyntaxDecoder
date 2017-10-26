@@ -24,13 +24,13 @@ import com.kotlinnlp.transitionsystems.state.items.StateItem
 abstract class ActionsScorer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView,
+  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>,
-  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
+  ItemType : StateItem<ItemType, *, *>>
 (
-  protected val featuresExtractor: FeaturesExtractor<StateViewType, ContextType, FeaturesType>
+  protected val featuresExtractor: FeaturesExtractor<
+    StateType, TransitionType, ItemType, ContextType, StateViewType, FeaturesType>
 ) {
 
   /**
@@ -45,7 +45,7 @@ abstract class ActionsScorer<
    * @param extendedState the extended state containing items, context and state
    */
   fun score(actions: List<Transition<TransitionType, StateType>.Action>,
-            extendedState: ExtendedStateType) {
+            extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
 
     actions.resetScores()
 
@@ -61,7 +61,7 @@ abstract class ActionsScorer<
    * @param extendedState the extended state containing items, context and state
    */
   abstract fun assignScore(actions: List<Transition<TransitionType, StateType>.Action>,
-                           extendedState: ExtendedStateType)
+                           extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>)
 
   /**
    * @return a map of Transitions to their related Actions

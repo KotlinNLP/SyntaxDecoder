@@ -21,8 +21,7 @@ abstract class ActionsErrorsSetter<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType>,
-  in ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
+  ContextType : DecodingContext<ContextType>> {
 
   /**
    * Whether last assigned errors have been considered relevant.
@@ -37,7 +36,7 @@ abstract class ActionsErrorsSetter<
    * @param extendedState the extended state of the last scored actions
    */
   fun setErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                extendedState: ExtendedStateType){
+                extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
 
     actions.resetErrors()
 
@@ -53,5 +52,5 @@ abstract class ActionsErrorsSetter<
    * @param extendedState the extended state of the last scored actions
    */
   abstract protected fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                                      extendedState: ExtendedStateType)
+                                      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>)
 }

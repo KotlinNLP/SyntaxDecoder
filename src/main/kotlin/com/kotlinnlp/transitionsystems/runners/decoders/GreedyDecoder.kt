@@ -34,21 +34,18 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 class GreedyDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView,
+  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>,
-  ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
+  ItemType : StateItem<ItemType, *, *>>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   itemsFactory: ItemsFactory<ItemType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  actionsScorer: ActionsScorer<
-    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>,
-  bestActionSelector: BestActionSelector<
-    StateType, TransitionType, ItemType, ContextType, ExtendedStateType>
+  actionsScorer: ActionsScorer<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>,
+  bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
 ) :
-  SyntaxDecoder<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType, ExtendedStateType>(
+  SyntaxDecoder<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>(
     transitionSystem,
     itemsFactory,
     actionsGenerator,
@@ -59,9 +56,11 @@ class GreedyDecoder<
   /**
    * @param extendedState the [ExtendedState] containing items, context and state
    */
-  override fun processState(extendedState: ExtendedStateType,
-                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                                 extendedState: ExtendedStateType) -> Unit)?): DependencyTree {
+  override fun processState(
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+    beforeApplyAction: ((
+      action: Transition<TransitionType, StateType>.Action,
+      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?): DependencyTree {
 
     while (!extendedState.state.isTerminal) {
 

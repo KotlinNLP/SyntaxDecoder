@@ -12,10 +12,9 @@ import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.TransitionSystem
 import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsErrorsSetter
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorerTrainable
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.Updatable
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.*
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.FeaturesErrors
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.BatchScheduling
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.EpochScheduling
 import com.kotlinnlp.transitionsystems.helpers.sortByScoreAndPriority
@@ -34,16 +33,24 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 class ActionsScorerTrainer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
-  out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>>
+  ItemType : StateItem<ItemType, *, *>,
+  StateViewType : StateView<StateType>,
+  FeaturesErrorsType: FeaturesErrors,
+  FeaturesType : Features<FeaturesErrorsType, *>,
+  FeaturesExtractorStructureType: FeaturesExtractorStructure<
+    FeaturesExtractorStructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
+  ActionsScorerStructureType: ActionsScorerStructure<
+    ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
+  private val featuresExtractor: FeaturesExtractor<
+    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
   private val actionsScorer: ActionsScorerTrainable<
-    StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>,
+    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesErrorsType, FeaturesType,
+    ActionsScorerStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
@@ -57,6 +64,16 @@ class ActionsScorerTrainer<
    */
   var relevantErrorsCount: Int = 0
     private set
+
+  /**
+   * The support structure of the [featuresExtractor].
+   */
+  private val featuresExtractorStructure = this.featuresExtractor.supportStructureFactory()
+
+  /**
+   * The support structure of the [actionsScorer].
+   */
+  private val actionsScorerStructure = this.actionsScorer.supportStructureFactory()
 
   /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].
@@ -117,11 +134,29 @@ class ActionsScorerTrainer<
                              extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?
   ) {
 
-    val actions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(extendedState)
+
+    val actions: List<Transition<TransitionType, StateType>.Action> = this.actionsGenerator
+      .generateFrom(transitions = this.transitionSystem.generateTransitions(extendedState.state))
+
+    val actionsDynamicStructure = this.actionsScorerStructure.dynamicStructureFactory(
+      actions = actions,
+      extendedState = extendedState)
+
+    val featuresDynamicStructure = this.featuresExtractorStructure.dynamicStructureFactory(
+      extendedState = extendedState,
+      stateView = this.actionsScorer.buildStateView(actionsDynamicStructure))
+
+    this.scoreActions(
+      actionsDynamicStructure = actionsDynamicStructure,
+      featuresDynamicStructure = featuresDynamicStructure)
+
+    val sortedActionsDynamicStructure = this.actionsScorerStructure.dynamicStructureFactory(
+      actions = actionsDynamicStructure.actions.sortByScoreAndPriority(),
+      extendedState = extendedState)
 
     this.calculateAndPropagateErrors(
-      actions = actions,
-      extendedState = extendedState,
+      featuresDynamicStructure = featuresDynamicStructure,
+      actionsDynamicStructure = sortedActionsDynamicStructure,
       propagateToInput = propagateToInput)
 
     this.applyAction(
@@ -131,43 +166,50 @@ class ActionsScorerTrainer<
   }
 
   /**
-   * Generate the possible actions allowed in a given state, assigns them a score and returns them in descending order
-   * according to the score.
+   * Score the actions allowed in a given state, assigns them a score.
    *
-   * @param extendedState the [ExtendedState] context of the state
-   *
-   * @return a list of Actions
+   * @param featuresDynamicStructure the dynamic support structure of the [featuresExtractor]
+   * @param actionsDynamicStructure the dynamic support structure of the [actionsScorer]
    */
-  private fun getScoredActions(
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
-  ): List<Transition<TransitionType, StateType>.Action> {
+  private fun scoreActions(
+    featuresDynamicStructure: FeaturesExtractorDynamicStructure<
+      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
+    actionsDynamicStructure: ActionsScorerDynamicStructure<
+      StateType, TransitionType, ContextType, ItemType, ActionsScorerStructureType>) {
 
-    val actions = this.actionsGenerator.generateFrom(
-      transitions = this.transitionSystem.generateTransitions(extendedState.state))
+    this.featuresExtractor.setFeatures(featuresDynamicStructure)
 
-    this.actionsScorer.score(actions = actions, extendedState = extendedState)
-
-    return actions.sortByScoreAndPriority()
+    this.actionsScorer.score(features = featuresDynamicStructure.features, structure = actionsDynamicStructure)
   }
 
   /**
-   * Calculate and propagate the errors of the [actions] respect to a current state.
+   * Calculate and propagate the errors of the actions in the given support structure respect to a current state.
    *
-   * @param extendedState the [ExtendedState] context of the state
+   * @param featuresDynamicStructure the dynamic support structure of the [featuresExtractor]
+   * @param actionsDynamicStructure the dynamic support structure of the [actionsScorer]
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
-  private fun calculateAndPropagateErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                                          extendedState: ExtendedState<
-                                            StateType, TransitionType, ItemType, ContextType>,
-                                          propagateToInput: Boolean){
+  private fun calculateAndPropagateErrors(
+    featuresDynamicStructure: FeaturesExtractorDynamicStructure<
+      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
+    actionsDynamicStructure: ActionsScorerDynamicStructure<
+      StateType, TransitionType, ContextType, ItemType, ActionsScorerStructureType>,
+    propagateToInput: Boolean){
 
-    this.actionsErrorsSetter.setErrors(actions = actions, extendedState = extendedState)
+    this.actionsErrorsSetter.setErrors(
+      actions = actionsDynamicStructure.actions,
+      extendedState = actionsDynamicStructure.extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
 
       this.relevantErrorsCount++
 
-      this.actionsScorer.backward(propagateToInput = propagateToInput)
+      this.actionsScorer.backward(structure = actionsDynamicStructure, propagateToInput = propagateToInput)
+
+      if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
+        featuresDynamicStructure.features.errors = this.actionsScorer.getFeaturesErrors(actionsDynamicStructure)
+        this.featuresExtractor.backward(structure = featuresDynamicStructure, propagateToInput = propagateToInput)
+      }
     }
   }
 

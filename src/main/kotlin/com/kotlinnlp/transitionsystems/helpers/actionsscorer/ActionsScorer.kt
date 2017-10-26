@@ -10,58 +10,45 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
-import com.kotlinnlp.transitionsystems.helpers.resetScores
-import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
-import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.items.StateItem
+import com.kotlinnlp.transitionsystems.state.stateview.StateView
 
 /**
- * The ActionsScorer.
- *
- * @property featuresExtractor a [FeaturesExtractor]
+ * The actions scorer.
  */
 abstract class ActionsScorer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
-  out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>>
-(
-  protected val featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ItemType, ContextType, StateViewType, FeaturesType>
-) {
+  ItemType : StateItem<ItemType, *, *>,
+  out StateViewType : StateView<StateType>,
+  in FeaturesType : Features<*, *>,
+  StructureType: ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>> {
 
   /**
-   * Contains the last scored actions.
-   */
-  protected lateinit var lastScoredActions: List<Transition<TransitionType, StateType>.Action>
-
-  /**
-   * Assign scores to the given [actions] using the [extendedState] as context.
+   * Assign scores to the actions contained into the given [structure], using the given [features].
    *
-   * @param actions a list of actions to score
-   * @param extendedState the extended state containing items, context and state
+   * @param features the features used to score actions
+   * @param structure the dynamic support structure that contains the actions to score
    */
-  fun score(actions: List<Transition<TransitionType, StateType>.Action>,
-            extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
-
-    actions.resetScores()
-
-    this.lastScoredActions = actions
-
-    this.assignScore(actions = actions, extendedState = extendedState)
-  }
+  abstract fun score(
+    features: FeaturesType,
+    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>)
 
   /**
-   * Assign scores to the given [actions] using the [extendedState] as context.
-   *
-   * @param actions a list of actions to score
-   * @param extendedState the extended state containing items, context and state
+   * @return a support structure for this [ActionsScorer]
    */
-  abstract fun assignScore(actions: List<Transition<TransitionType, StateType>.Action>,
-                           extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>)
+  abstract fun supportStructureFactory(): StructureType
+
+  /**
+   * @param structure the dynamic support structure used to build a state view
+   *
+   * @return the state view of the given structure, used by the features extractor
+   */
+  abstract fun buildStateView(
+    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>
+  ): StateViewType
 
   /**
    * @return a map of Transitions to their related Actions

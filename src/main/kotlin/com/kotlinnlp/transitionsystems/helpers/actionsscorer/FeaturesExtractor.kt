@@ -11,29 +11,47 @@ import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
-import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 
 /**
- * The FeaturesExtractor.
+ * The features extractor.
  */
-interface FeaturesExtractor<
+abstract class FeaturesExtractor<
   StateType: State<StateType>,
   TransitionType: Transition<TransitionType, StateType>,
-  ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>,
-  in StateViewType : StateView<StateType>,
-  out FeaturesType : Features<*, *>> {
+  ItemType : StateItem<ItemType, *, *>,
+  StateViewType : StateView<StateType>,
+  FeaturesType : Features<*, *>,
+  StructureType: FeaturesExtractorStructure<
+    StructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>> {
 
   /**
-   * Extract features using the given [stateView] and [extendedState].
+   * Extract features using the given [structure] and set them into its 'features' property.
    *
-   * @param stateView a view of the state
-   * @param extendedState extended state context
+   * @param structure the variable support structure in which to set the extracted features
    *
    * @return the extracted [Features]
    */
-  fun extract(stateView: StateViewType,
-              extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>): FeaturesType
+  fun setFeatures(
+    structure: FeaturesExtractorDynamicStructure<
+      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>) {
+
+    structure.features = this.extract(structure)
+  }
+
+  /**
+   * @return a support structure for this [FeaturesExtractor]
+   */
+  abstract fun supportStructureFactory(): StructureType
+
+  /**
+   * Extract features using the given [structure].
+   *
+   * @param structure a structure containing a state view and an extended state.
+   */
+  abstract protected fun extract(
+    structure: FeaturesExtractorDynamicStructure<
+      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>): FeaturesType
 }

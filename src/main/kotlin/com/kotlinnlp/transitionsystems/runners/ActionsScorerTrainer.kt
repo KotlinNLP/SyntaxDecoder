@@ -53,6 +53,12 @@ class ActionsScorerTrainer<
 ) : BatchScheduling, EpochScheduling, Updatable {
 
   /**
+   * Count the number of relevant errors.
+   */
+  var relevantErrorsCount: Int = 0
+    private set
+
+  /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].
    * The best local action is applied with a greedy approach until the final state is reached.
    * Before applying it, the temporary result is compared to the gold [DependencyTree] to
@@ -71,6 +77,8 @@ class ActionsScorerTrainer<
             propagateToInput: Boolean,
             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                  extendedState: ExtendedStateType) -> Unit)? = null): DependencyTree {
+
+    this.relevantErrorsCount = 0
 
     val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
@@ -151,6 +159,9 @@ class ActionsScorerTrainer<
     this.actionsErrorsSetter.setErrors(actions = actions, extendedState = extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
+
+      this.relevantErrorsCount++
+
       this.actionsScorer.backward(propagateToInput = propagateToInput)
     }
   }

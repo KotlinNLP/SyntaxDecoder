@@ -8,7 +8,6 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.Transition
-import com.kotlinnlp.transitionsystems.helpers.resetErrors
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
@@ -37,8 +36,6 @@ abstract class ActionsErrorsSetter<
    */
   fun setErrors(actions: List<Transition<TransitionType, StateType>.Action>,
                 extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
-
-    actions.resetErrors()
 
     this.areErrorsRelevant = false
 

@@ -78,6 +78,8 @@ abstract class SyntaxDecoder<
    *
    * @param extendedState the [ExtendedState] containing items, context and state
    * @param beforeApplyAction callback called before applying the best action (optional)
+   *
+   * @return a dependency tree
    */
   abstract protected fun processState(
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,

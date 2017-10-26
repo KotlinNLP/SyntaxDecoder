@@ -54,7 +54,12 @@ class GreedyDecoder<
   ) {
 
   /**
+   * Decode the syntax starting from an initial state building a dependency tree.
+   *
    * @param extendedState the [ExtendedState] containing items, context and state
+   * @param beforeApplyAction callback called before applying the best action (optional)
+   *
+   * @return a dependency tree
    */
   override fun processState(
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,

@@ -37,8 +37,7 @@ class ActionsScorerTrainer<
   in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
   out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>,
-  out ExtendedStateType : ExtendedState<StateType, TransitionType, ItemType, ContextType>>
+  ItemType : StateItem<ItemType, *, *>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val itemsFactory: ItemsFactory<ItemType>,
@@ -76,19 +75,20 @@ class ActionsScorerTrainer<
             context: ContextType,
             goldDependencyTree: DependencyTree,
             propagateToInput: Boolean,
-            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                 extendedState: ExtendedStateType) -> Unit)? = null): DependencyTree {
+            beforeApplyAction: ((
+              action: Transition<TransitionType, StateType>.Action,
+              extendedState: ExtendedState<
+                StateType, TransitionType, ItemType, ContextType>) -> Unit)? = null): DependencyTree {
 
     this.relevantErrorsCount = 0
 
     val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
-    @Suppress("UNCHECKED_CAST")
-    val extendedState: ExtendedStateType = ExtendedState(
+    val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
       state = state,
       items = itemIds.map { id -> this.itemsFactory(id) },
       context = context,
-      oracle = this.oracleFactory(goldDependencyTree)) as ExtendedStateType
+      oracle = this.oracleFactory(goldDependencyTree))
 
     while (!state.isTerminal) {
 
@@ -110,10 +110,12 @@ class ActionsScorerTrainer<
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    * @param beforeApplyAction callback called before applying the best action (default = null)
    */
-  private fun processState(extendedState: ExtendedStateType,
+  private fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
                            propagateToInput: Boolean,
-                           beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                                extendedState: ExtendedStateType) -> Unit)?) {
+                           beforeApplyAction: ((
+                             action: Transition<TransitionType, StateType>.Action,
+                             extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?
+  ) {
 
     val actions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(extendedState)
 
@@ -136,15 +138,16 @@ class ActionsScorerTrainer<
    *
    * @return a list of Actions
    */
-  private fun getScoredActions(extendedState: ExtendedStateType): List<Transition<TransitionType, StateType>.Action> {
+  private fun getScoredActions(
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+  ): List<Transition<TransitionType, StateType>.Action> {
 
     val actions = this.actionsGenerator.generateFrom(
       transitions = this.transitionSystem.generateTransitions(extendedState.state))
 
     this.actionsScorer.score(actions = actions, extendedState = extendedState)
 
-    @Suppress("UNCHECKED_CAST")
-    return actions.sortByScoreAndPriority() as List<Transition<TransitionType, StateType>.Action>
+    return actions.sortByScoreAndPriority()
   }
 
   /**
@@ -154,7 +157,8 @@ class ActionsScorerTrainer<
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
   private fun calculateAndPropagateErrors(actions: List<Transition<TransitionType, StateType>.Action>,
-                                          extendedState: ExtendedStateType,
+                                          extendedState: ExtendedState<
+                                            StateType, TransitionType, ItemType, ContextType>,
                                           propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(actions = actions, extendedState = extendedState)
@@ -175,9 +179,10 @@ class ActionsScorerTrainer<
    * @param beforeApplyAction callback called before applying the [action] (default = null)
    */
   private fun applyAction(action: Transition<TransitionType, StateType>.Action,
-                          extendedState: ExtendedStateType,
-                          beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                               extendedState: ExtendedStateType) -> Unit)?) {
+                          extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+                          beforeApplyAction: ((
+                            action: Transition<TransitionType, StateType>.Action,
+                            extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?) {
 
     beforeApplyAction?.invoke(action, extendedState)  // external callback
 

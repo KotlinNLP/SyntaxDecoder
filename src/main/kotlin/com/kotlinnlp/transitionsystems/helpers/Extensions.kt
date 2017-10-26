@@ -22,15 +22,3 @@ private val scoreTransitionComparator
 fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
   List<Transition<TransitionType, StateType>.Action>.sortByScoreAndPriority()
   = this.sortedWith(scoreTransitionComparator)
-
-/**
- * Set all the errors at zero.
- */
-fun List<Transition<*, *>.Action>.resetErrors()
-  = this.forEach { it.error = 0.0 }
-
-/**
- * Set all the scores at zero.
- */
-fun List<Transition<*, *>.Action>.resetScores()
-  = this.forEach { it.score = 0.0 }

@@ -9,47 +9,49 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
-import com.kotlinnlp.transitionsystems.state.stateview.StateView
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.FeaturesErrors
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.BatchScheduling
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.EpochScheduling
+import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.ExampleScheduling
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.state.items.StateItem
+import com.kotlinnlp.transitionsystems.state.stateview.StateView
 
 /**
- * The ActionsScorer that implements [Trainable].
- *
- * @property featuresExtractor a [FeaturesExtractor]
+ * The trainable [ActionsScorer].
  */
 abstract class ActionsScorerTrainable<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  in StateViewType : StateView<StateType>,
   ContextType : DecodingContext<ContextType>,
-  out FeaturesType : Features<*, *>,
-  ItemType : StateItem<ItemType, *, *>>
-(
-  featuresExtractor: FeaturesExtractor<StateType, TransitionType, ItemType, ContextType, StateViewType, FeaturesType>
-) :
-  ActionsScorer<StateType, TransitionType, StateViewType, ContextType, FeaturesType, ItemType>(featuresExtractor),
-  Trainable {
+  ItemType : StateItem<ItemType, *, *>,
+  out StateViewType : StateView<StateType>,
+  FeaturesErrorsType: FeaturesErrors,
+  in FeaturesType : Features<FeaturesErrorsType, *>,
+  StructureType: ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>>
+  :
+  ActionsScorer<StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>(),
+  ExampleScheduling,
+  BatchScheduling,
+  EpochScheduling,
+  Updatable {
 
   /**
-   * Backward errors through this [ActionsScorer], starting from the output actions, eventually accumulating them into
-   * proper structures, and call the backward of the [featuresExtractor] if it is [Trainable].
+   * Backward errors through this [ActionsScorer], starting from the scored actions of the given [structure].
    * Errors are required to be already set into the output actions properly.
    *
+   * @param structure the support structure that contains the scored actions
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
-  override fun backward(propagateToInput: Boolean) {
-
-    this.propagateErrors(propagateToInput)
-
-    if (this.featuresExtractor is Trainable) {
-      this.featuresExtractor.backward(propagateToInput = propagateToInput)
-    }
-  }
+  abstract fun backward(
+    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>,
+    propagateToInput: Boolean)
 
   /**
-   * Propagate errors through this [ActionsScorer], setting its features errors.
+   *
    */
-  abstract fun propagateErrors(propagateToInput: Boolean)
+  abstract fun getFeaturesErrors(
+    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>
+  ): FeaturesErrorsType
 }

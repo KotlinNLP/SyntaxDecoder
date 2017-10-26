@@ -22,4 +22,4 @@ data class StateTransitionView<
 (
   val state: StateType,
   val transition: Transition<TransitionType, StateType>
-) : StateView
+) : StateView<StateType>

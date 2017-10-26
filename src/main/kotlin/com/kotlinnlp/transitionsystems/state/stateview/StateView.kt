@@ -7,7 +7,9 @@
 
 package com.kotlinnlp.transitionsystems.state.stateview
 
+import com.kotlinnlp.transitionsystems.state.State
+
 /**
  * The view of a State, used to extract features.
  */
-interface StateView
+interface StateView<StateType: State<StateType>>

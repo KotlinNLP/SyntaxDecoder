@@ -14,4 +14,4 @@ import com.kotlinnlp.transitionsystems.state.State
  *
  * @property state a [State]
  */
-data class StateOnlyView<StateType : State<StateType>>(val state: StateType) : StateView
+data class StateOnlyView<StateType : State<StateType>>(val state: StateType) : StateView<StateType>

@@ -7,25 +7,33 @@
 
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
+import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.ExtendedState
+import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 
 /**
  * The FeaturesExtractor.
  */
 interface FeaturesExtractor<
-  in StateViewType : StateView,
+  StateType: State<StateType>,
+  TransitionType: Transition<TransitionType, StateType>,
+  ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>,
+  in StateViewType : StateView<StateType>,
   out FeaturesType : Features<*, *>> {
 
   /**
-   * Extract features using the given [stateView] and an optional [context].
+   * Extract features using the given [stateView] and [extendedState].
    *
    * @param stateView a view of the state
-   * @param context items context (optional)
+   * @param extendedState extended state context
    *
    * @return the extracted [Features]
    */
-  fun extract(stateView: StateViewType, context: ContextType): FeaturesType
+  fun extract(stateView: StateViewType,
+              extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>): FeaturesType
 }

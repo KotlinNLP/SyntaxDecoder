@@ -10,15 +10,15 @@ package com.kotlinnlp.transitionsystems.helpers.actionsscorer.features
 /**
  * The features extracted from a FeaturesExtractor, used as input of the ActionsScorer.
  */
-interface Features<out ErrorsType: FeaturesErrors, out RelevanceType: FeaturesRelevance> {
+abstract class Features<ErrorsType: FeaturesErrors, RelevanceType: FeaturesRelevance> {
 
   /**
    * The errors associated to this features.
    */
-  val errors: ErrorsType
+  lateinit var errors: ErrorsType
 
   /**
    * The relevance associated to this features.
    */
-  val relevance: RelevanceType
+  lateinit var relevance: RelevanceType
 }

@@ -7,17 +7,23 @@
 
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
+import com.kotlinnlp.transitionsystems.Transition
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
+import com.kotlinnlp.transitionsystems.state.State
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 
 /**
  * The [FeaturesExtractor] that implements [Trainable].
  */
 interface FeaturesExtractorTrainable<
-  in StateViewType : StateView,
+  StateType: State<StateType>,
+  TransitionType: Transition<TransitionType, StateType>,
+  ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType>,
+  in StateViewType : StateView<StateType>,
   out FeaturesType : Features<*, *>>
   :
-  FeaturesExtractor<StateViewType, ContextType, FeaturesType>,
+  FeaturesExtractor<StateType, TransitionType, ItemType, ContextType, StateViewType, FeaturesType>,
   Trainable

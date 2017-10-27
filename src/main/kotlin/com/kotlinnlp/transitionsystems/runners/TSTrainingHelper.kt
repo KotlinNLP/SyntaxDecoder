@@ -97,8 +97,6 @@ class TSTrainingHelper<
               extendedState: ExtendedState<
                 StateType, TransitionType, ItemType, ContextType>) -> Unit)? = null): DependencyTree {
 
-    this.relevantErrorsCount = 0
-
     val state: StateType = this.transitionSystem.getInitialState(itemIds)
 
     val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
@@ -267,5 +265,7 @@ class TSTrainingHelper<
     if (this.featuresExtractor is FeaturesExtractorTrainable) {
       this.featuresExtractor.update()
     }
+
+    this.relevantErrorsCount = 0
   }
 }

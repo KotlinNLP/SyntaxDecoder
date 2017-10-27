@@ -27,10 +27,10 @@ import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
 /**
- * The helper to train a SyntaxDecoder.
+ * The helper to train the trainable components of a Transition System (the actions scorer and the features extractor).
  *
  */
-class ActionsScorerTrainer<
+class TSTrainingHelper<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType>,
@@ -237,6 +237,7 @@ class ActionsScorerTrainer<
    * Beat the occurrence of a new batch
    */
   override fun newBatch() {
+
     this.actionsScorer.newBatch()
 
     if (this.featuresExtractor is FeaturesExtractorTrainable) {
@@ -248,6 +249,7 @@ class ActionsScorerTrainer<
    * Beat the occurrence of a new epoch
    */
   override fun newEpoch() {
+
     this.actionsScorer.newEpoch()
 
     if (this.featuresExtractor is FeaturesExtractorTrainable) {
@@ -259,6 +261,7 @@ class ActionsScorerTrainer<
    * Update the trainable components
    */
   override fun update() {
+
     this.actionsScorer.update()
 
     if (this.featuresExtractor is FeaturesExtractorTrainable) {

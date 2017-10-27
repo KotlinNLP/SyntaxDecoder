@@ -22,7 +22,6 @@ import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
-import com.kotlinnlp.transitionsystems.state.items.ItemsFactory
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
@@ -33,7 +32,7 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 class TSTrainingHelper<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   StateViewType : StateView<StateType>,
   FeaturesErrorsType: FeaturesErrors,
@@ -44,7 +43,6 @@ class TSTrainingHelper<
     ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
-  private val itemsFactory: ItemsFactory<ItemType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val featuresExtractor: FeaturesExtractor<
     StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
@@ -101,7 +99,6 @@ class TSTrainingHelper<
 
     val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
       state = state,
-      items = itemIds.map { id -> this.itemsFactory(id) },
       context = context,
       oracle = this.oracleFactory(goldDependencyTree))
 

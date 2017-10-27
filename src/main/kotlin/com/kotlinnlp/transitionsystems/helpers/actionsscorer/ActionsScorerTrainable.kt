@@ -41,7 +41,7 @@ abstract class ActionsScorerTrainable<
    * Backward errors through this [ActionsScorer], starting from the scored actions of the given [structure].
    * Errors are required to be already set into the output actions properly.
    *
-   * @param structure the support structure that contains the scored actions
+   * @param structure the dynamic support structure that contains the scored actions
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
@@ -49,7 +49,9 @@ abstract class ActionsScorerTrainable<
     propagateToInput: Boolean)
 
   /**
+   * @param structure the dynamic support structure that contains the scored actions
    *
+   * @return the errors of the features used to score the actions of the given [structure]
    */
   abstract fun getFeaturesErrors(
     structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>

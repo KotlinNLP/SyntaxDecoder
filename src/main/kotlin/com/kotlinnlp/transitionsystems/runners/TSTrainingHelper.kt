@@ -257,12 +257,15 @@ class TSTrainingHelper<
    */
   override fun update() {
 
-    this.actionsScorer.update()
+    if (this.relevantErrorsCount > 0) {
 
-    if (this.featuresExtractor is FeaturesExtractorTrainable) {
-      this.featuresExtractor.update()
+      this.actionsScorer.update()
+
+      if (this.featuresExtractor is FeaturesExtractorTrainable) {
+        this.featuresExtractor.update()
+      }
+
+      this.relevantErrorsCount = 0
     }
-
-    this.relevantErrorsCount = 0
   }
 }

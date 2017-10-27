@@ -238,6 +238,10 @@ class ActionsScorerTrainer<
    */
   override fun newBatch() {
     this.actionsScorer.newBatch()
+
+    if (this.featuresExtractor is FeaturesExtractorTrainable) {
+      this.featuresExtractor.newBatch()
+    }
   }
 
   /**
@@ -245,6 +249,10 @@ class ActionsScorerTrainer<
    */
   override fun newEpoch() {
     this.actionsScorer.newEpoch()
+
+    if (this.featuresExtractor is FeaturesExtractorTrainable) {
+      this.featuresExtractor.newEpoch()
+    }
   }
 
   /**
@@ -252,5 +260,9 @@ class ActionsScorerTrainer<
    */
   override fun update() {
     this.actionsScorer.update()
+
+    if (this.featuresExtractor is FeaturesExtractorTrainable) {
+      this.featuresExtractor.update()
+    }
   }
 }

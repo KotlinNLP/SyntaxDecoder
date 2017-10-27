@@ -20,4 +20,9 @@ interface DecodingContext<SelfType: DecodingContext<SelfType, ItemType>, ItemTyp
    * A list of [StateItem].
    */
   val items: List<ItemType>
+
+  /**
+   * A callback called after the learn of a sentence.
+   */
+  fun afterLearn()
 }

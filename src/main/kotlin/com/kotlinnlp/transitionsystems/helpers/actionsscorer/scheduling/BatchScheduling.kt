@@ -8,12 +8,12 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling
 
 /**
- * BatchScheduling beats the time of each batch
+ * Implement a listener that beats the occurrence of each batch.
  */
 interface BatchScheduling {
 
   /**
-   * Beat the occurrence of a new batch
+   * Beat the occurrence of a new batch.
    */
   fun newBatch()
 }

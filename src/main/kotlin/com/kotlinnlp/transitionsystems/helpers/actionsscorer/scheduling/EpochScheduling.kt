@@ -8,12 +8,12 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling
 
 /**
- * EpochScheduling beats the time of each epoch
+ * Implement a listener that beats the occurrence of each epoch.
  */
 interface EpochScheduling {
 
   /**
-   * Beat the occurrence of a new epoch
+   * Beat the occurrence of a new epoch.
    */
   fun newEpoch()
 }

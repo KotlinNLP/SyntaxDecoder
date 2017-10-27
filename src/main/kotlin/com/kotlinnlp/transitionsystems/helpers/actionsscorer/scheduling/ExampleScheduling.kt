@@ -8,12 +8,12 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling
 
 /**
- * ExampleScheduling beats the time of each example
+ * Implement a listener that beats the occurrence of each example.
  */
 interface ExampleScheduling {
 
   /**
-   * Beat the occurrence of a new example
+   * Beat the occurrence of a new example.
    */
   fun newExample()
 }

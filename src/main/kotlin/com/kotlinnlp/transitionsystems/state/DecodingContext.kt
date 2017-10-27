@@ -7,9 +7,17 @@
 
 package com.kotlinnlp.transitionsystems.state
 
+import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.utils.Clonable
 
 /**
  * The [DecodingContext] extends the input with adding properties.
  */
-interface DecodingContext<SelfType: DecodingContext<SelfType>> : Clonable<SelfType>
+interface DecodingContext<SelfType: DecodingContext<SelfType, ItemType>, ItemType: StateItem<ItemType, *, *>>
+  : Clonable<SelfType> {
+
+  /**
+   * A list of [StateItem].
+   */
+  val items: List<ItemType>
+}

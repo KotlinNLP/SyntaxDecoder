@@ -18,7 +18,6 @@ import com.kotlinnlp.transitionsystems.utils.Clonable
  * This structure allows you to keep aligned with state the properties that can evolve together with it.
  *
  * @property state a [State]
- * @property items a list of [StateItem]
  * @property context a [DecodingContext]
  * @property oracle an [Oracle] (optional)
  */
@@ -26,9 +25,8 @@ data class ExtendedState<
   StateType : State<StateType>,
   TransitionType: Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType>>(
+  ContextType : DecodingContext<ContextType, ItemType>>(
   val state: StateType,
-  val items: List<ItemType>,
   val context: ContextType,
   val oracle: Oracle<StateType, TransitionType>?
 ) : Clonable<ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
@@ -40,7 +38,6 @@ data class ExtendedState<
 
     return ExtendedState(
       state = this.state.copy(),
-      items = this.items.map { it.copy() },
       context = this.context.copy(),
       oracle = this.oracle?.copy())
   }

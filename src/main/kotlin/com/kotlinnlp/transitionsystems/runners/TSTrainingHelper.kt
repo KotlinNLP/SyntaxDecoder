@@ -106,6 +106,10 @@ class TSTrainingHelper<
 
       this.actionsScorer.newExample()
 
+      if (this.featuresExtractor is FeaturesExtractorTrainable) {
+        this.featuresExtractor.newExample()
+      }
+
       this.processState(
         extendedState = extendedState,
         propagateToInput = propagateToInput,

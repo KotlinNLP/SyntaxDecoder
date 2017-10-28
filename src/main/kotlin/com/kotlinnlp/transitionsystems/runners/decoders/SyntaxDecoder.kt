@@ -31,6 +31,10 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
  * reached.
  *
  * @property transitionSystem a [TransitionSystem]
+ * @property actionsGenerator an actions generator
+ * @property featuresExtractor a features extractor
+ * @property actionsScorer an actions scorer
+ * @property bestActionSelector a best action selector
  */
 abstract class SyntaxDecoder<
   StateType : State<StateType>,
@@ -39,18 +43,18 @@ abstract class SyntaxDecoder<
   ItemType : StateItem<ItemType, *, *>,
   StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,
-  FeaturesExtractorStructureType: FeaturesExtractorStructure<
+  FeaturesExtractorStructureType : FeaturesExtractorStructure<
     FeaturesExtractorStructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
-  ActionsScorerStructureType: ActionsScorerStructure<
+  ActionsScorerStructureType : ActionsScorerStructure<
     ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
 (
-  protected val transitionSystem: TransitionSystem<StateType, TransitionType>,
-  private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  private val featuresExtractor: FeaturesExtractor<
+  val transitionSystem: TransitionSystem<StateType, TransitionType>,
+  val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
+  val featuresExtractor: FeaturesExtractor<
     StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
-  private val actionsScorer: ActionsScorer<
+  val actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, ActionsScorerStructureType>,
-  private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
+  val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
 ) {
 
   /**

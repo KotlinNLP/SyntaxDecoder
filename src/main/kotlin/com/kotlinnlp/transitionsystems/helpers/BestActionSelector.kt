@@ -20,7 +20,7 @@ interface BestActionSelector<
   StateType: State<StateType>,
   TransitionType: Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType>> {
+  ContextType : DecodingContext<ContextType, ItemType>> {
 
   /**
    * @param actions a list of Actions

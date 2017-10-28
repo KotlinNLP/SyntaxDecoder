@@ -20,7 +20,7 @@ import com.kotlinnlp.transitionsystems.state.stateview.StateView
 abstract class ActionsScorer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   out StateViewType : StateView<StateType>,
   in FeaturesType : Features<*, *>,

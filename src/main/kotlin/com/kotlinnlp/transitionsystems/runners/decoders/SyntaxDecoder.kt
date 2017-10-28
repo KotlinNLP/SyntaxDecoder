@@ -37,7 +37,7 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 abstract class SyntaxDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,

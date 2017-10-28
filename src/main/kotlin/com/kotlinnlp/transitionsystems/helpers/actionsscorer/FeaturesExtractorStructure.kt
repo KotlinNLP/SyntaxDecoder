@@ -23,7 +23,7 @@ open class FeaturesExtractorStructure<
     SelfType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>> {

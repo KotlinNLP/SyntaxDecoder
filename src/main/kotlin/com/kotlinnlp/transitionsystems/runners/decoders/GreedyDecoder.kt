@@ -37,7 +37,7 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 class GreedyDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,

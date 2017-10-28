@@ -23,7 +23,7 @@ import com.kotlinnlp.transitionsystems.state.items.StateItem
 class ActionsScorerDynamicStructure<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   StructureType : ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>>
 (

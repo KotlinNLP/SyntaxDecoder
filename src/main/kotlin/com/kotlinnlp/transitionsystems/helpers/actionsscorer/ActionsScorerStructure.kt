@@ -20,7 +20,7 @@ interface ActionsScorerStructure<
   SelfType: ActionsScorerStructure<SelfType, StateType, TransitionType, ContextType, ItemType>,
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>> {
 
   /**

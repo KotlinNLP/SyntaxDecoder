@@ -20,7 +20,6 @@ import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
-import com.kotlinnlp.transitionsystems.state.items.ItemsFactory
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
@@ -47,7 +46,6 @@ class GreedyDecoder<
     ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
-  itemsFactory: ItemsFactory<ItemType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   featuresExtractor: FeaturesExtractor<
     StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
@@ -58,7 +56,6 @@ class GreedyDecoder<
   SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType,
     FeaturesExtractorStructureType, ActionsScorerStructureType>(
     transitionSystem = transitionSystem,
-    itemsFactory = itemsFactory,
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,

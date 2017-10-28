@@ -21,7 +21,6 @@ import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.ExtendedState
 import com.kotlinnlp.transitionsystems.state.State
-import com.kotlinnlp.transitionsystems.state.items.ItemsFactory
 import com.kotlinnlp.transitionsystems.state.items.StateItem
 import com.kotlinnlp.transitionsystems.syntax.DependencyTree
 
@@ -32,7 +31,6 @@ import com.kotlinnlp.transitionsystems.syntax.DependencyTree
  * reached.
  *
  * @property transitionSystem a [TransitionSystem]
- * @property itemsFactory the factory of new [StateItem]s
  */
 abstract class SyntaxDecoder<
   StateType : State<StateType>,
@@ -47,7 +45,6 @@ abstract class SyntaxDecoder<
     ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
 (
   protected val transitionSystem: TransitionSystem<StateType, TransitionType>,
-  private val itemsFactory: ItemsFactory<ItemType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val featuresExtractor: FeaturesExtractor<
     StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
@@ -75,7 +72,6 @@ abstract class SyntaxDecoder<
 
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
       state = this.transitionSystem.getInitialState(itemIds),
-      items = itemIds.map { id -> this.itemsFactory(id) },
       context = context,
       oracle = null)
 

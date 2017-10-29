@@ -11,7 +11,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import transitionsystems.Utils
-import com.kotlinnlp.transitionsystems.state.templates.StackBufferState
+import com.kotlinnlp.syntaxdecoder.state.templates.StackBufferState
 import kotlin.test.assertEquals
 
 object StackBufferStateSpec: Spek({

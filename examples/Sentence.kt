@@ -6,8 +6,8 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.conllio.Token
-import com.kotlinnlp.transitionsystems.syntax.DependencyTree
-import com.kotlinnlp.transitionsystems.syntax.Deprel
+import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.syntaxdecoder.syntax.Deprel
 
 /**
  * The Sentence.

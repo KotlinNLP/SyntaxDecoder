@@ -6,20 +6,20 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.conllio.CoNLLReader
-import com.kotlinnlp.transitionsystems.models.arceagerspine.ArcEagerSpine
-import com.kotlinnlp.transitionsystems.models.arceagerspine.ArcEagerSpineOracle
-import com.kotlinnlp.transitionsystems.models.archybrid.ArcHybrid
-import com.kotlinnlp.transitionsystems.models.archybrid.ArcHybridOracle
-import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpine
-import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineNonDetOracle
-import com.kotlinnlp.transitionsystems.models.arcspine.ArcSpineOracle
-import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandard
-import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandardNonDetOracle
-import com.kotlinnlp.transitionsystems.models.arcstandard.ArcStandardOracle
-import com.kotlinnlp.transitionsystems.models.arcswift.ArcSwift
-import com.kotlinnlp.transitionsystems.models.arcswift.ArcSwiftOracle
-import com.kotlinnlp.transitionsystems.models.easyfirst.EasyFirst
-import com.kotlinnlp.transitionsystems.models.easyfirst.EasyFirstOracle
+import com.kotlinnlp.syntaxdecoder.models.arceagerspine.ArcEagerSpine
+import com.kotlinnlp.syntaxdecoder.models.arceagerspine.ArcEagerSpineOracle
+import com.kotlinnlp.syntaxdecoder.models.archybrid.ArcHybrid
+import com.kotlinnlp.syntaxdecoder.models.archybrid.ArcHybridOracle
+import com.kotlinnlp.syntaxdecoder.models.arcspine.ArcSpine
+import com.kotlinnlp.syntaxdecoder.models.arcspine.ArcSpineNonDetOracle
+import com.kotlinnlp.syntaxdecoder.models.arcspine.ArcSpineOracle
+import com.kotlinnlp.syntaxdecoder.models.arcstandard.ArcStandard
+import com.kotlinnlp.syntaxdecoder.models.arcstandard.ArcStandardNonDetOracle
+import com.kotlinnlp.syntaxdecoder.models.arcstandard.ArcStandardOracle
+import com.kotlinnlp.syntaxdecoder.models.arcswift.ArcSwift
+import com.kotlinnlp.syntaxdecoder.models.arcswift.ArcSwiftOracle
+import com.kotlinnlp.syntaxdecoder.models.easyfirst.EasyFirst
+import com.kotlinnlp.syntaxdecoder.models.easyfirst.EasyFirstOracle
 
 /**
  * Test the coverage a [TransitionSystem] for the language with the tree-bank given as first argument.

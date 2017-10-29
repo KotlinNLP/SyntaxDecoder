@@ -34,7 +34,7 @@ abstract class ActionsScorer<
    */
   abstract fun score(
     features: FeaturesType,
-    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>)
+    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>)
 
   /**
    * @return a support structure for this [ActionsScorer]
@@ -47,7 +47,7 @@ abstract class ActionsScorer<
    * @return the state view of the given structure, used by the features extractor
    */
   abstract fun buildStateView(
-    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>
+    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>
   ): StateViewType
 
   /**

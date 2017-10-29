@@ -35,7 +35,7 @@ abstract class FeaturesExtractor<
    * @return the extracted [Features]
    */
   fun setFeatures(
-    structure: FeaturesExtractorDynamicStructure<
+    structure: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>) {
 
     structure.features = this.extract(structure)
@@ -52,6 +52,6 @@ abstract class FeaturesExtractor<
    * @param structure a structure containing a state view and an extended state.
    */
   abstract protected fun extract(
-    structure: FeaturesExtractorDynamicStructure<
+    structure: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>): FeaturesType
 }

@@ -38,14 +38,14 @@ abstract class FeaturesExtractorTrainable<
   Updatable {
 
   /**
-   * Backward errors through this [FeaturesExtractor], starting from the features of the given [structure].
+   * Backward errors through this [FeaturesExtractor], starting from the features of the given [featuresMemory].
    * Errors are required to be already set into the given features.
    *
-   * @param structure the dynamic support structure that contains extracted features with their errors
+   * @param featuresMemory the dynamic support featuresMemory that contains extracted features with their errors
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
-    structure: FeaturesExtractorDynamicStructure<
+    featuresMemory: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>,
     propagateToInput: Boolean)
 }

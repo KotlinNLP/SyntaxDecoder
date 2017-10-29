@@ -46,7 +46,7 @@ abstract class ActionsScorerTrainable<
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
-    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>,
+    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>,
     propagateToInput: Boolean)
 
   /**
@@ -55,6 +55,6 @@ abstract class ActionsScorerTrainable<
    * @return the errors of the features used to score the actions of the given [structure]
    */
   abstract fun getFeaturesErrors(
-    structure: ActionsScorerDynamicStructure<StateType, TransitionType, ContextType, ItemType, StructureType>
+    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>
   ): FeaturesErrorsType
 }

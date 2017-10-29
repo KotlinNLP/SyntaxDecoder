@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.helpers.features.FeaturesErrors
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractor
-import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractorDynamicStructure
+import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractorMemory
 import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractorStructure
 import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractorTrainable
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
@@ -138,25 +138,25 @@ class SyntaxDecoderTrainer<
     val actions: List<Transition<TransitionType, StateType>.Action> = this.actionsGenerator
       .generateFrom(transitions = this.transitionSystem.generateTransitions(extendedState.state))
 
-    val actionsDynamicStructure = this.actionsScorerStructure.dynamicStructureFactory(
+    val actionsScorerMemory = this.actionsScorerStructure.buildMemoryOf(
       actions = actions,
       extendedState = extendedState)
 
-    val featuresDynamicStructure = this.featuresExtractorStructure.dynamicStructureFactory(
+    val featuresExtractorMemory = this.featuresExtractorStructure.buildMemoryOf(
       extendedState = extendedState,
-      stateView = this.actionsScorer.buildStateView(actionsDynamicStructure))
+      stateView = this.actionsScorer.buildStateView(actionsScorerMemory))
 
     this.scoreActions(
-      actionsDynamicStructure = actionsDynamicStructure,
-      featuresDynamicStructure = featuresDynamicStructure)
+      actionsMemory = actionsScorerMemory,
+      featuresMemory = featuresExtractorMemory)
 
-    val sortedActionsDynamicStructure = this.actionsScorerStructure.dynamicStructureFactory(
-      actions = actionsDynamicStructure.actions.sortByScoreAndPriority(),
+    val sortedActionsScorerMemory = this.actionsScorerStructure.buildMemoryOf(
+      actions = actionsScorerMemory.actions.sortByScoreAndPriority(),
       extendedState = extendedState)
 
     this.calculateAndPropagateErrors(
-      featuresDynamicStructure = featuresDynamicStructure,
-      actionsDynamicStructure = sortedActionsDynamicStructure,
+      featuresMemory = featuresExtractorMemory,
+      actionsMemory = sortedActionsScorerMemory,
       propagateToInput = propagateToInput)
 
     this.applyAction(
@@ -168,47 +168,47 @@ class SyntaxDecoderTrainer<
   /**
    * Score the actions allowed in a given state, assigns them a score.
    *
-   * @param featuresDynamicStructure the dynamic support structure of the [featuresExtractor]
-   * @param actionsDynamicStructure the dynamic support structure of the [actionsScorer]
+   * @param featuresMemory the dynamic support structure of the [featuresExtractor]
+   * @param actionsMemory the dynamic support structure of the [actionsScorer]
    */
   private fun scoreActions(
-    featuresDynamicStructure: FeaturesExtractorDynamicStructure<
+    featuresMemory: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
-    actionsDynamicStructure: ActionsScorerDynamicStructure<
+    actionsMemory: ActionsScorerMemory<
       StateType, TransitionType, ContextType, ItemType, ActionsScorerStructureType>) {
 
-    this.featuresExtractor.setFeatures(featuresDynamicStructure)
+    this.featuresExtractor.setFeatures(featuresMemory)
 
-    this.actionsScorer.score(features = featuresDynamicStructure.features, structure = actionsDynamicStructure)
+    this.actionsScorer.score(features = featuresMemory.features, structure = actionsMemory)
   }
 
   /**
    * Calculate and propagate the errors of the actions in the given support structure respect to a current state.
    *
-   * @param featuresDynamicStructure the dynamic support structure of the [featuresExtractor]
-   * @param actionsDynamicStructure the dynamic support structure of the [actionsScorer]
+   * @param featuresMemory the dynamic support structure of the [featuresExtractor]
+   * @param actionsMemory the dynamic support structure of the [actionsScorer]
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
   private fun calculateAndPropagateErrors(
-    featuresDynamicStructure: FeaturesExtractorDynamicStructure<
+    featuresMemory: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
-    actionsDynamicStructure: ActionsScorerDynamicStructure<
+    actionsMemory: ActionsScorerMemory<
       StateType, TransitionType, ContextType, ItemType, ActionsScorerStructureType>,
     propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
-      actions = actionsDynamicStructure.actions,
-      extendedState = actionsDynamicStructure.extendedState)
+      actions = actionsMemory.actions,
+      extendedState = actionsMemory.extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
 
       this.relevantErrorsCount++
 
-      this.actionsScorer.backward(structure = actionsDynamicStructure, propagateToInput = propagateToInput)
+      this.actionsScorer.backward(structure = actionsMemory, propagateToInput = propagateToInput)
 
       if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
-        featuresDynamicStructure.features.errors = this.actionsScorer.getFeaturesErrors(actionsDynamicStructure)
-        this.featuresExtractor.backward(structure = featuresDynamicStructure, propagateToInput = propagateToInput)
+        featuresMemory.features.errors = this.actionsScorer.getFeaturesErrors(actionsMemory)
+        this.featuresExtractor.backward(featuresMemory = featuresMemory, propagateToInput = propagateToInput)
       }
     }
   }

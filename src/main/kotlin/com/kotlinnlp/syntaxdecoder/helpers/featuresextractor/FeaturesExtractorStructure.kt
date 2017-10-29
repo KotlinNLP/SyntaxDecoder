@@ -32,14 +32,14 @@ open class FeaturesExtractorStructure<
    * @param stateView the state view used as adding context to extract features
    * @param extendedState the extended state context used to extract features
    *
-   * @return a new dynamic structure associated to this static one
+   * @return a new memory associated to this support structure
    */
   @Suppress("UNCHECKED_CAST")
-  fun dynamicStructureFactory(
+  fun buildMemoryOf(
     stateView: StateViewType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ) =
-    FeaturesExtractorDynamicStructure(
+    FeaturesExtractorMemory(
       structure = this as SelfType,
       stateView = stateView,
       extendedState = extendedState)

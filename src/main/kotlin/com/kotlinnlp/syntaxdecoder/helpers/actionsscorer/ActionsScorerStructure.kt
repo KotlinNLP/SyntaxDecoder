@@ -27,14 +27,14 @@ interface ActionsScorerStructure<
    * @param actions the actions to score
    * @param extendedState the extended state to use for the scoring
    *
-   * @return a new dynamic structure associated to this static one
+   * @return a new memory associated to this support structure
    */
   @Suppress("UNCHECKED_CAST")
-  fun dynamicStructureFactory(
+  fun buildMemoryOf(
     actions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ) =
-    ActionsScorerDynamicStructure(
+    ActionsScorerMemory(
       structure = this as SelfType,
       actions = actions,
       extendedState = extendedState)

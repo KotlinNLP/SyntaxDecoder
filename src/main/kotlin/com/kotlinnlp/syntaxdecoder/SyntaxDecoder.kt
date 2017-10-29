@@ -135,17 +135,17 @@ abstract class SyntaxDecoder<
     val actions = this.actionsGenerator.generateFrom(
       transitions = this.transitionSystem.generateTransitions(extendedState.state))
 
-    val actionsDynamicStructure = actionsScorerStructure.dynamicStructureFactory(
+    val actionsScorerMemory = actionsScorerStructure.buildMemoryOf(
       actions = actions,
       extendedState = extendedState)
 
-    val featuresDynamicStructure = featuresExtractorStructure.dynamicStructureFactory(
+    val featuresExtractorMemory = featuresExtractorStructure.buildMemoryOf(
       extendedState = extendedState,
-      stateView = this.actionsScorer.buildStateView(actionsDynamicStructure))
+      stateView = this.actionsScorer.buildStateView(actionsScorerMemory))
 
-    this.featuresExtractor.setFeatures(featuresDynamicStructure)
+    this.featuresExtractor.setFeatures(featuresExtractorMemory)
 
-    this.actionsScorer.score(features = featuresDynamicStructure.features, structure = actionsDynamicStructure)
+    this.actionsScorer.score(features = featuresExtractorMemory.features, structure = actionsScorerMemory)
 
     return actions.sortByScoreAndPriority()
   }

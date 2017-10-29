@@ -6,9 +6,11 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.progressindicator.ProgressIndicatorBar
-import com.kotlinnlp.syntaxdecoder.*
 import com.kotlinnlp.syntaxdecoder.helpers.ActionsGenerator
-import com.kotlinnlp.syntaxdecoder.state.State
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
+import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 
 /**
  *

@@ -8,9 +8,9 @@
 package com.kotlinnlp.syntaxdecoder.helpers
 
 import com.kotlinnlp.syntaxdecoder.syntax.Deprel
-import com.kotlinnlp.syntaxdecoder.state.State
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
-import com.kotlinnlp.syntaxdecoder.Transition
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 
 /**
  * The ActionsGenerator.

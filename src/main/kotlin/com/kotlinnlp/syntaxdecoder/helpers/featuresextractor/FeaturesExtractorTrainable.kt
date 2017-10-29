@@ -7,16 +7,16 @@
 
 package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor
 
-import com.kotlinnlp.syntaxdecoder.Transition
-import com.kotlinnlp.syntaxdecoder.helpers.Updatable
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
+import com.kotlinnlp.syntaxdecoder.utils.Updatable
 import com.kotlinnlp.syntaxdecoder.helpers.features.Features
-import com.kotlinnlp.syntaxdecoder.helpers.scheduling.BatchScheduling
-import com.kotlinnlp.syntaxdecoder.helpers.scheduling.EpochScheduling
-import com.kotlinnlp.syntaxdecoder.helpers.scheduling.ExampleScheduling
-import com.kotlinnlp.syntaxdecoder.state.stateview.StateView
-import com.kotlinnlp.syntaxdecoder.state.DecodingContext
-import com.kotlinnlp.syntaxdecoder.state.State
-import com.kotlinnlp.syntaxdecoder.state.items.StateItem
+import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
+import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
+import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
+import com.kotlinnlp.syntaxdecoder.DecodingContext
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+import com.kotlinnlp.syntaxdecoder.items.StateItem
 
 /**
  * The trainable [FeaturesExtractor].

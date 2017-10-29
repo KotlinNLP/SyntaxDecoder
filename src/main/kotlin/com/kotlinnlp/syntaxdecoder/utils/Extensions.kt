@@ -8,6 +8,21 @@
 package com.kotlinnlp.syntaxdecoder.utils
 
 import com.kotlinnlp.syntaxdecoder.syntax.Deprel
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+
+/**
+ * A [Comparator] of actions by score and then by transition priority.
+ */
+private val scoreTransitionComparator
+  = compareByDescending<Transition<*, *>.Action> { it.score }.thenBy { it.transition.priority }
+
+/**
+ * Sort a list of actions by score and then by transition priority.
+ */
+fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
+  List<Transition<TransitionType, StateType>.Action>.sortByScoreAndPriority()
+  = this.sortedWith(scoreTransitionComparator)
 
 /**
  * Groups the elements of the original deprels collection by the Deprel.Position property.

@@ -78,7 +78,6 @@ class TSTrainingHelper<
    * The best local action is applied with a greedy approach until the final state is reached.
    * Before applying it, the temporary result is compared to the gold [DependencyTree] to
    *
-   * @param itemIds a list of item ids
    * @param context a generic [DecodingContext] used to decode
    * @param goldDependencyTree the gold [DependencyTree]
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
@@ -86,8 +85,7 @@ class TSTrainingHelper<
    *
    * @return the [DependencyTree] built following a greedy approach
    */
-  fun learn(itemIds: List<Int>,
-            context: ContextType,
+  fun learn(context: ContextType,
             goldDependencyTree: DependencyTree,
             propagateToInput: Boolean,
             beforeApplyAction: ((
@@ -95,7 +93,7 @@ class TSTrainingHelper<
               extendedState: ExtendedState<
                 StateType, TransitionType, ItemType, ContextType>) -> Unit)? = null): DependencyTree {
 
-    val state: StateType = this.transitionSystem.getInitialState(itemIds)
+    val state: StateType = this.transitionSystem.getInitialState(context.items.map { it.id } )
 
     val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
       state = state,

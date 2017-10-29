@@ -60,14 +60,12 @@ abstract class SyntaxDecoder<
   /**
    * Decode the syntax of the given items building a dependency tree.
    *
-   * @param itemIds a list of item ids
    * @param context a generic [DecodingContext] used to decode
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a [DependencyTree]
    */
   fun decode(
-    itemIds: List<Int>,
     context: ContextType,
     beforeApplyAction: ((
       action: Transition<TransitionType, StateType>.Action,
@@ -75,7 +73,7 @@ abstract class SyntaxDecoder<
   ): DependencyTree {
 
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
-      state = this.transitionSystem.getInitialState(itemIds),
+      state = this.transitionSystem.getInitialState(context.items.map { it.id } ),
       context = context,
       oracle = null)
 

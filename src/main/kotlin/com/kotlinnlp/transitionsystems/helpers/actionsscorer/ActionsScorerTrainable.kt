@@ -8,11 +8,12 @@
 package com.kotlinnlp.transitionsystems.helpers.actionsscorer
 
 import com.kotlinnlp.transitionsystems.Transition
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.FeaturesErrors
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.BatchScheduling
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.EpochScheduling
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling.ExampleScheduling
+import com.kotlinnlp.transitionsystems.helpers.Updatable
+import com.kotlinnlp.transitionsystems.helpers.features.Features
+import com.kotlinnlp.transitionsystems.helpers.features.FeaturesErrors
+import com.kotlinnlp.transitionsystems.helpers.scheduling.BatchScheduling
+import com.kotlinnlp.transitionsystems.helpers.scheduling.EpochScheduling
+import com.kotlinnlp.transitionsystems.helpers.scheduling.ExampleScheduling
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.State
 import com.kotlinnlp.transitionsystems.state.items.StateItem

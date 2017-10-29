@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer
+package com.kotlinnlp.transitionsystems.helpers.featuresextractor
 
 import com.kotlinnlp.transitionsystems.Transition
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.features.Features
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext
 import com.kotlinnlp.transitionsystems.state.State

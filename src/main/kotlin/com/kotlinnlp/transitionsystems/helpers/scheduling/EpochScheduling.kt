@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling
+package com.kotlinnlp.transitionsystems.helpers.scheduling
 
 /**
  * Implement a listener that beats the occurrence of each epoch.

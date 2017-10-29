@@ -5,15 +5,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer.scheduling
+package com.kotlinnlp.transitionsystems.helpers.scheduling
 
 /**
- * Implement a listener that beats the occurrence of each example.
+ * Implement a listener that beats the occurrence of each batch.
  */
-interface ExampleScheduling {
+interface BatchScheduling {
 
   /**
-   * Beat the occurrence of a new example.
+   * Beat the occurrence of a new batch.
    */
-  fun newExample()
+  fun newBatch()
 }

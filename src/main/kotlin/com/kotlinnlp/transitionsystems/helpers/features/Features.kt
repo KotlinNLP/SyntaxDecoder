@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer.features
+package com.kotlinnlp.transitionsystems.helpers.features
 
 /**
  * The features extracted from a FeaturesExtractor, used as input of the ActionsScorer.

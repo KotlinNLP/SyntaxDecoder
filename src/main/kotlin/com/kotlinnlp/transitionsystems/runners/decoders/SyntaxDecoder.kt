@@ -13,9 +13,9 @@ import com.kotlinnlp.transitionsystems.helpers.ActionsGenerator
 import com.kotlinnlp.transitionsystems.helpers.BestActionSelector
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.transitionsystems.helpers.actionsscorer.ActionsScorerStructure
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.FeaturesExtractor
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.FeaturesExtractorStructure
-import com.kotlinnlp.transitionsystems.helpers.actionsscorer.features.Features
+import com.kotlinnlp.transitionsystems.helpers.featuresextractor.FeaturesExtractor
+import com.kotlinnlp.transitionsystems.helpers.featuresextractor.FeaturesExtractorStructure
+import com.kotlinnlp.transitionsystems.helpers.features.Features
 import com.kotlinnlp.transitionsystems.helpers.sortByScoreAndPriority
 import com.kotlinnlp.transitionsystems.state.stateview.StateView
 import com.kotlinnlp.transitionsystems.state.DecodingContext

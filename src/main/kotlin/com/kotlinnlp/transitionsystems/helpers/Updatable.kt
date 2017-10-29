@@ -5,9 +5,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.transitionsystems.helpers.actionsscorer.features
+package com.kotlinnlp.transitionsystems.helpers
 
 /**
- * The errors object associated to the [Features].
+ * Define an updatable object
  */
-interface FeaturesErrors
+interface Updatable {
+
+  /**
+   * Update the trainable components of this object.
+   */
+  fun update()
+}

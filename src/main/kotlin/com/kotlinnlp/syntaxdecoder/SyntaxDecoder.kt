@@ -15,7 +15,7 @@ import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.ActionsScorerStructure
 import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractorStructure
-import com.kotlinnlp.syntaxdecoder.helpers.features.Features
+import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem

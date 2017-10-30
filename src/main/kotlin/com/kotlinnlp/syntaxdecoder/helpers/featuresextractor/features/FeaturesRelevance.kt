@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.features
+package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features
 
 /**
  * The relevance object associated to the [Features].

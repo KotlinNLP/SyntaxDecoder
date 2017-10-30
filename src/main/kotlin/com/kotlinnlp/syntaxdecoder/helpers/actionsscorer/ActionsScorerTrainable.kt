@@ -9,8 +9,8 @@ package com.kotlinnlp.syntaxdecoder.helpers.actionsscorer
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
-import com.kotlinnlp.syntaxdecoder.helpers.features.Features
-import com.kotlinnlp.syntaxdecoder.helpers.features.FeaturesErrors
+import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.Features
+import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.FeaturesErrors
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling

@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.helpers.features.Features
+import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem

@@ -126,7 +126,7 @@ abstract class SyntaxDecoder<
    *
    * @return a list of scored actions
    */
-  private fun getScoredActions(
+  protected fun getScoredActions(
     featuresExtractorStructure: FeaturesExtractorStructureType,
     actionsScorerStructure: ActionsScorerStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>

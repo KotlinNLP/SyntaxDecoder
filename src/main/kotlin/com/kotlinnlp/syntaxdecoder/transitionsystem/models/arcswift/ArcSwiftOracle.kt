@@ -129,7 +129,7 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
    * @return the cost of this transition.
    */
   private fun Shift.calculateCost(): Int =
-    if (this@ArcSwiftOracle.thereAreCorrectArcs(this.state)) 1 else 0
+    if (this@ArcSwiftOracle.thereAreCorrectArcs(this.refState)) 1 else 0
 
   /**
    * @param state a state

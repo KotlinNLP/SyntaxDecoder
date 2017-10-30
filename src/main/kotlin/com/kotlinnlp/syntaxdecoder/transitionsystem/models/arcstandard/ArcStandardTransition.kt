@@ -17,5 +17,5 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
  * @property state the [State] on which this transition operates
  */
 abstract class ArcStandardTransition(
-  state: StackBufferState
-) : Transition<ArcStandardTransition, StackBufferState>(state)
+  refState: StackBufferState
+) : Transition<ArcStandardTransition, StackBufferState>(refState)

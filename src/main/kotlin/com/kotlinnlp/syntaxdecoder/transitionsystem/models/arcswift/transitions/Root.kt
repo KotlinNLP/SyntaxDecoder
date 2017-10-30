@@ -9,6 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftTransition
 
 /**
@@ -16,9 +17,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftTran
  *
  * Root[(σ|s0, β, T)] ⇒ (σ, β, T ∪ {(s0, root)})
  *
- * @property state the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates.
  */
-class Root(state: StackBufferState): ArcSwiftTransition(state), SyntacticDependency {
+class Root(refState: StackBufferState): ArcSwiftTransition(refState), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -38,21 +39,25 @@ class Root(state: StackBufferState): ArcSwiftTransition(state), SyntacticDepende
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.state.stack.last()
+  override val dependentId: Int get() = this.refState.stack.last()
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.buffer.isEmpty() && this.state.stack.isNotEmpty() &&
-      this.state.unattachedStackElements.size == 1
+    this.refState.buffer.isEmpty() && this.refState.stack.isNotEmpty() &&
+      this.refState.unattachedStackElements.size == 1
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.stack.clear()
+  override fun perform(state: StackBufferState) {
+    state.stack.clear()
   }
 
   /**

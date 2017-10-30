@@ -9,6 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transi
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineTransition
 import com.kotlinnlp.syntaxdecoder.utils.removeLast
@@ -18,9 +19,9 @@ import com.kotlinnlp.syntaxdecoder.utils.removeLast
  *
  * ArcLeft[(σ|s0, b0|β, T)] ⇒ (σ, b0|β, T ∪ {(b0, s0[0])})
  *
- * @property state the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates.
  */
-class ArcLeft(state: ArcEagerSpineState) : ArcEagerSpineTransition(state), SyntacticDependency {
+class ArcLeft(refState: ArcEagerSpineState) : ArcEagerSpineTransition(refState), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,25 +36,29 @@ class ArcLeft(state: ArcEagerSpineState) : ArcEagerSpineTransition(state), Synta
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.buffer.first()
+  override val governorId: Int get() = this.refState.buffer.first()
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.state.stack.last().root
+  override val dependentId: Int get() = this.refState.stack.last().root
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.stack.isNotEmpty() && this.state.buffer.isNotEmpty()
+    this.refState.stack.isNotEmpty() && this.refState.buffer.isNotEmpty()
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.stack.removeLast() // remove the dependent
+  override fun perform(state: ArcEagerSpineState) {
+    state.stack.removeLast() // remove the dependent
   }
 
   /**

@@ -9,6 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftTransition
 import com.kotlinnlp.syntaxdecoder.utils.removeFirst
 
@@ -17,10 +18,10 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * (σ|ik| . . . |i1, j|β, A) ⇒ (σ|ik|j, β, A ∪ {(ik → j)})
  *
- * @property state the [State] on which this transition operates
+ * @property refState the [State] on which this transition operates
  * @property governorStackIndex the position in the stack of the governor element
  */
-class ArcRight(state: StackBufferState, val governorStackIndex: Int): ArcSwiftTransition(state), SyntacticDependency {
+class ArcRight(refState: StackBufferState, val governorStackIndex: Int): ArcSwiftTransition(refState), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,26 +36,26 @@ class ArcRight(state: StackBufferState, val governorStackIndex: Int): ArcSwiftTr
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack[this.governorStackIndex]
+  override val governorId: Int get() = this.refState.stack[this.governorStackIndex]
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.state.buffer.first()
+  override val dependentId: Int get() = this.refState.buffer.first()
 
   /**
    * True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get () =
-    this.state.buffer.isNotEmpty()
-      && this.governorStackIndex <= this.state.stack.lastIndex
+    this.refState.buffer.isNotEmpty()
+      && this.governorStackIndex <= this.refState.stack.lastIndex
       && (this.governorStackIndex == 0 || this.attachedElementsUntilK)
 
   /**
    * True if all the elements until [governorStackIndex] are already attached.
    */
   private val attachedElementsUntilK: Boolean get() =
-    this.state.stack.subList(0, this.governorStackIndex - 1).all { this.state.dependencyTree.isAttached(it) }
+    this.refState.stack.subList(0, this.governorStackIndex - 1).all { this.refState.dependencyTree.isAttached(it) }
 
   /**
    * Ensures that the value of 'governorStackIndex' is within the limits.
@@ -62,12 +63,16 @@ class ArcRight(state: StackBufferState, val governorStackIndex: Int): ArcSwiftTr
   init { require(this.governorStackIndex >= 0) }
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.stack = ArrayList(this.state.stack.slice(this.governorStackIndex.. this.state.stack.lastIndex))
-    this.state.stack.add(0, this.state.buffer.removeFirst())
+  override fun perform(state: StackBufferState) {
+    state.stack = ArrayList(state.stack.slice(this.governorStackIndex.. state.stack.lastIndex))
+    state.stack.add(0, state.buffer.removeFirst())
   }
 
   /**

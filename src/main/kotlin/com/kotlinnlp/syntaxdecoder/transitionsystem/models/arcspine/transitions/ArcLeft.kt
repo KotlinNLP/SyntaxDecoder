@@ -9,6 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.ArcSpineState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.ArcSpineTransition
 import com.kotlinnlp.syntaxdecoder.utils.pop
@@ -17,10 +18,10 @@ import com.kotlinnlp.syntaxdecoder.utils.secondToLast
 /**
  * The ArcLeft transition.
  *
- * @property state the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates.
  * @property governorSpineIndex the index of the governor within the left spine of the topmost element in the stack
  */
-class ArcLeft(state: ArcSpineState, val governorSpineIndex: Int) : ArcSpineTransition(state), SyntacticDependency {
+class ArcLeft(refState: ArcSpineState, val governorSpineIndex: Int) : ArcSpineTransition(refState), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,18 +36,18 @@ class ArcLeft(state: ArcSpineState, val governorSpineIndex: Int) : ArcSpineTrans
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack.last().leftSpine[this.governorSpineIndex]
+  override val governorId: Int get() = this.refState.stack.last().leftSpine[this.governorSpineIndex]
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.state.stack.secondToLast().root
+  override val dependentId: Int get() = this.refState.stack.secondToLast().root
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.stack.size > 1 && this.state.stack.last().leftSpine.size >= this.governorSpineIndex
+    this.refState.stack.size > 1 && this.refState.stack.last().leftSpine.size >= this.governorSpineIndex
 
   /**
    * Ensures that the value of 'governorSpineIndex' is within the limits.
@@ -54,14 +55,18 @@ class ArcLeft(state: ArcSpineState, val governorSpineIndex: Int) : ArcSpineTrans
   init { require(this.governorSpineIndex >= 0) }
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    val s0: ArcSpineState.StackElement = this.state.stack.pop()
-    val s1: ArcSpineState.StackElement = this.state.stack.pop()
+  override fun perform(state: ArcSpineState) {
+    val s0: ArcSpineState.StackElement = state.stack.pop()
+    val s1: ArcSpineState.StackElement = state.stack.pop()
 
-    this.state.stack.add(s0.addToLeftSpine(this.governorSpineIndex, s1.leftSpine))
+    state.stack.add(s0.addToLeftSpine(this.governorSpineIndex, s1.leftSpine))
   }
 
   /**

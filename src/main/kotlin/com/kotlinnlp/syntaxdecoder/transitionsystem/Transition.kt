@@ -18,7 +18,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * @property state the [State] on which this transition operates.
  */
 abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: State<StateType>>(
-  val state: StateType
+  val refState: StateType
 ) {
 
   /**
@@ -45,11 +45,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner abstract class Action internal constructor(val id: Int = -1, var score: Double) {
 
     /**
-     * The state on which this action operates.
-     */
-    val state: StateType = this@Transition.state
-
-    /**
      * The [Transition] from which this [Action] originated.
      */
     @Suppress("UNCHECKED_CAST")
@@ -61,21 +56,33 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     var error: Double = 0.0
 
     /**
+     * @param copyState whether perform this [Action] to the [refState] or a copy of it
+     *
      * @return the state modified by this [Action]
      */
-    fun apply(): StateType {
+    fun apply(copyState: Boolean = false): StateType {
 
-      this@Transition.perform()
+      val state: StateType = if (copyState)
+        this.transition.refState.copy()
+      else
+        this.transition.refState
 
-      this.perform() // call after the transition has been performed
+      this@Transition.perform(state)
 
-      return this.state
+      this.perform(state) // call after the transition has been performed
+
+      return state
     }
 
     /**
-     * Perform this [Action] modifying the DependencyTree of its [state].
+     * Perform this [Action] modifying the DependencyTree of the given [state].
+     *
+     * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+     * compatible with this [Action] as it can only be the [refState] or a copy of it.
+     *
+     * @param state a State
      */
-    abstract protected fun perform()
+    abstract protected fun perform(state: StateType)
   }
 
   /**
@@ -84,9 +91,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Shift internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * Perform this [Action] modifying the DependencyTree of its [state].
+     * Perform this [Action] modifying the DependencyTree of the given [state].
+     *
+     * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+     * compatible with this [Action] as it can only be the [refState] or a copy of it.
+     *
+     * @param state a State
      */
-    override fun perform() = Unit
+    override fun perform(state: StateType) = Unit
 
     /**
      * @return its string representation.
@@ -100,9 +112,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Unshift internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * Perform this [Action] modifying the DependencyTree of its [state].
+     * Perform this [Action] modifying the DependencyTree of the given [state].
+     *
+     * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+     * compatible with this [Action] as it can only be the [refState] or a copy of it.
+     *
+     * @param state a State
      */
-    override fun perform() = Unit
+    override fun perform(state: StateType) = Unit
 
     /**
      * @return its string representation.
@@ -116,9 +133,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Relocate internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * Perform this [Action] modifying the DependencyTree of its [state].
+     * Perform this [Action] modifying the DependencyTree of the given [state].
+     *
+     * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+     * compatible with this [Action] as it can only be the [refState] or a copy of it.
+     *
+     * @param state a State
      */
-    override fun perform() = Unit
+    override fun perform(state: StateType) = Unit
 
     /**
      * @return its string representation.
@@ -132,9 +154,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class NoArc internal constructor(id: Int, score: Double) : Action(id, score) {
 
     /**
-     * Perform this [Action] modifying the DependencyTree of its [state].
+     * Perform this [Action] modifying the DependencyTree of the given [state].
+     *
+     * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+     * compatible with this [Action] as it can only be the [refState] or a copy of it.
+     *
+     * @param state a State
      */
-    override fun perform() = Unit
+    override fun perform(state: StateType) = Unit
 
     /**
      * @return its string representation.
@@ -177,8 +204,8 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     /**
      *
      */
-    override fun perform() {
-      this.state.dependencyTree.setArc(
+    override fun perform(state: StateType) {
+      state.dependencyTree.setArc(
         dependentId = this.dependentId,
         governorId = this.governorId,
         deprel = deprel)
@@ -224,10 +251,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   }
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  abstract protected fun perform()
+  abstract protected fun perform(state: StateType)
 
   /**
    * @param id the id of the action

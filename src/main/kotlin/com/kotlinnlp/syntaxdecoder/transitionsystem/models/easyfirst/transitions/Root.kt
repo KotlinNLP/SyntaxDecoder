@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.transitions
 
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.PendingListState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstTransition
@@ -14,9 +15,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstTr
 /**
  * The Root transition.
  *
- * @property state the [State] on which this transition operates
+ * @property refState the [State] on which this transition operates
  */
-class Root(state: PendingListState) : EasyFirstTransition(state) {
+class Root(refState: PendingListState) : EasyFirstTransition(refState) {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -36,19 +37,23 @@ class Root(state: PendingListState) : EasyFirstTransition(state) {
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.state.pendingList.last()
+  override val dependentId: Int get() = this.refState.pendingList.last()
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.state.pendingList.size == 1
+  override val isAllowed: Boolean get() = this.refState.pendingList.size == 1
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.pendingList.clear()
+  override fun perform(state: PendingListState) {
+    state.pendingList.clear()
   }
 
   /**

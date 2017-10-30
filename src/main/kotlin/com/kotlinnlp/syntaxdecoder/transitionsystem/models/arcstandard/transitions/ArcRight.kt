@@ -10,6 +10,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.transiti
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.ArcStandardTransition
 import com.kotlinnlp.syntaxdecoder.utils.pop
 import com.kotlinnlp.syntaxdecoder.utils.secondToLast
@@ -19,9 +20,9 @@ import com.kotlinnlp.syntaxdecoder.utils.secondToLast
  *
  * ([σ|i|j], B, A) ⇒ ([σ|i], B, A∪{(i, l, j)})
  *
- * @property state the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates.
  */
-class ArcRight(state: StackBufferState) : ArcStandardTransition(state), SyntacticDependency {
+class ArcRight(refState: StackBufferState) : ArcStandardTransition(refState), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -36,24 +37,28 @@ class ArcRight(state: StackBufferState) : ArcStandardTransition(state), Syntacti
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack.secondToLast()
+  override val governorId: Int get() = this.refState.stack.secondToLast()
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = state.stack.last()
+  override val dependentId: Int get() = this.refState.stack.last()
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.state.stack.size > 1
+  override val isAllowed: Boolean get() = this.refState.stack.size > 1
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.stack.pop() // remove the dependent
+  override fun perform(state: StackBufferState) {
+    state.stack.pop() // remove the dependent
   }
 
   /**

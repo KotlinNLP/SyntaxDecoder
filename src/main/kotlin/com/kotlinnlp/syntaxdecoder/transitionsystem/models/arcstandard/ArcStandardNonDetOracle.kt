@@ -61,8 +61,8 @@ open class ArcStandardNonDetOracle : ArcStandardOracle() {
    */
   override fun Shift.calculateCost(): Int =
     when {
-      !this@ArcStandardNonDetOracle.thereAreCorrectArcs(this.state) -> 0
-      this.state.buffer.any { goldDependencyTree.heads[it] == this.state.stack.last() } -> 0
+      !this@ArcStandardNonDetOracle.thereAreCorrectArcs(this.refState) -> 0
+      this.refState.buffer.any { goldDependencyTree.heads[it] == this.refState.stack.last() } -> 0
       else -> 1
     }
 }

@@ -123,13 +123,13 @@ open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
    * @return the cost of this transition.
    */
   open protected fun Shift.calculateCost(): Int =
-    if (this.state.stack.size <= 1) 0 else {
+    if (this.refState.stack.size <= 1) 0 else {
 
-      val s0h = goldDependencyTree.heads[this.state.stack.last().root]
-      val s1h = goldDependencyTree.heads[this.state.stack.secondToLast().root]
+      val s0h = goldDependencyTree.heads[this.refState.stack.last().root]
+      val s1h = goldDependencyTree.heads[this.refState.stack.secondToLast().root]
 
-      val s0ls = this.state.stack.last().leftSpine
-      val s1rs = this.state.stack.secondToLast().rightSpine
+      val s0ls = this.refState.stack.last().leftSpine
+      val s1rs = this.refState.stack.secondToLast().rightSpine
 
       if (s0ls.contains(s1h) || s1rs.contains(s0h)) 1 else 0
     }

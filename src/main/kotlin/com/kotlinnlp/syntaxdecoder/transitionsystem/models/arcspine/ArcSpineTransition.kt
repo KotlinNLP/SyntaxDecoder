@@ -16,5 +16,5 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
  * @property state the [State] on which this transition operates
  */
 abstract class ArcSpineTransition(
-  state: ArcSpineState
-) : Transition<ArcSpineTransition, ArcSpineState>(state)
+  refState: ArcSpineState
+) : Transition<ArcSpineTransition, ArcSpineState>(refState)

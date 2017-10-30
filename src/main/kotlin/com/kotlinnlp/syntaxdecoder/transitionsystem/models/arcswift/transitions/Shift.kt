@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions
 
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftTransition
 import com.kotlinnlp.syntaxdecoder.utils.removeFirst
@@ -17,9 +18,9 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * (σ, i|β, A) ⇒ (σ|i, β, A)
  *
- * @property state the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates.
  */
-class Shift(state: StackBufferState) : ArcSwiftTransition(state) {
+class Shift(refState: StackBufferState) : ArcSwiftTransition(refState) {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -35,14 +36,18 @@ class Shift(state: StackBufferState) : ArcSwiftTransition(state) {
    * True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.buffer.size > 1 || (this.state.buffer.size == 1 && this.state.stack.isEmpty())
+    this.refState.buffer.size > 1 || (this.refState.buffer.size == 1 && this.refState.stack.isEmpty())
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.stack.add(0, this.state.buffer.removeFirst())
+  override fun perform(state: StackBufferState) {
+    state.stack.add(0, state.buffer.removeFirst())
   }
 
   /**

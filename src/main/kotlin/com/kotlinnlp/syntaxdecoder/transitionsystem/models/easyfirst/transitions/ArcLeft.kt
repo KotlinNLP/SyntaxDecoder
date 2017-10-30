@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.transitions
 
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.PendingListState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstTransition
@@ -15,10 +16,13 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.FocusedArc
 /**
  * The ArcLeft transition.
  *
- * @property state the [State] on which this transition operates
+ * @property refState the [State] on which this transition operates
  * @property pendingListFocus the index of the focus element in the pending list
  */
-class ArcLeft(state: PendingListState, override val pendingListFocus: Int) : FocusedArc, EasyFirstTransition(state) {
+class ArcLeft(
+  refState: PendingListState,
+  override val pendingListFocus: Int
+) : FocusedArc, EasyFirstTransition(refState) {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -33,24 +37,28 @@ class ArcLeft(state: PendingListState, override val pendingListFocus: Int) : Foc
   /**
    * The governor id.
    */
-  override val governorId: Int get() = state.pendingList[this.pendingListFocus + 1]
+  override val governorId: Int get() = this.refState.pendingList[this.pendingListFocus + 1]
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = state.pendingList[this.pendingListFocus]
+  override val dependentId: Int get() = this.refState.pendingList[this.pendingListFocus]
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.pendingListFocus in 0 .. this.state.pendingList.size
+  override val isAllowed: Boolean get() = this.pendingListFocus in 0 .. this.refState.pendingList.size
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.pendingList.removeAt(this.pendingListFocus) // remove the dependent
+  override fun perform(state: PendingListState) {
+    state.pendingList.removeAt(this.pendingListFocus) // remove the dependent
   }
 
   /**

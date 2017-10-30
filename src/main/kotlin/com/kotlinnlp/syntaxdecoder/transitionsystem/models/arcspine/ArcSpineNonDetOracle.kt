@@ -57,12 +57,12 @@ class ArcSpineNonDetOracle : ArcSpineOracle() {
    * @return the cost of this transition.
    */
   override fun Shift.calculateCost(): Int =
-    if (this.state.stack.size <= 1) 0 else {
-      val s0: ArcSpineState.StackElement = this.state.stack.last()
+    if (this.refState.stack.size <= 1) 0 else {
+      val s0: ArcSpineState.StackElement = this.refState.stack.last()
 
       when {
         s0.root < goldDependencyTree.heads[s0.root] ?: -1 -> 0
-        this.state.buffer.any { s0.rightSpine.contains(goldDependencyTree.heads[it]) } -> 0
+        this.refState.buffer.any { s0.rightSpine.contains(goldDependencyTree.heads[it]) } -> 0
         else -> 1
       }
     }

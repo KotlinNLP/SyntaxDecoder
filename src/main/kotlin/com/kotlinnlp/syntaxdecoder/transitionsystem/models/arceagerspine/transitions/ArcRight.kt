@@ -9,6 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transi
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineTransition
 import com.kotlinnlp.syntaxdecoder.utils.pop
@@ -17,13 +18,13 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
 /**
  * The ArcRight transition.
  *
- * @property state the [State] on which this transition operates
+ * @property refState the [State] on which this transition operates
  * @property governorSpineIndex the index of the governor within the right spine of the topmost element in the stack
  */
 class ArcRight(
-  state: ArcEagerSpineState,
+  refState: ArcEagerSpineState,
   val governorSpineIndex: Int
-) : ArcEagerSpineTransition(state), SyntacticDependency {
+) : ArcEagerSpineTransition(refState), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -38,20 +39,20 @@ class ArcRight(
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.state.stack.last()[this.governorSpineIndex]
+  override val governorId: Int get() = this.refState.stack.last()[this.governorSpineIndex]
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = state.buffer.first()
+  override val dependentId: Int get() = this.refState.buffer.first()
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.state.buffer.isNotEmpty() &&
-      this.state.stack.isNotEmpty() &&
-      this.state.stack.last().size >= this.governorSpineIndex
+    this.refState.buffer.isNotEmpty() &&
+      this.refState.stack.isNotEmpty() &&
+      this.refState.stack.last().size >= this.governorSpineIndex
 
   /**
    * Ensures that the value of 'governorSpineIndex' is within the limits.
@@ -59,23 +60,24 @@ class ArcRight(
   init { require(this.governorSpineIndex >= 0) }
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
+  override fun perform(state: ArcEagerSpineState) {
 
-    this.state.stack.last().insert(this.governorSpineIndex + 1, this.state.buffer.removeFirst())
+    state.stack.last().insert(this.governorSpineIndex + 1, state.buffer.removeFirst())
 
-    if (this.state.stack.size > 1 && this.state.buffer.isEmpty()) this.unshift()
+    if (state.stack.size > 1 && state.buffer.isEmpty()) {
+      state.buffer.add(state.stack.pop().root) // unshift
+    }
   }
 
   /**
    * @return the string representation of this transition.
    */
   override fun toString(): String = "arc-right(${this.governorSpineIndex})"
-
-  /**
-   * Perform an unshift on its [state].
-   */
-  private fun unshift() = this.state.buffer.add(this.state.stack.pop().root)
 }

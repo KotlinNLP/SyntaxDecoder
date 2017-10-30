@@ -114,7 +114,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
 
     if (this.isDependentReachable && !this.isArcCorrect) cost += 1
 
-    cost += this.state.stack.last().sumBy {
+    cost += this.refState.stack.last().sumBy {
       reachableDependents.intersect(goldDependencyTree.dependents[it].right).size
     }
 
@@ -133,7 +133,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     cost += reachableDependents.intersect(
       goldDependencyTree.dependents[this.dependentId].left).size
 
-    cost += this.state.stack.last().subListFrom(this.governorSpineIndex + 1)?.sumBy {
+    cost += this.refState.stack.last().subListFrom(this.governorSpineIndex + 1)?.sumBy {
       reachableDependents.intersect(goldDependencyTree.dependents[it].right).size
     } ?: 0
 
@@ -147,7 +147,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
 
     var cost = 0
 
-    val b0: Int = this.state.buffer.first()
+    val b0: Int = this.refState.buffer.first()
 
     if (reachableDependents.contains(b0)
       && (goldDependencyTree.heads[b0] != null
@@ -169,7 +169,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
   private fun ArcLeft.removeUnreachableDependents() {
     reachableDependents.remove(this.dependentId)
 
-    this.state.stack.last().forEach {
+    this.refState.stack.last().forEach {
       reachableDependents.removeAll(goldDependencyTree.dependents[it].right)
     }
   }
@@ -181,7 +181,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     reachableDependents.remove(this.dependentId)
     reachableDependents.removeAll(goldDependencyTree.dependents[this.dependentId].left)
 
-    this.state.stack.last().subListFrom(this.governorSpineIndex + 1)?.forEach {
+    this.refState.stack.last().subListFrom(this.governorSpineIndex + 1)?.forEach {
       reachableDependents.removeAll(goldDependencyTree.dependents[it].right)
     }
   }
@@ -190,7 +190,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
    * Removes from [reachableDependents] the dependents that would no longer be reachable by applying this transition.
    */
   private fun Shift.removeUnreachableDependents() {
-    val b0: Int = this.state.buffer.first()
+    val b0: Int = this.refState.buffer.first()
 
     if (goldDependencyTree.heads[b0] != null && goldDependencyTree.heads[b0]!! < b0) {
       reachableDependents.remove(b0)

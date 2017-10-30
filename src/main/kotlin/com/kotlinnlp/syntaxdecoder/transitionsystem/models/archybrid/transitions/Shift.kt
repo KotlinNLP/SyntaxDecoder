@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions
 
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybridTransition
@@ -17,9 +18,9 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * Shift[(σ, b0|β, T)] ⇒ (σ|b0, β, T)
  *
- * @property state the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates.
  */
-class Shift(state: StackBufferState) : ArcHybridTransition(state) {
+class Shift(refState: StackBufferState) : ArcHybridTransition(refState) {
 
   /**
    * The Transition type, from which depends the building of the related Action.
@@ -34,14 +35,18 @@ class Shift(state: StackBufferState) : ArcHybridTransition(state) {
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.state.buffer.isNotEmpty()
+  override val isAllowed: Boolean get() = this.refState.buffer.isNotEmpty()
 
   /**
-   * Apply this transition on its [state].
-   * It requires that the transition [isAllowed] on its [state].
+   * Perform this [Transition] on the given [state].
+   *
+   * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
+   * compatible with this [Transition] as it can only be the [refState] or a copy of it.
+   *
+   * @param state a State
    */
-  override fun perform() {
-    this.state.stack.add(this.state.buffer.removeFirst())
+  override fun perform(state: StackBufferState) {
+    state.stack.add(state.buffer.removeFirst())
   }
 
   /**

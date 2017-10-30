@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.actionsscorer
+package com.kotlinnlp.syntaxdecoder.modules.actionsscorer
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
-import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.FeaturesErrors
+import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
+import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.FeaturesErrors
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling

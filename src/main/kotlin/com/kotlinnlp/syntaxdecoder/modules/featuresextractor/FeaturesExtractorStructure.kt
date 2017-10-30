@@ -5,37 +5,42 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.actionsscorer
+package com.kotlinnlp.syntaxdecoder.modules.featuresextractor
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
+import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 
 /**
- * The [ActionsScorer] support structure.
+ *
  */
-interface ActionsScorerStructure<
-  SelfType: ActionsScorerStructure<SelfType, StateType, TransitionType, ContextType, ItemType>,
+open class FeaturesExtractorStructure<
+  SelfType: FeaturesExtractorStructure<
+    SelfType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
-  ItemType : StateItem<ItemType, *, *>> {
+  ItemType : StateItem<ItemType, *, *>,
+  StateViewType : StateView<StateType>,
+  FeaturesType : Features<*, *>> {
 
   /**
-   * @param actions the actions to score
-   * @param extendedState the extended state to use for the scoring
+   * @param stateView the state view used as adding context to extract features
+   * @param extendedState the extended state context used to extract features
    *
    * @return a new memory associated to this support structure
    */
   @Suppress("UNCHECKED_CAST")
   fun buildMemoryOf(
-    actions: List<Transition<TransitionType, StateType>.Action>,
+    stateView: StateViewType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ) =
-    ActionsScorerMemory(
+    FeaturesExtractorMemory(
       structure = this as SelfType,
-      actions = actions,
+      stateView = stateView,
       extendedState = extendedState)
 }

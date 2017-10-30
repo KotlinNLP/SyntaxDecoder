@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.bestactionselector
+package com.kotlinnlp.syntaxdecoder.modules.bestactionselector
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition

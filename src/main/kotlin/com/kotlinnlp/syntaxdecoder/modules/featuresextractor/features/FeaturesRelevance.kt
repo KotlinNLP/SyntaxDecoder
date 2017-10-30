@@ -5,9 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features
+package com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features
 
 /**
- * The errors object associated to the [Features].
+ * The relevance object associated to the [Features].
  */
-interface FeaturesErrors
+interface FeaturesRelevance

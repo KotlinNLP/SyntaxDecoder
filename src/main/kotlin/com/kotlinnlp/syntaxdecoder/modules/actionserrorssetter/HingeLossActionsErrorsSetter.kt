@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.actionserrorssetter
+package com.kotlinnlp.syntaxdecoder.modules.actionserrorssetter
 
 import com.kotlinnlp.syntaxdecoder.DecodingContext
 import com.kotlinnlp.syntaxdecoder.items.StateItem

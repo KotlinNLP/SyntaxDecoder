@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features
+package com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features
 
 /**
  * The features extracted from a FeaturesExtractor, used as input of the ActionsScorer.

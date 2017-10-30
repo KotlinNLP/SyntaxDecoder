@@ -5,42 +5,37 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor
+package com.kotlinnlp.syntaxdecoder.modules.actionsscorer
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 
 /**
- *
+ * The [ActionsScorer] support structure.
  */
-open class FeaturesExtractorStructure<
-  SelfType: FeaturesExtractorStructure<
-    SelfType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
+interface ActionsScorerStructure<
+  SelfType: ActionsScorerStructure<SelfType, StateType, TransitionType, ContextType, ItemType>,
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
-  ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
-  FeaturesType : Features<*, *>> {
+  ItemType : StateItem<ItemType, *, *>> {
 
   /**
-   * @param stateView the state view used as adding context to extract features
-   * @param extendedState the extended state context used to extract features
+   * @param actions the actions to score
+   * @param extendedState the extended state to use for the scoring
    *
    * @return a new memory associated to this support structure
    */
   @Suppress("UNCHECKED_CAST")
   fun buildMemoryOf(
-    stateView: StateViewType,
+    actions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ) =
-    FeaturesExtractorMemory(
+    ActionsScorerMemory(
       structure = this as SelfType,
-      stateView = stateView,
+      actions = actions,
       extendedState = extendedState)
 }

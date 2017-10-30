@@ -5,36 +5,38 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.helpers.featuresextractor
+package com.kotlinnlp.syntaxdecoder.modules.actionsscorer
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
+import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
- * The [FeaturesExtractor] memory, that is created for each transition.
+ * The [ActionsScorer] memory, that is created for each transition.
  *
- * @property structure the support structure associated to this dynamic structure
- * @property stateView the state view used as adding context to extract features
- * @property extendedState the extended state context used to extract features
+ * @property structure the support structure associated to this memory
+ * @property actions the actions to score
+ * @property extendedState the extended state to use for the scoring
  */
-class FeaturesExtractorMemory<
+class ActionsScorerMemory<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
-  FeaturesType : Features<*, *>,
-  StructureType : FeaturesExtractorStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>>
+  StructureType : ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>>
 (
   val structure: StructureType,
-  val stateView: StateViewType,
+  val actions: List<Transition<TransitionType, StateType>.Action>,
   val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
 ) {
-  lateinit var features: FeaturesType
+
+  /**
+   * The [actions] sorted by score and then by transition priority.
+   */
+  val sortedActions: List<Transition<TransitionType, StateType>.Action> by lazy {
+    this.actions.sortByScoreAndPriority()
+  }
 }

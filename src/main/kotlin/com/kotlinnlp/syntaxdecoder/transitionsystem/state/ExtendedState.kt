@@ -20,6 +20,7 @@ import com.kotlinnlp.syntaxdecoder.utils.Clonable
  *
  * @property state a [State]
  * @property context a [DecodingContext]
+ * @property score a score (default 0.0)
  * @property oracle an [Oracle] (optional)
  */
 data class ExtendedState<
@@ -29,7 +30,8 @@ data class ExtendedState<
   ContextType : DecodingContext<ContextType, ItemType>>(
   val state: StateType,
   val context: ContextType,
-  val oracle: Oracle<StateType, TransitionType>?
+  var score: Double = 0.0,
+  val oracle: Oracle<StateType, TransitionType>? = null
 ) : Clonable<ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
 
   /**
@@ -40,6 +42,7 @@ data class ExtendedState<
     return ExtendedState(
       state = this.state.copy(),
       context = this.context.copy(),
+      score = score,
       oracle = this.oracle?.copy())
   }
 }

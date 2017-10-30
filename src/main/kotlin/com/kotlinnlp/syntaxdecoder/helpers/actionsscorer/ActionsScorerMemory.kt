@@ -9,7 +9,7 @@ package com.kotlinnlp.syntaxdecoder.helpers.actionsscorer
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.DecodingContext
-import com.kotlinnlp.syntaxdecoder.transitionsystem.ExtendedState
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority

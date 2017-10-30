@@ -22,10 +22,12 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirst
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstOracle
 
 /**
- * Test the coverage a Transition System for the language with the tree-bank given as first argument.
- * The second argument is the [TransitionSystemType].
+ * Test the coverage a Transition System for the language with the given tree-bank.
+ *
+ * Command line arguments:
+ *   1. The filename of the test tree-bank.
+ *   2. The [TransitionSystemType].
  */
-
 fun main(args: Array<String>){
 
   fun transitionSystemCoverage(transitionSystemType: TransitionSystemType) = when (transitionSystemType) {

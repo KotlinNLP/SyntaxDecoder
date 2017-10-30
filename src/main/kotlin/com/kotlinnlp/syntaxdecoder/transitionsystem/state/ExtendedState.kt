@@ -7,9 +7,9 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state
 
-import com.kotlinnlp.syntaxdecoder.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
-import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.utils.Clonable
 

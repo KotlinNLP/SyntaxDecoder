@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.items
+package com.kotlinnlp.syntaxdecoder.context.items
 
 import com.kotlinnlp.syntaxdecoder.utils.Clonable
 

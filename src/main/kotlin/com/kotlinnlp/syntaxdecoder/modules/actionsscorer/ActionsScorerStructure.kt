@@ -8,10 +8,10 @@
 package com.kotlinnlp.syntaxdecoder.modules.actionsscorer
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 
 /**
  * The [ActionsScorer] support structure.

@@ -18,10 +18,10 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
-import com.kotlinnlp.syntaxdecoder.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 
 /**

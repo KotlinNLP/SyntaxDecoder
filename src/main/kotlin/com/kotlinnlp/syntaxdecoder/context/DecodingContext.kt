@@ -5,11 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.items
+package com.kotlinnlp.syntaxdecoder.context
 
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.Clonable
 
 /**
- * The relevance object associated to a [StateItem].
+ * The [DecodingContext] extends the input with adding properties.
  */
-interface ItemRelevance<SelfType: ItemRelevance<SelfType>> : Clonable<SelfType>
+interface DecodingContext<SelfType: DecodingContext<SelfType, ItemType>, ItemType: StateItem<ItemType, *, *>>
+  : Clonable<SelfType> {
+
+  /**
+   * A list of [StateItem].
+   */
+  val items: List<ItemType>
+}

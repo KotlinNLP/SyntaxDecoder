@@ -9,9 +9,9 @@ package com.kotlinnlp.syntaxdecoder.modules.featuresextractor
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 
 /**

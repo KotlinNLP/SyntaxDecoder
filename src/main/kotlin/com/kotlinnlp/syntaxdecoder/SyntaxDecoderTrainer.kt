@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder
 
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
@@ -23,7 +24,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorSt
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTrainable
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState

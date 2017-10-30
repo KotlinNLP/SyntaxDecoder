@@ -178,7 +178,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
      *
      */
     override fun perform() {
-      state.dependencyTree.setArc(
+      this.state.dependencyTree.setArc(
         dependentId = this.dependentId,
         governorId = this.governorId,
         deprel = deprel)

@@ -9,7 +9,7 @@ package com.kotlinnlp.syntaxdecoder
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
-import com.kotlinnlp.syntaxdecoder.helpers.ActionsGenerator
+import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.helpers.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.ActionsScorerStructure

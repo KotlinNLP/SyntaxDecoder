@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
-import com.kotlinnlp.syntaxdecoder.helpers.TransitionsGenerator
+import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions.ArcLeft
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions.ArcRight
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions.Root

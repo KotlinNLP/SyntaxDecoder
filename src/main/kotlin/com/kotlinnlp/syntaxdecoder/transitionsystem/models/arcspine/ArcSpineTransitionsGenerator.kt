@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine
 
-import com.kotlinnlp.syntaxdecoder.helpers.TransitionsGenerator
+import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions.ArcLeft
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions.ArcRight
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions.Root

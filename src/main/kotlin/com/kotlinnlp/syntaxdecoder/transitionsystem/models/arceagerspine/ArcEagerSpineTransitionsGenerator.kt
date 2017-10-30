@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.*
-import com.kotlinnlp.syntaxdecoder.helpers.TransitionsGenerator
+import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
 
 /**
  * The TransitionsGenerator for the ArcEagerSpine Transition System.

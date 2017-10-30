@@ -7,7 +7,6 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem
 
-import com.kotlinnlp.syntaxdecoder.helpers.TransitionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import kotlin.reflect.KClass
 

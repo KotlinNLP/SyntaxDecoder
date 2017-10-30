@@ -10,7 +10,6 @@ package com.kotlinnlp.syntaxdecoder
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
-import com.kotlinnlp.syntaxdecoder.helpers.*
 import com.kotlinnlp.syntaxdecoder.helpers.actionserrorssetter.ActionsErrorsSetter
 import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.*
 import com.kotlinnlp.syntaxdecoder.helpers.bestactionselector.BestActionSelector
@@ -26,6 +25,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ExtendedState
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
 

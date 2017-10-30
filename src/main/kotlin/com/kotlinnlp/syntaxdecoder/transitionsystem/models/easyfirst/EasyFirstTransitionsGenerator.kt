@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.PendingListState
-import com.kotlinnlp.syntaxdecoder.helpers.TransitionsGenerator
+import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.transitions.ArcLeft
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.transitions.ArcRight
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.transitions.Root

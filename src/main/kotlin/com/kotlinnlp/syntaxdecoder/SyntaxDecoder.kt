@@ -21,7 +21,6 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ExtendedState
-import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
  * The [SyntaxDecoder] decodes the implicit syntax of a list of items building a dependency tree.
@@ -132,11 +131,9 @@ abstract class SyntaxDecoder<
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
-    val actions = this.actionsGenerator.generateFrom(
-      transitions = this.transitionSystem.generateTransitions(extendedState.state))
-
     val actionsScorerMemory = actionsScorerStructure.buildMemoryOf(
-      actions = actions,
+      actions = this.actionsGenerator.generateFrom(
+        transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
     val featuresExtractorMemory = featuresExtractorStructure.buildMemoryOf(
@@ -147,6 +144,6 @@ abstract class SyntaxDecoder<
 
     this.actionsScorer.score(features = featuresExtractorMemory.features, structure = actionsScorerMemory)
 
-    return actions.sortByScoreAndPriority()
+    return actionsScorerMemory.sortedActions
   }
 }

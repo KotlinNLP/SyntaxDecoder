@@ -12,6 +12,7 @@ import com.kotlinnlp.syntaxdecoder.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.items.StateItem
+import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
  * The [ActionsScorer] memory, that is created for each transition.
@@ -30,4 +31,12 @@ class ActionsScorerMemory<
   val structure: StructureType,
   val actions: List<Transition<TransitionType, StateType>.Action>,
   val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
-)
+) {
+
+  /**
+   * The [actions] sorted by score and then by transition priority.
+   */
+  val sortedActions: List<Transition<TransitionType, StateType>.Action> by lazy {
+    this.actions.sortByScoreAndPriority()
+  }
+}

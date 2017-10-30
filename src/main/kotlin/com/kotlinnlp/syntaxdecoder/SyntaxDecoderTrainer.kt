@@ -26,7 +26,6 @@ import com.kotlinnlp.syntaxdecoder.items.StateItem
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ExtendedState
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
-import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
  * The helper to train the trainable components of a SyntaxDecoder (the actions scorer and the features extractor).
@@ -134,12 +133,9 @@ class SyntaxDecoderTrainer<
                              extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?
   ) {
 
-
-    val actions: List<Transition<TransitionType, StateType>.Action> = this.actionsGenerator
-      .generateFrom(transitions = this.transitionSystem.generateTransitions(extendedState.state))
-
     val actionsScorerMemory = this.actionsScorerStructure.buildMemoryOf(
-      actions = actions,
+      actions = this.actionsGenerator.generateFrom(
+        transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
     val featuresExtractorMemory = this.featuresExtractorStructure.buildMemoryOf(
@@ -150,17 +146,15 @@ class SyntaxDecoderTrainer<
       actionsMemory = actionsScorerMemory,
       featuresMemory = featuresExtractorMemory)
 
-    val sortedActionsScorerMemory = this.actionsScorerStructure.buildMemoryOf(
-      actions = actionsScorerMemory.actions.sortByScoreAndPriority(),
-      extendedState = extendedState)
-
     this.calculateAndPropagateErrors(
       featuresMemory = featuresExtractorMemory,
-      actionsMemory = sortedActionsScorerMemory,
+      actionsMemory = actionsScorerMemory,
       propagateToInput = propagateToInput)
 
     this.applyAction(
-      action = this.bestActionSelector.select(actions = actions, extendedState = extendedState),
+      action = this.bestActionSelector.select(
+        actions = actionsScorerMemory.sortedActions,
+        extendedState = extendedState),
       extendedState = extendedState,
       beforeApplyAction = beforeApplyAction)
   }
@@ -197,7 +191,7 @@ class SyntaxDecoderTrainer<
     propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
-      actions = actionsMemory.actions,
+      actions = actionsMemory.sortedActions,
       extendedState = actionsMemory.extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {

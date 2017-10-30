@@ -11,7 +11,7 @@ import com.kotlinnlp.syntaxdecoder.SyntaxDecoder
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.helpers.ActionsGenerator
-import com.kotlinnlp.syntaxdecoder.helpers.BestActionSelector
+import com.kotlinnlp.syntaxdecoder.helpers.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.ActionsScorer
 import com.kotlinnlp.syntaxdecoder.helpers.actionsscorer.ActionsScorerStructure
 import com.kotlinnlp.syntaxdecoder.helpers.featuresextractor.FeaturesExtractor

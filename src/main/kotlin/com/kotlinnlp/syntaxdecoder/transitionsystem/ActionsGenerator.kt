@@ -29,7 +29,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
    *
    * @return a list of Actions
    */
-  fun generateFrom(transitions: List<Transition<TransitionType, StateType>>):
+  fun generateFrom(transitions: List<TransitionType>):
     List<Transition<TransitionType, StateType>.Action> {
 
     this.actionId = 0

@@ -56,11 +56,18 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     var error: Double = 0.0
 
     /**
+     * Apply this [Action] to the [refState] or a copy of it. Update the 'track' of the involved state.
+     *
      * @param copyState whether perform this [Action] to the [refState] or a copy of it
      *
      * @return the state modified by this [Action]
      */
     fun apply(copyState: Boolean = false): StateType {
+
+      require(this@Transition.refStateTrack == this@Transition.refState.track.get()){
+        "Incompatible state track: " +
+          "Expected: ${this@Transition.refStateTrack} Found: ${this@Transition.refState.track.get()}"
+      }
 
       val state: StateType = if (copyState)
         this.transition.refState.copy()
@@ -70,6 +77,8 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
       this@Transition.perform(state)
 
       this.perform(state) // call after the transition has been performed
+
+      state.track.incrementAndGet()
 
       return state
     }
@@ -216,6 +225,13 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
      */
     override fun toString(): String = "${deprel?:"arc"}(${this.governorId} -> ${this.dependentId})"
   }
+
+  /**
+   * The 'track' of the [State] at the time this [Transition] is created.
+   *
+   * You can apply an action / transition to the [refState] or a copy of it only if its 'track' has not changed.
+   */
+  val refStateTrack: Int = this.refState.track.get()
 
   /**
    * The Transition type, from which depends the building of the related [Action].

@@ -8,6 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state
 
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * The State.
@@ -15,6 +16,11 @@ import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
  * @property itemIds the list of item ids used to initialize the state
  */
 abstract class State<SelfType: State<SelfType>>(val itemIds: List<Int>) {
+
+  /**
+   * Used to keep track of a state configuration at a certain time.
+   */
+  var track = AtomicInteger(0)
 
   /**
    * Contains the set of arcs already created.

@@ -82,9 +82,8 @@ class GreedyDecoder<
    */
   override fun processState(
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
-    beforeApplyAction: ((
-      action: Transition<TransitionType, StateType>.Action,
-      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?): DependencyTree {
+    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                         context: ContextType) -> Unit)?): DependencyTree {
 
     while (!extendedState.state.isTerminal) {
 
@@ -93,7 +92,7 @@ class GreedyDecoder<
         actionsScorerStructure = this.actionsScorerStructure,
         extendedState = extendedState)
 
-      beforeApplyAction?.invoke(bestAction, extendedState) // external callback
+      beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback
 
       bestAction.apply()
     }

@@ -66,10 +66,8 @@ abstract class SyntaxDecoder<
    */
   fun decode(
     context: ContextType,
-    beforeApplyAction: ((
-      action: Transition<TransitionType, StateType>.Action,
-      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)? = null
-  ): DependencyTree {
+    beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                         context: ContextType) -> Unit)? = null): DependencyTree {
 
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
       state = this.transitionSystem.getInitialState(context.items.map { it.id }),
@@ -90,8 +88,7 @@ abstract class SyntaxDecoder<
   abstract protected fun processState(
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
     beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                         extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?
-  ): DependencyTree
+                         context: ContextType) -> Unit)?): DependencyTree
 
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].

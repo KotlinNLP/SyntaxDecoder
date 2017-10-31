@@ -93,10 +93,8 @@ class SyntaxDecoderTrainer<
   fun learn(context: ContextType,
             goldDependencyTree: DependencyTree,
             propagateToInput: Boolean,
-            beforeApplyAction: ((
-              action: Transition<TransitionType, StateType>.Action,
-              extendedState: ExtendedState<
-                StateType, TransitionType, ItemType, ContextType>) -> Unit)? = null): DependencyTree {
+            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                 context: ContextType) -> Unit)? = null): DependencyTree {
 
     val state: StateType = this.transitionSystem.getInitialState(context.items.map { it.id } )
 
@@ -131,10 +129,8 @@ class SyntaxDecoderTrainer<
    */
   private fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
                            propagateToInput: Boolean,
-                           beforeApplyAction: ((
-                             action: Transition<TransitionType, StateType>.Action,
-                             extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?
-  ) {
+                           beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                                context: ContextType) -> Unit)?) {
 
     val actionsScorerMemory = this.actionsScorerStructure.buildMemoryOf(
       actions = this.actionsGenerator.generateFrom(
@@ -219,11 +215,10 @@ class SyntaxDecoderTrainer<
    */
   private fun applyAction(action: Transition<TransitionType, StateType>.Action,
                           extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
-                          beforeApplyAction: ((
-                            action: Transition<TransitionType, StateType>.Action,
-                            extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit)?) {
+                          beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
+                                               context: ContextType) -> Unit)?) {
 
-    beforeApplyAction?.invoke(action, extendedState)  // external callback
+    beforeApplyAction?.invoke(action, extendedState.context)  // external callback
 
     extendedState.oracle!!.updateWith(action.transition)
 

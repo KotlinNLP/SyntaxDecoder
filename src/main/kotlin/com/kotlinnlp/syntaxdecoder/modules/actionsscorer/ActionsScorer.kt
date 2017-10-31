@@ -51,9 +51,16 @@ abstract class ActionsScorer<
   ): StateViewType
 
   /**
-   * @return a map of Transitions to their related Actions
+   * @return a list actions grouped by their transitions
    */
-  protected fun List<Transition<TransitionType, StateType>.Action>.mapToTransitions():
-    Map<Transition<TransitionType, StateType>, List<Transition<TransitionType, StateType>.Action>>
+  protected fun List<Transition<TransitionType, StateType>.Action>.groupByTransitions():
+    Map<TransitionType, List<Transition<TransitionType, StateType>.Action>>
     = this.groupBy { it.transition }
+
+  /**
+   * @return a list transitions
+   */
+  protected fun List<Transition<TransitionType, StateType>.Action>.toTransitions():
+    List<TransitionType>
+    = this.groupByTransitions().keys.toList()
 }

@@ -246,7 +246,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    *  True if the transition is allowed in the given parser state.
    */
-  abstract val isAllowed: Boolean get
+  abstract val isAllowed: Boolean
 
   /**
    * @param id the id of the action

@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybridTransition
-import com.kotlinnlp.syntaxdecoder.utils.pop
+import com.kotlinnlp.syntaxdecoder.utils.removeLast
 import com.kotlinnlp.syntaxdecoder.utils.secondToLast
 
 /**
@@ -58,7 +58,7 @@ class ArcRight(refState: StackBufferState) : ArcHybridTransition(refState), Synt
    * @param state a State
    */
   override fun perform(state: StackBufferState) {
-    state.stack.pop() // remove the dependent
+    state.stack.removeLast() // remove the dependent
   }
 
   /**

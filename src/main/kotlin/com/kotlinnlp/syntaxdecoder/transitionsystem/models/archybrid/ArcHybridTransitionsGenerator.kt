@@ -9,10 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.ArcLeft
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.ArcRight
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.Root
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.Shift
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.*
 
 /**
  * The TransitionsGenerator for the ArcHybrid Transition System.

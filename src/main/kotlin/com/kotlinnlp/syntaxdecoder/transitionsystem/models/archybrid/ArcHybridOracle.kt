@@ -9,8 +9,8 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.*
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
@@ -97,7 +97,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    * @param transition a transition
    */
   override fun updateWith(transition: ArcHybridTransition) {
-    if (transition is DependencyRelation && transition.governorId != null){
+    if (transition is SyntacticDependency && transition.governorId != null){
       this.dependentsCounter.decrease(transition.governorId!!)
     }
   }
@@ -131,7 +131,15 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    * @return the cost of this transition.
    */
   private fun Shift.calculateCost(): Int =
-    if (ArcHybridTransitionsGenerator().generate(this.refState)
+    if (this@ArcHybridOracle.thereAreCorrectArcs(this.refState)) 1 else 0
+
+  /**
+   * @param state a state
+   *
+   * @return True if there are any zero-cost arc-transition in the given [state] configuration.
+   */
+  private fun thereAreCorrectArcs(state: StackBufferState): Boolean =
+    ArcHybridTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
-      .none { hasZeroCost(this) }) 0 else 1
+      .any { hasZeroCost(it) }
 }

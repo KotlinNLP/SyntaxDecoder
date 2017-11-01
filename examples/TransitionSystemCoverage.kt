@@ -89,7 +89,7 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
     require(actions.any { this.oracle.hasZeroCost(it) }) { "there should always be a 0 cost action" }
 
     return actions.let {
-      if (errorExploring) it.getRandomAction() else it.first {  this.oracle.isCorrect(it) }
+      if (this.errorExploring) it.getRandomAction() else it.first {  this.oracle.isCorrect(it) }
     }
   }
 

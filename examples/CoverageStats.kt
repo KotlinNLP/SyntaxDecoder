@@ -18,6 +18,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.ArcStanda
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.ArcStandardOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwift
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftOracle
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.Covington
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.CovingtonOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirst
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstOracle
 
@@ -79,7 +81,11 @@ fun main(args: Array<String>){
 
     TransitionSystemType.ARC_RELOCATE -> TODO("not-implemented")
 
-    TransitionSystemType.COVINGTON -> TODO("not-implemented")
+    TransitionSystemType.COVINGTON ->  TransitionSystemCoverage(
+      transitionSystem = Covington(),
+      oracle = CovingtonOracle(),
+      errorExploring = false,
+      verbose = true)
   }
 
   println("Start 'Coverage Stats'")

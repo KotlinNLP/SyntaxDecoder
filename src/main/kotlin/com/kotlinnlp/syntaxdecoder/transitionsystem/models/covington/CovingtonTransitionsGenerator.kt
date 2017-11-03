@@ -15,6 +15,7 @@ class CovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Covin
    */
   override fun generate(state: CovingtonState): List<CovingtonTransition>  = listOf(
     Shift(state),
+    NoArc(state),
     ArcLeft(state, dependentStack1Index = 1),
     ArcRight(state, governorStack1Index = 1)
   ).filter { it.isAllowed }

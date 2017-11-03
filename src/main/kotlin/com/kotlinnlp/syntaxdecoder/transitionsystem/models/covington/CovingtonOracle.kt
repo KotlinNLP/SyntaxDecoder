@@ -69,7 +69,6 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
       is ArcRight -> transition.calculateCost()
       is Shift -> transition.calculateCost()
       is NoArc -> transition.calculateCost()
-      is Root -> transition.calculateCost()
       else  -> throw RuntimeException("Transition not in list.")
     }
 
@@ -95,13 +94,6 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
    * @return the cost of this transition.
    */
   private fun ArcRight.calculateCost(): Int = if (this.isArcCorrect) 0 else 1
-
-  /**
-   * Calculate the cost of the Root transition.
-   *
-   * @return the cost of this transition.
-   */
-  private fun Root.calculateCost(): Int = if (goldDependencyTree.heads[this.dependentId] == null) 0 else 1
 
   /**
    * Calculate the cost of the NoArc transition.

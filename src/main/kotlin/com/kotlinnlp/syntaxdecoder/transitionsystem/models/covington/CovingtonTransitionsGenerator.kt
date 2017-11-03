@@ -14,7 +14,6 @@ class CovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Covin
    * @return a list of valid transitions for the given [state].
    */
   override fun generate(state: CovingtonState): List<CovingtonTransition>  = listOf(
-    Root(state),
     Shift(state),
     ArcLeft(state, dependentStack1Index = 1),
     ArcRight(state, governorStack1Index = 1)

@@ -19,5 +19,6 @@ enum class TransitionSystemType {
   ARC_EAGER_SPINE_EXPLORE,
   ARC_SWIFT,
   EASY_FIRST,
-  COVINGTON
+  COVINGTON,
+  NON_LOCAL_COVINGTON
 }

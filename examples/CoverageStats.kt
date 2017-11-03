@@ -20,6 +20,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwift
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.Covington
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.CovingtonOracle
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.NLCovington
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirst
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstOracle
 
@@ -85,7 +86,14 @@ fun main(args: Array<String>){
       transitionSystem = Covington(),
       oracle = CovingtonOracle(),
       errorExploring = false,
-      verbose = true)
+      verbose = false)
+
+    TransitionSystemType.NON_LOCAL_COVINGTON ->  TransitionSystemCoverage(
+        transitionSystem = NLCovington(),
+        oracle = CovingtonOracle(),
+        errorExploring = false,
+        verbose = false)
+
   }
 
   println("Start 'Coverage Stats'")

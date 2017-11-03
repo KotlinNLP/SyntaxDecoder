@@ -114,10 +114,20 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
   /**
    * Calculate the cost of the Shift transition.
    *
+   * Shift is correct when no more attachments are pending in λ1 from or to j.
+   *
    * @return the cost of this transition.
    */
-  private fun Shift.calculateCost(): Int =
-    if (this@CovingtonOracle.thereAreCorrectArcs(this.refState)) 1 else 0
+  private fun Shift.calculateCost(): Int {
+
+    val j: Int = this.refState.buffer.first()
+
+    return when {
+      this.refState.stack1.isEmpty() -> 0
+      this.refState.stack1.none { goldDependencyTree.heads[it] == j || goldDependencyTree.heads[j] == it } -> 0
+      else -> 1
+    }
+  }
 
   /**
    * @param state a state

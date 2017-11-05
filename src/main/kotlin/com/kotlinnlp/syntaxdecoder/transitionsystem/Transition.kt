@@ -15,10 +15,12 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 /**
  * The State Transition.
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
 abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: State<StateType>>(
-  val refState: StateType
+  val refState: StateType,
+  val id: Int
 ) {
 
   /**

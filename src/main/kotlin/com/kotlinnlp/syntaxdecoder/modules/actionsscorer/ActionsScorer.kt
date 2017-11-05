@@ -27,14 +27,14 @@ abstract class ActionsScorer<
   StructureType: ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>> {
 
   /**
-   * Assign scores to the actions contained into the given [structure], using the given [features].
+   * Assign scores to the actions contained into the given [actionsScorerMemory], using the given [features].
    *
    * @param features the features used to score actions
-   * @param structure the dynamic support structure that contains the actions to score
+   * @param actionsScorerMemory the actions scorer memory that contains the actions to score
    */
   abstract fun score(
     features: FeaturesType,
-    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>)
+    actionsScorerMemory: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>)
 
   /**
    * @return a support structure for this [ActionsScorer]

@@ -140,7 +140,7 @@ abstract class SyntaxDecoder<
 
     this.featuresExtractor.setFeatures(featuresExtractorMemory)
 
-    this.actionsScorer.score(features = featuresExtractorMemory.features, structure = actionsScorerMemory)
+    this.actionsScorer.score(features = featuresExtractorMemory.features, actionsScorerMemory = actionsScorerMemory)
 
     return actionsScorerMemory.sortedActions
   }

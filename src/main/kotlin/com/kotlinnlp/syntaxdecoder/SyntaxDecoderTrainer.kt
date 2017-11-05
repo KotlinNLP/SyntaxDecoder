@@ -172,7 +172,7 @@ class SyntaxDecoderTrainer<
 
     this.featuresExtractor.setFeatures(featuresMemory)
 
-    this.actionsScorer.score(features = featuresMemory.features, structure = actionsMemory)
+    this.actionsScorer.score(features = featuresMemory.features, actionsScorerMemory = actionsMemory)
   }
 
   /**

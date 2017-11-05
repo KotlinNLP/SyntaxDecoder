@@ -28,17 +28,17 @@ abstract class FeaturesExtractor<
     StructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>> {
 
   /**
-   * Extract features using the given [structure] and set them into its 'features' property.
+   * Extract features using the given [featuresMemory] and set them into its 'features' property.
    *
-   * @param structure the variable support structure in which to set the extracted features
+   * @param featuresMemory the variable support featuresMemory in which to set the extracted features
    *
    * @return the extracted [Features]
    */
   fun setFeatures(
-    structure: FeaturesExtractorMemory<
+    featuresMemory: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>) {
 
-    structure.features = this.extract(structure)
+    featuresMemory.features = this.extract(featuresMemory)
   }
 
   /**
@@ -47,11 +47,11 @@ abstract class FeaturesExtractor<
   abstract fun supportStructureFactory(): StructureType
 
   /**
-   * Extract features using the given [structure].
+   * Extract features using the given [featuresMemory].
    *
-   * @param structure a structure containing a state view and an extended state.
+   * @param featuresMemory a featuresMemory containing a state view and an extended state.
    */
   abstract protected fun extract(
-    structure: FeaturesExtractorMemory<
+    featuresMemory: FeaturesExtractorMemory<
       StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>): FeaturesType
 }

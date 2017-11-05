@@ -16,7 +16,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
  * The State Transition of the EasyFirst transition system.
  *
  * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
 abstract class EasyFirstTransition(
-  refState: PendingListState
-) : Transition<EasyFirstTransition, PendingListState>(refState), SyntacticDependency
+  refState: PendingListState,
+  id: Int
+) : Transition<EasyFirstTransition, PendingListState>(refState, id), SyntacticDependency

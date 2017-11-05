@@ -18,11 +18,13 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.FocusedArc
  *
  * @property refState the [State] on which this transition operates
  * @property pendingListFocus the index of the focus element in the pending list
+ * @property id the transition id
  */
 class ArcRight(
   refState: PendingListState,
-  override val pendingListFocus: Int
-) : FocusedArc, EasyFirstTransition(refState) {
+  override val pendingListFocus: Int,
+  id: Int
+) : FocusedArc, EasyFirstTransition(refState, id) {
 
   /**
    * The Transition type, from which depends the building of the related Action.

@@ -18,10 +18,15 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFrom
  *
  * (λ1|ik|...|i1, λ2, j|B, A) ⇒ (λ1, ik|...|i1|λ2, j|B, A ∪ {j → ik})
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
  * @property dependentStack1Index the position in the stack of the governor element
+ * @property id the transition id
  */
-class ArcLeft(refState: CovingtonState, val dependentStack1Index: Int) : CovingtonTransition(refState), SyntacticDependency {
+class ArcLeft(
+  refState: CovingtonState,
+  val dependentStack1Index: Int,
+  id: Int
+) : CovingtonTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

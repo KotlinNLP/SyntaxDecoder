@@ -16,10 +16,15 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFrom
 /**
  * The ArcRight transition.
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
  * @property governorStack1Index the position in the stack of the governor element
+ * @property id the transition id
  */
-class ArcRight(refState: CovingtonState, val governorStack1Index: Int) : CovingtonTransition(refState), SyntacticDependency {
+class ArcRight(
+  refState: CovingtonState,
+  val governorStack1Index: Int,
+  id: Int
+) : CovingtonTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

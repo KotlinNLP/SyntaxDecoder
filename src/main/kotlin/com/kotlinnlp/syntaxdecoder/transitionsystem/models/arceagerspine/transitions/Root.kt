@@ -19,9 +19,10 @@ import com.kotlinnlp.syntaxdecoder.utils.pop
  *
  * Root[(σ|s0, β, T)] ⇒ (σ, β, T ∪ {(s0, root)})
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class Root(refState: ArcEagerSpineState) : ArcEagerSpineTransition(refState), SyntacticDependency {
+class Root(refState: ArcEagerSpineState, id: Int) : ArcEagerSpineTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

@@ -15,7 +15,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
  * The State Transition of the ArcSwift transition system.
  *
  * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
 abstract class ArcSwiftTransition(
-  refState: StackBufferState
-) : Transition<ArcSwiftTransition, StackBufferState>(refState)
+  refState: StackBufferState,
+  id: Int
+) : Transition<ArcSwiftTransition, StackBufferState>(refState, id)

@@ -20,9 +20,10 @@ import com.kotlinnlp.syntaxdecoder.utils.secondToLast
  *
  * ArcRight[(σ|s1|s0, β, T)] ⇒ (σ|s1, β, T ∪ {(s1, s0)})
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class ArcRight(refState: StackBufferState) : ArcHybridTransition(refState), SyntacticDependency {
+class ArcRight(refState: StackBufferState, id: Int) : ArcHybridTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

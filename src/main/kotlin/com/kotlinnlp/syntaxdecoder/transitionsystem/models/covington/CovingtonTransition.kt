@@ -13,7 +13,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
  * The State Transition of the Convington transition system.
  *
  * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
 abstract class CovingtonTransition(
-  refState: CovingtonState
-) : Transition<CovingtonTransition, CovingtonState>(refState)
+  refState: CovingtonState,
+  id: Int
+) : Transition<CovingtonTransition, CovingtonState>(refState, id)

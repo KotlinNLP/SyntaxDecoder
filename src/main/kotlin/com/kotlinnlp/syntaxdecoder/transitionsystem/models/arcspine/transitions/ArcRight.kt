@@ -17,11 +17,16 @@ import com.kotlinnlp.syntaxdecoder.utils.secondToLast
 /**
  * The ArcRight transition.
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
  * @property governorSpineIndex the index of the governor within the right spine of the second topmost element in the
  *                              stack
+ * @property id the transition id
  */
-class ArcRight(refState: ArcSpineState, val governorSpineIndex: Int) : ArcSpineTransition(refState), SyntacticDependency {
+class ArcRight(
+  refState: ArcSpineState,
+  val governorSpineIndex: Int,
+  id: Int
+) : ArcSpineTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

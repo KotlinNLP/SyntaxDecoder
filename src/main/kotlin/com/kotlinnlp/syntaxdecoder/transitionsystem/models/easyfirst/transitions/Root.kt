@@ -16,8 +16,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstTr
  * The Root transition.
  *
  * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class Root(refState: PendingListState) : EasyFirstTransition(refState) {
+class Root(refState: PendingListState, id: Int) : EasyFirstTransition(refState, id) {
 
   /**
    * The Transition type, from which depends the building of the related Action.

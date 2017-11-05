@@ -19,9 +19,10 @@ import com.kotlinnlp.syntaxdecoder.utils.removeLast
  *
  * ArcLeft[(σ|s1|s0, b0|β, T)] ⇒ (σ|s1, b0|β, T ∪ {(b0, s0)})
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class ArcLeft(refState: StackBufferState) : ArcHybridTransition(refState), SyntacticDependency {
+class ArcLeft(refState: StackBufferState, id: Int) : ArcHybridTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

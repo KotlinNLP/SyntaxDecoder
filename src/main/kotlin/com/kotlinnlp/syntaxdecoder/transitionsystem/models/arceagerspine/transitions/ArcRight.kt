@@ -20,11 +20,13 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * @property refState the [State] on which this transition operates
  * @property governorSpineIndex the index of the governor within the right spine of the topmost element in the stack
+ * @property id the transition id
  */
 class ArcRight(
   refState: ArcEagerSpineState,
-  val governorSpineIndex: Int
-) : ArcEagerSpineTransition(refState), SyntacticDependency {
+  val governorSpineIndex: Int,
+  id: Int
+) : ArcEagerSpineTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

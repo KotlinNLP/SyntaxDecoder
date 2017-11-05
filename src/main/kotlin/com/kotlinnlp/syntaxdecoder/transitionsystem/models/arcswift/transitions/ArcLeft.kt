@@ -19,8 +19,13 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftTran
  *
  * @property refState the [State] on which this transition operates
  * @property dependentStackIndex the position in the stack of the dependent element
+ * @property id the transition id
  */
-class ArcLeft(refState: StackBufferState, val dependentStackIndex: Int) : ArcSwiftTransition(refState), SyntacticDependency {
+class ArcLeft(
+  refState: StackBufferState,
+  val dependentStackIndex: Int,
+  id: Int
+) : ArcSwiftTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

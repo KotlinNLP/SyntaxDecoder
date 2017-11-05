@@ -15,9 +15,10 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
 /**
  * The Shift transition.
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class Shift(refState: ArcSpineState) : ArcSpineTransition(refState) {
+class Shift(refState: ArcSpineState, id: Int) : ArcSpineTransition(refState, id) {
 
   /**
    * The Transition type, from which depends the building of the related Action.

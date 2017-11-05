@@ -20,8 +20,13 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * @property refState the [State] on which this transition operates
  * @property governorStackIndex the position in the stack of the governor element
+ * @property id the transition id
  */
-class ArcRight(refState: StackBufferState, val governorStackIndex: Int): ArcSwiftTransition(refState), SyntacticDependency {
+class ArcRight(
+  refState: StackBufferState,
+  val governorStackIndex: Int,
+  id: Int
+) : ArcSwiftTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

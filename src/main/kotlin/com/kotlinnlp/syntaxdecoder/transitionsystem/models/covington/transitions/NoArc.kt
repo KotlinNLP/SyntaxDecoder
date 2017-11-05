@@ -17,9 +17,10 @@ import com.kotlinnlp.syntaxdecoder.utils.pop
  *
  * (λ1|i, λ2, B, A) ⇒ (λ1, i|λ2, B, A)
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class NoArc(refState: CovingtonState) : CovingtonTransition(refState) {
+class NoArc(refState: CovingtonState, id: Int) : CovingtonTransition(refState, id) {
 
   /**
    * The Transition type, from which depends the building of the related Action.

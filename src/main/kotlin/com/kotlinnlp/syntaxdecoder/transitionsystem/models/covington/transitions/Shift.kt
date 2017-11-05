@@ -17,9 +17,10 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * (λ1, λ2, j|B, A) ⇒ (λ1 · λ2|j, [], B, A)
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class Shift(refState: CovingtonState) : CovingtonTransition(refState) {
+class Shift(refState: CovingtonState, id: Int) : CovingtonTransition(refState, id) {
 
   /**
    * The Transition type, from which depends the building of the related Action.

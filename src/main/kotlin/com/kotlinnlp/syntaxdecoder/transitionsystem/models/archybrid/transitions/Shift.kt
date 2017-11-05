@@ -18,9 +18,10 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  *
  * Shift[(σ, b0|β, T)] ⇒ (σ|b0, β, T)
  *
- * @property refState the [State] on which this transition operates.
+ * @property refState the [State] on which this transition operates
+ * @property id the transition id
  */
-class Shift(refState: StackBufferState) : ArcHybridTransition(refState) {
+class Shift(refState: StackBufferState, id: Int) : ArcHybridTransition(refState, id) {
 
   /**
    * The Transition type, from which depends the building of the related Action.

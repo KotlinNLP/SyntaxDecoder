@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.utils.secondToLast
 /**
  * The TransitionsGenerator for the ArcHybrid Transition System.
  */
-class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpineTransition> {
+class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpineTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -39,7 +39,7 @@ class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpin
    * Add Root transitions (if allowed)
    */
   private fun ArrayList<ArcSpineTransition>.addRoot(state: ArcSpineState){
-    val root = Root(state)
+    val root = Root(state, id = this.getNextId())
     if (root.isAllowed) this.add(root)
   }
 
@@ -47,7 +47,7 @@ class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpin
    * Add Shift transitions (if allowed)
    */
   private fun ArrayList<ArcSpineTransition>.addShift(state: ArcSpineState){
-    val shift = Shift(state)
+    val shift = Shift(state, id = this.getNextId())
     if (shift.isAllowed) this.add(shift)
   }
 
@@ -57,8 +57,14 @@ class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpin
   private fun ArrayList<ArcSpineTransition>.addArcs(state: ArcSpineState){
 
     if (state.stack.size > 1) {
-      state.stack.last().leftSpine.indices.forEach { k -> this.add(ArcLeft(state, k)) }
-      state.stack.secondToLast().rightSpine.indices.forEach { k -> this.add(ArcRight(state, k)) }
+
+      state.stack.last().leftSpine.indices.forEach { k ->
+        this.add(ArcLeft(state, governorSpineIndex =  k, id = this.getNextId()))
+      }
+
+      state.stack.secondToLast().rightSpine.indices.forEach { k ->
+        this.add(ArcRight(state, governorSpineIndex =  k, id = this.getNextId()))
+      }
     }
   }
 }

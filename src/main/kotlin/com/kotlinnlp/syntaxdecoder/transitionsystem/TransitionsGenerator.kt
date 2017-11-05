@@ -12,12 +12,17 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 /**
  * The TransitionsGenerator.
  */
-interface TransitionsGenerator<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>> {
+abstract class TransitionsGenerator<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>> {
 
   /**
    * @param state the state from which to extract valid transitions.
    *
    * @return a list of valid transitions for the given [state].
    */
-  fun generate(state: StateType): List<TransitionType>
+  abstract fun generate(state: StateType): List<TransitionType>
+
+  /**
+   * @return the next id
+   */
+  protected fun ArrayList<TransitionType>.getNextId(): Int = this.lastIndex + 1
 }

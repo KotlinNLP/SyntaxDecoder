@@ -14,7 +14,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions
 /**
  * The TransitionsGenerator for the ArcHybrid Transition System.
  */
-class ArcHybridTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcHybridTransition> {
+class ArcHybridTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcHybridTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -22,9 +22,9 @@ class ArcHybridTransitionsGenerator : TransitionsGenerator<StackBufferState, Arc
    * @return a list of valid transitions for the given [state].
    */
   override fun generate(state: StackBufferState): List<ArcHybridTransition> = listOf(
-    Root(state),
-    Shift(state),
-    ArcLeft(state),
-    ArcRight(state)
+    Root(state, id = 0),
+    Shift(state, id = 1),
+    ArcLeft(state, id = 2),
+    ArcRight(state, id = 3)
   ).filter { it.isAllowed }
 }

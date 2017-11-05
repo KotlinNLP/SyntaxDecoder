@@ -15,7 +15,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.transitions
 /**
  * The CovingtonTransitionsGenerator for the Covington Transition System.
  */
-class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, CovingtonTransition> {
+class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, CovingtonTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -36,7 +36,7 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
    * Add Shift transitions (if allowed)
    */
   private fun ArrayList<CovingtonTransition>.addShift(state: CovingtonState) {
-    val shift = Shift(state)
+    val shift = Shift(state, id = this.getNextId())
     if (shift.isAllowed) this.add(shift)
   }
 
@@ -50,11 +50,11 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
       state.stack1.indices.forEach { k ->
 
         if (state.dependencyTree.heads[state.buffer.first()] == null) {
-          this.add(ArcRight(state, governorStack1Index = k + 1))
+          this.add(ArcRight(state, governorStack1Index = k + 1, id = this.getNextId()))
         }
 
         if (state.dependencyTree.heads[state.stack1[state.stack1.lastIndex - k]] == null){
-          this.add(ArcLeft(state, dependentStack1Index = k + 1))
+          this.add(ArcLeft(state, dependentStack1Index = k + 1, id = this.getNextId()))
         }
       }
     }

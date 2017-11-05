@@ -13,7 +13,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.transitions
 /**
  * The CovingtonTransitionsGenerator for the Covington Transition System.
  */
-class CovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, CovingtonTransition> {
+class CovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, CovingtonTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -21,9 +21,9 @@ class CovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Covin
    * @return a list of valid transitions for the given [state].
    */
   override fun generate(state: CovingtonState): List<CovingtonTransition>  = listOf(
-    Shift(state),
-    NoArc(state),
-    ArcLeft(state, dependentStack1Index = 1),
-    ArcRight(state, governorStack1Index = 1)
+    Shift(state, id = 0),
+    NoArc(state, id = 1),
+    ArcLeft(state, dependentStack1Index = 1, id = 2),
+    ArcRight(state, governorStack1Index = 1, id = 3)
   ).filter { it.isAllowed }
 }

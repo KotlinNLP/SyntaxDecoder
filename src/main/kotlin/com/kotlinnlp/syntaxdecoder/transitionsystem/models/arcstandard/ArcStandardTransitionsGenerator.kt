@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.transitio
 /**
  * The TransitionsGenerator for the ArcStandard Transition System.
  */
-class ArcStandardTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcStandardTransition> {
+class ArcStandardTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcStandardTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -25,9 +25,9 @@ class ArcStandardTransitionsGenerator : TransitionsGenerator<StackBufferState, A
    * @return a list of valid transitions for the given [state].
    */
   override fun generate(state: StackBufferState): List<ArcStandardTransition> = listOf(
-    Root(state),
-    Shift(state),
-    ArcLeft(state),
-    ArcRight(state)
+    Root(state, id = 0),
+    Shift(state, id = 1),
+    ArcLeft(state, id = 2),
+    ArcRight(state, id = 3)
   ).filter { it.isAllowed }
 }

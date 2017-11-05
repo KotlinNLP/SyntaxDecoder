@@ -16,7 +16,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.transitions
 /**
  * The TransitionsGenerator for the EasyFirst Transition System.
  */
-class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, EasyFirstTransition> {
+class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, EasyFirstTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -37,7 +37,7 @@ class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, Eas
    * Add Root transition (if allowed).
    */
   private fun ArrayList<EasyFirstTransition>.addRoot(state: PendingListState){
-    val root = Root(state)
+    val root = Root(state, id = this.getNextId())
     if (root.isAllowed) this.add(root)
   }
 
@@ -47,8 +47,8 @@ class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, Eas
   private fun ArrayList<EasyFirstTransition>.addArcs(state: PendingListState) {
 
     for (i in 0 until state.pendingList.lastIndex) {
-      this.add(ArcLeft(state, i))
-      this.add(ArcRight(state, i))
+      this.add(ArcLeft(state, pendingListFocus = i, id = this.getNextId()))
+      this.add(ArcRight(state, pendingListFocus = i, id = this.getNextId()))
     }
   }
 }

@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.transitions.
 /**
  * The TransitionsGenerator for the ArcSwift Transition System.
  */
-class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcSwiftTransition> {
+class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcSwiftTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -39,7 +39,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
    * Add Root transitions (if allowed)
    */
   private fun ArrayList<ArcSwiftTransition>.addRoot(state: StackBufferState) {
-    val root = Root(state)
+    val root = Root(state, id = this.getNextId())
     if (root.isAllowed) this.add(root)
   }
 
@@ -47,7 +47,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
    * Add Shift transitions (if allowed)
    */
   private fun ArrayList<ArcSwiftTransition>.addShift(state: StackBufferState) {
-    val shift = Shift(state)
+    val shift = Shift(state, id = this.getNextId())
     if (shift.isAllowed) this.add(shift)
   }
 
@@ -66,7 +66,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
 
     if (state.buffer.isNotEmpty()){
       val si: Int = state.stack.indexOfFirst { state.dependencyTree.isUnattached(it) }
-      if (si > -1) this.add(ArcLeft(state, si))
+      if (si > -1) this.add(ArcLeft(state, dependentStackIndex =  si, id = this.getNextId()))
     }
   }
 
@@ -77,7 +77,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
 
     if (state.buffer.size > 1 || (state.buffer.size == 1 && state.unattachedStackElements.size == 1)){
       loop@for (si in 0 until state.stack.size){
-        this.add(ArcRight(state, si))
+        this.add(ArcRight(state, governorStackIndex = si, id = this.getNextId()))
         if (state.dependencyTree.isUnattached(state.stack[si])) break@loop
       }
     }

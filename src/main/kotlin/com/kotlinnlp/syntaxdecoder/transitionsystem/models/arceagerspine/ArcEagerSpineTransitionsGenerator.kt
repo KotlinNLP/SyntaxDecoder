@@ -13,7 +13,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
 /**
  * The TransitionsGenerator for the ArcEagerSpine Transition System.
  */
-class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineState, ArcEagerSpineTransition> {
+class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineState, ArcEagerSpineTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
@@ -36,7 +36,7 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
    * Add Root transition (if allowed).
    */
   private fun ArrayList<ArcEagerSpineTransition>.addRoot(state: ArcEagerSpineState){
-    val root = Root(state)
+    val root = Root(state, id = this.getNextId())
     if (root.isAllowed) this.add(root)
   }
 
@@ -44,7 +44,7 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
    * Add Shift transition (if allowed).
    */
   private fun ArrayList<ArcEagerSpineTransition>.addShift(state: ArcEagerSpineState){
-    val shift = Shift(state)
+    val shift = Shift(state, id = this.getNextId())
     if (shift.isAllowed) this.add(shift)
   }
 
@@ -52,7 +52,7 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
    * Add ArcLeft transition (if allowed).
    */
   private fun ArrayList<ArcEagerSpineTransition>.addArcLeft(state: ArcEagerSpineState){
-    val arcLeft = ArcLeft(state)
+    val arcLeft = ArcLeft(state, id = this.getNextId())
     if (arcLeft.isAllowed) this.add(arcLeft)
   }
 
@@ -60,8 +60,12 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
    * Add multiple ArcRight transitions (if allowed)
    */
   private fun ArrayList<ArcEagerSpineTransition>.addArcsRight(state: ArcEagerSpineState) {
+
     if (state.stack.isNotEmpty() && state.buffer.isNotEmpty()) {
-      state.stack.last().indices.forEach { k -> this.add(ArcRight(state, k)) }
+
+      state.stack.last().indices.forEach { k ->
+        this.add(ArcRight(state, governorSpineIndex = k, id = this.getNextId()))
+      }
     }
   }
 }

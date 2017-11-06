@@ -29,17 +29,17 @@ abstract class ActionsErrorsSetter<
     protected set
 
   /**
-   * Assign errors to the given [actions] using the given [extendedState] as context.
+   * Assign errors to the given [sortedActions] using the given [extendedState] as context.
    *
-   * @param actions a list with the last scored actions
+   * @param sortedActions a list with the last scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    */
-  fun setErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+  fun setErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
                 extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
 
     this.areErrorsRelevant = false
 
-    this.assignErrors(actions = actions, extendedState = extendedState)
+    this.assignErrors(actions = sortedActions, extendedState = extendedState)
   }
 
   /**

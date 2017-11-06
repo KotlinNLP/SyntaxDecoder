@@ -165,7 +165,7 @@ class SyntaxDecoderTrainer<
     propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
-      actions = structure.sortedActions,
+      sortedActions = structure.sortedActions,
       extendedState = structure.extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {

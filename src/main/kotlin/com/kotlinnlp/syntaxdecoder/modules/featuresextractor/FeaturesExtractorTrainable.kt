@@ -13,10 +13,11 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 
 /**
  * The trainable [FeaturesExtractor].
@@ -26,26 +27,25 @@ abstract class FeaturesExtractorTrainable<
   TransitionType: Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,
-  StructureType: FeaturesExtractorStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>>
+  StructureType: ScoringSupportStructure<
+    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
   :
-  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>(),
+  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
   Updatable {
 
   /**
-   * Backward errors through this [FeaturesExtractor], starting from the features of the given [featuresMemory].
+   * Backward errors through this [FeaturesExtractor], starting from the features of the given [supportStructure].
    * Errors are required to be already set into the given features.
    *
-   * @param featuresMemory the dynamic support featuresMemory that contains extracted features with their errors
+   * @param supportStructure the transition support structure that contains extracted features with their errors
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
-    featuresMemory: FeaturesExtractorMemory<
-      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>,
+    supportStructure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>,
     propagateToInput: Boolean)
 }

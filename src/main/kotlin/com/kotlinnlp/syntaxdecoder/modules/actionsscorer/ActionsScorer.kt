@@ -12,7 +12,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
 
 /**
  * The actions scorer.
@@ -22,33 +23,23 @@ abstract class ActionsScorer<
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  out StateViewType : StateView<StateType>,
-  in FeaturesType : Features<*, *>,
-  StructureType: ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>> {
+  FeaturesType : Features<*, *>,
+  StructureType: ScoringSupportStructure<
+    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>> {
 
   /**
-   * Assign scores to the actions contained into the given [actionsScorerMemory], using the given [features].
+   * Assign scores to the actions contained into the given [structure] using the features contained in it.
    *
-   * @param features the features used to score actions
-   * @param actionsScorerMemory the actions scorer memory that contains the actions to score
+   * @param structure the transition support structure that contains the actions to score
    */
   abstract fun score(
-    features: FeaturesType,
-    actionsScorerMemory: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>)
+    structure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>)
 
   /**
    * @return a support structure for this [ActionsScorer]
    */
   abstract fun supportStructureFactory(): StructureType
-
-  /**
-   * @param structure the dynamic support structure used to build a state view
-   *
-   * @return the state view of the given structure, used by the features extractor
-   */
-  abstract fun buildStateView(
-    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>
-  ): StateViewType
 
   /**
    * @return a list actions grouped by their transitions

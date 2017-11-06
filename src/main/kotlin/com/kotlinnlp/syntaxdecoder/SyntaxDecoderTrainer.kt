@@ -19,12 +19,11 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.FeaturesEr
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
-import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorMemory
-import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTrainable
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
@@ -39,21 +38,18 @@ class SyntaxDecoderTrainer<
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  FeaturesExtractorStructureType: FeaturesExtractorStructure<
-    FeaturesExtractorStructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
-  ActionsScorerStructureType: ActionsScorerStructure<
-    ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
+  SupportStructureType: ScoringSupportStructure<
+    SupportStructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, SupportStructureType>,
   private val actionsScorer: ActionsScorerTrainable<
-    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesErrorsType, FeaturesType,
-    ActionsScorerStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesErrorsType, FeaturesType,
+    SupportStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
@@ -69,14 +65,9 @@ class SyntaxDecoderTrainer<
     private set
 
   /**
-   * The support structure of the [featuresExtractor].
-   */
-  private val featuresExtractorStructure = this.featuresExtractor.supportStructureFactory()
-
-  /**
    * The support structure of the [actionsScorer].
    */
-  private val actionsScorerStructure = this.actionsScorer.supportStructureFactory()
+  private val supportStructure: SupportStructureType = this.actionsScorer.supportStructureFactory()
 
   /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].
@@ -132,76 +123,60 @@ class SyntaxDecoderTrainer<
                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                 context: ContextType) -> Unit)?) {
 
-    val actionsScorerMemory = this.actionsScorerStructure.buildMemoryOf(
+    val transitionSupportStructure = this.supportStructure.buildTransitionStructure(
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
-    val featuresExtractorMemory = this.featuresExtractorStructure.buildMemoryOf(
-      extendedState = extendedState,
-      stateView = this.actionsScorer.buildStateView(actionsScorerMemory))
+    this.scoreActions(structure = transitionSupportStructure)
 
-    this.scoreActions(
-      actionsMemory = actionsScorerMemory,
-      featuresMemory = featuresExtractorMemory)
-
-    this.calculateAndPropagateErrors(
-      featuresMemory = featuresExtractorMemory,
-      actionsMemory = actionsScorerMemory,
-      propagateToInput = propagateToInput)
+    this.calculateAndPropagateErrors(structure = transitionSupportStructure, propagateToInput = propagateToInput)
 
     this.applyAction(
       action = this.bestActionSelector.select(
-        actions = actionsScorerMemory.sortedActions,
+        actions = transitionSupportStructure.sortedActions,
         extendedState = extendedState),
       extendedState = extendedState,
       beforeApplyAction = beforeApplyAction)
   }
 
   /**
-   * Score the actions allowed in a given state, assigns them a score.
+   * Score the actions allowed in a given state.
    *
-   * @param featuresMemory the dynamic support structure of the [featuresExtractor]
-   * @param actionsMemory the dynamic support structure of the [actionsScorer]
+   * @param structure the scoring support structure
    */
   private fun scoreActions(
-    featuresMemory: FeaturesExtractorMemory<
-      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
-    actionsMemory: ActionsScorerMemory<
-      StateType, TransitionType, ContextType, ItemType, ActionsScorerStructureType>) {
+    structure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, SupportStructureType>) {
 
-    this.featuresExtractor.setFeatures(featuresMemory)
-
-    this.actionsScorer.score(features = featuresMemory.features, actionsScorerMemory = actionsMemory)
+    this.featuresExtractor.setFeatures(structure)
+    this.actionsScorer.score(structure)
   }
 
   /**
    * Calculate and propagate the errors of the actions in the given support structure respect to a current state.
    *
-   * @param featuresMemory the dynamic support structure of the [featuresExtractor]
-   * @param actionsMemory the dynamic support structure of the [actionsScorer]
+   * @param structure the scoring support structure
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
   private fun calculateAndPropagateErrors(
-    featuresMemory: FeaturesExtractorMemory<
-      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
-    actionsMemory: ActionsScorerMemory<
-      StateType, TransitionType, ContextType, ItemType, ActionsScorerStructureType>,
+    structure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, SupportStructureType>,
     propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
-      actions = actionsMemory.sortedActions,
-      extendedState = actionsMemory.extendedState)
+      actions = structure.sortedActions,
+      extendedState = structure.extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
 
       this.relevantErrorsCount++
 
-      this.actionsScorer.backward(structure = actionsMemory, propagateToInput = propagateToInput)
+      this.actionsScorer.backward(structure = structure, propagateToInput = propagateToInput)
 
       if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
-        featuresMemory.features.errors = this.actionsScorer.getFeaturesErrors(actionsMemory)
-        this.featuresExtractor.backward(featuresMemory = featuresMemory, propagateToInput = propagateToInput)
+        structure.features.errors = this.actionsScorer.getFeaturesErrors(structure)
+        this.featuresExtractor.backward(supportStructure = structure, propagateToInput = propagateToInput)
       }
     }
   }

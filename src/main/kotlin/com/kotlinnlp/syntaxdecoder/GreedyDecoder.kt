@@ -12,11 +12,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorerStructure
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
-import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
@@ -31,30 +29,30 @@ import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
  *
  * The transition applied to a state is chosen with a greedy approach, looking for the best local one.
  *
- * @property transitionSystem a [TransitionSystem]
+ * @property transitionSystem a transition system
+ * @property actionsGenerator an actions generator
+ * @property featuresExtractor a features extractor
+ * @property actionsScorer an actions scorer
+ * @property bestActionSelector a best action selector
  */
 class GreedyDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,
-  FeaturesExtractorStructureType: FeaturesExtractorStructure<
-    FeaturesExtractorStructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
-  ActionsScorerStructureType: ActionsScorerStructure<
-    ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
+  ScoringStructureType : ScoringSupportStructure<
+    ScoringStructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   actionsScorer: ActionsScorer<
-    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, ActionsScorerStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
 ) :
-  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType,
-    FeaturesExtractorStructureType, ActionsScorerStructureType>(
+  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>(
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
@@ -63,14 +61,9 @@ class GreedyDecoder<
   ) {
 
   /**
-   * The support structure of the [featuresExtractor].
+   * The support structure to score actions and extract features.
    */
-  private val featuresExtractorStructure = featuresExtractor.supportStructureFactory()
-
-  /**
-   * The support structure of the [actionsScorer].
-   */
-  private val actionsScorerStructure = actionsScorer.supportStructureFactory()
+  private val supportStructure = actionsScorer.supportStructureFactory()
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
@@ -88,8 +81,7 @@ class GreedyDecoder<
     while (!extendedState.state.isTerminal) {
 
       val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(
-        featuresExtractorStructure = this.featuresExtractorStructure,
-        actionsScorerStructure = this.actionsScorerStructure,
+        supportStructure = this.supportStructure,
         extendedState = extendedState)
 
       beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback

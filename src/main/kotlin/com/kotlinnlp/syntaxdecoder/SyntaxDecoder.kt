@@ -13,11 +13,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorerStructure
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
-import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
@@ -40,19 +38,16 @@ abstract class SyntaxDecoder<
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,
-  FeaturesExtractorStructureType : FeaturesExtractorStructure<
-    FeaturesExtractorStructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>,
-  ActionsScorerStructureType : ActionsScorerStructure<
-    ActionsScorerStructureType, StateType, TransitionType, ContextType, ItemType>>
+  ScoringStructureType : ScoringSupportStructure<
+    ScoringStructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
 (
   val transitionSystem: TransitionSystem<StateType, TransitionType>,
   val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   val featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, FeaturesExtractorStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   val actionsScorer: ActionsScorer<
-    StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, ActionsScorerStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
 ) {
 
@@ -93,21 +88,18 @@ abstract class SyntaxDecoder<
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].
    *
-   * @param featuresExtractorStructure the support structure of the [featuresExtractor]
-   * @param actionsScorerStructure the support structure of the [actionsScorer]
+   * @param supportStructure the scoring support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return the best action to apply to the given state
    */
   protected fun getBestAction(
-    featuresExtractorStructure: FeaturesExtractorStructureType,
-    actionsScorerStructure: ActionsScorerStructureType,
+    supportStructure: ScoringStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): Transition<TransitionType, StateType>.Action {
 
     val scoredActions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(
-      featuresExtractorStructure = featuresExtractorStructure,
-      actionsScorerStructure = actionsScorerStructure,
+      supportStructure = supportStructure,
       extendedState = extendedState)
 
     return this.bestActionSelector.select(actions = scoredActions, extendedState = extendedState)
@@ -117,31 +109,25 @@ abstract class SyntaxDecoder<
    * Generate the possible actions allowed in a given state, assigns them a score and returns them in descending order
    * according to the score.
    *
-   * @param featuresExtractorStructure the support structure of the [featuresExtractor]
-   * @param actionsScorerStructure the support structure of the [actionsScorer]
+   * @param supportStructure the scoring support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return a list of scored actions
    */
   protected fun getScoredActions(
-    featuresExtractorStructure: FeaturesExtractorStructureType,
-    actionsScorerStructure: ActionsScorerStructureType,
+    supportStructure: ScoringStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
-    val actionsScorerMemory = actionsScorerStructure.buildMemoryOf(
+    val transitionSupportStructure = supportStructure.buildTransitionStructure(
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
-    val featuresExtractorMemory = featuresExtractorStructure.buildMemoryOf(
-      extendedState = extendedState,
-      stateView = this.actionsScorer.buildStateView(actionsScorerMemory))
+    this.featuresExtractor.setFeatures(transitionSupportStructure)
 
-    this.featuresExtractor.setFeatures(featuresExtractorMemory)
+    this.actionsScorer.score(transitionSupportStructure)
 
-    this.actionsScorer.score(features = featuresExtractorMemory.features, actionsScorerMemory = actionsScorerMemory)
-
-    return actionsScorerMemory.sortedActions
+    return transitionSupportStructure.sortedActions
   }
 }

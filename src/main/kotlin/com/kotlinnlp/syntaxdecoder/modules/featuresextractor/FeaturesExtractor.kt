@@ -9,10 +9,11 @@ package com.kotlinnlp.syntaxdecoder.modules.featuresextractor
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 
 /**
  * The features extractor.
@@ -22,36 +23,30 @@ abstract class FeaturesExtractor<
   TransitionType: Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StateViewType : StateView<StateType>,
   FeaturesType : Features<*, *>,
-  StructureType: FeaturesExtractorStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType>> {
+  StructureType: ScoringSupportStructure<
+    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>> {
 
   /**
-   * Extract features using the given [featuresMemory] and set them into its 'features' property.
+   * Set the features property in the given [supportStructure].
    *
-   * @param featuresMemory the variable support featuresMemory in which to set the extracted features
-   *
-   * @return the extracted [Features]
+   * @param supportStructure the transition support structure in which to set the extracted features
    */
   fun setFeatures(
-    featuresMemory: FeaturesExtractorMemory<
-      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>) {
+    supportStructure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>) {
 
-    featuresMemory.features = this.extract(featuresMemory)
+    supportStructure.features = this.extract(supportStructure)
   }
 
   /**
-   * @return a support structure for this [FeaturesExtractor]
-   */
-  abstract fun supportStructureFactory(): StructureType
-
-  /**
-   * Extract features using the given [featuresMemory].
+   * Extract features using the given [supportStructure].
    *
-   * @param featuresMemory a featuresMemory containing a state view and an extended state.
+   * @param supportStructure a support structure containing a state view and an extended state.
+   *
+   * @return the extracted [Features]
    */
   abstract protected fun extract(
-    featuresMemory: FeaturesExtractorMemory<
-      StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>): FeaturesType
+    supportStructure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>): FeaturesType
 }

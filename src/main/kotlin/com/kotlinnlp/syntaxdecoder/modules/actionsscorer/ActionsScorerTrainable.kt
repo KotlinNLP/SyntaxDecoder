@@ -17,7 +17,8 @@ import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.transitionsystem.state.stateview.StateView
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
 
 /**
  * The trainable [ActionsScorer].
@@ -27,12 +28,11 @@ abstract class ActionsScorerTrainable<
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  out StateViewType : StateView<StateType>,
   FeaturesErrorsType: FeaturesErrors,
-  in FeaturesType : Features<FeaturesErrorsType, *>,
-  StructureType: ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>>
+  FeaturesType : Features<FeaturesErrorsType, *>,
+  StructureType: ScoringSupportStructure<StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
   :
-  ActionsScorer<StateType, TransitionType, ContextType, ItemType, StateViewType, FeaturesType, StructureType>(),
+  ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -46,7 +46,8 @@ abstract class ActionsScorerTrainable<
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
-    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>,
+    structure: TransitionSupportStructure<
+      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>,
     propagateToInput: Boolean)
 
   /**
@@ -55,6 +56,6 @@ abstract class ActionsScorerTrainable<
    * @return the errors of the features used to score the actions of the given [structure]
    */
   abstract fun getFeaturesErrors(
-    structure: ActionsScorerMemory<StateType, TransitionType, ContextType, ItemType, StructureType>
+    structure: TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>
   ): FeaturesErrorsType
 }

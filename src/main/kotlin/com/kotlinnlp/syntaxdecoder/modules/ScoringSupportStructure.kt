@@ -5,37 +5,37 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.modules.actionsscorer
+package com.kotlinnlp.syntaxdecoder.modules
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 
 /**
- * The [ActionsScorer] support structure.
+ * The support structure created for each scoring.
+ * It contains data useful to extract features and score actions.
  */
-interface ActionsScorerStructure<
-  SelfType: ActionsScorerStructure<SelfType, StateType, TransitionType, ContextType, ItemType>,
+interface ScoringSupportStructure<
+  SelfType: ScoringSupportStructure<SelfType, StateType, TransitionType, ContextType, ItemType, FeaturesType>,
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
-  ItemType : StateItem<ItemType, *, *>> {
+  ItemType : StateItem<ItemType, *, *>,
+  FeaturesType : Features<*, *>> {
 
   /**
+   * @param extendedState the extended state
    * @param actions the actions to score
-   * @param extendedState the extended state to use for the scoring
    *
-   * @return a new memory associated to this support structure
+   * @return a new transition support structure associated to this one
    */
   @Suppress("UNCHECKED_CAST")
-  fun buildMemoryOf(
-    actions: List<Transition<TransitionType, StateType>.Action>,
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
-  ) =
-    ActionsScorerMemory(
-      structure = this as SelfType,
-      actions = actions,
-      extendedState = extendedState)
+  fun buildTransitionStructure(
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+    actions: List<Transition<TransitionType, StateType>.Action>
+  )
+    = TransitionSupportStructure(structure = this as SelfType, extendedState = extendedState, actions = actions)
 }

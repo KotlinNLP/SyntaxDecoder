@@ -40,13 +40,13 @@ abstract class FeaturesExtractor<
   }
 
   /**
-   * Extract features using the given [supportStructure].
+   * Extract features using the given [structure].
    *
-   * @param supportStructure a support structure containing a state view and an extended state.
+   * @param structure the transition support structure
    *
    * @return the extracted [Features]
    */
   abstract protected fun extract(
-    supportStructure: TransitionSupportStructure<
+    structure: TransitionSupportStructure<
       StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>): FeaturesType
 }

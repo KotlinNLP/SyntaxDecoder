@@ -5,33 +5,42 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.modules.actionsscorer
+package com.kotlinnlp.syntaxdecoder.modules
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
- * The [ActionsScorer] memory, that is created for each transition.
+ * The support structure created for each transition.
+ * It contains data useful to extract features and score actions.
  *
  * @property structure the support structure associated to this memory
- * @property actions the actions to score
  * @property extendedState the extended state to use for the scoring
+ * @property actions the actions to score
  */
-class ActionsScorerMemory<
+class TransitionSupportStructure<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
-  StructureType : ActionsScorerStructure<StructureType, StateType, TransitionType, ContextType, ItemType>>
+  FeaturesType : Features<*, *>,
+  StructureType : ScoringSupportStructure<
+    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
 (
   val structure: StructureType,
-  val actions: List<Transition<TransitionType, StateType>.Action>,
-  val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+  val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  val actions: List<Transition<TransitionType, StateType>.Action>
 ) {
+
+  /**
+   *
+   */
+  lateinit var features: FeaturesType
 
   /**
    * The [actions] sorted by score and then by transition priority.

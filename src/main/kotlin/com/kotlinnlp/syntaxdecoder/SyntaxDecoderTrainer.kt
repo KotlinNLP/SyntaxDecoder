@@ -134,7 +134,7 @@ class SyntaxDecoderTrainer<
 
     this.applyAction(
       action = this.bestActionSelector.select(
-        actions = transitionSupportStructure.sortedActions,
+        sortedActions = transitionSupportStructure.sortedActions,
         extendedState = extendedState),
       extendedState = extendedState,
       beforeApplyAction = beforeApplyAction)

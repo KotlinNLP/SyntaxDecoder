@@ -102,7 +102,7 @@ abstract class SyntaxDecoder<
       supportStructure = supportStructure,
       extendedState = extendedState)
 
-    return this.bestActionSelector.select(actions = scoredActions, extendedState = extendedState)
+    return this.bestActionSelector.select(sortedActions = scoredActions, extendedState = extendedState)
   }
 
   /**

@@ -23,13 +23,13 @@ interface BestActionSelector<
   ContextType : DecodingContext<ContextType, ItemType>> {
 
   /**
-   * @param actions a list of Actions
+   * @param sortedActions a list of scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    *
-   * @return the best action among the given [actions]
+   * @return the best action among the given [sortedActions]
    */
   fun select(
-    actions: List<Transition<TransitionType, StateType>.Action>,
+    sortedActions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): Transition<TransitionType, StateType>.Action
 }

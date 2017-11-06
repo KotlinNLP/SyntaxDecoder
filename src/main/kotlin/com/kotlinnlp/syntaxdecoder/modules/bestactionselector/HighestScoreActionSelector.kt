@@ -24,16 +24,16 @@ class HighestScoreActionSelector<
   : BestActionSelector<StateType, TransitionType, ItemType, ContextType> {
 
   /**
-   * @param actions a list of Actions sorted by descending order
+   * @param sortedActions a list of scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    *
-   * @return the best action among the given [actions]
+   * @return the best action among the given [sortedActions]
    */
   override fun select(
-    actions: List<Transition<TransitionType, StateType>.Action>,
+    sortedActions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): Transition<TransitionType, StateType>.Action {
 
-    return actions.first()
+    return sortedActions.first()
   }
 }

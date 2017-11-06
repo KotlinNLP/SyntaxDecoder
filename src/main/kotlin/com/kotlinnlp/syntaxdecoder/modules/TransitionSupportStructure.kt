@@ -43,7 +43,7 @@ class TransitionSupportStructure<
   lateinit var features: FeaturesType
 
   /**
-   * The [actions] sorted by score and then by transition priority.
+   * The [actions] sorted by descending score and then by transition priority.
    */
   val sortedActions: List<Transition<TransitionType, StateType>.Action> by lazy {
     this.actions.sortByScoreAndPriority()

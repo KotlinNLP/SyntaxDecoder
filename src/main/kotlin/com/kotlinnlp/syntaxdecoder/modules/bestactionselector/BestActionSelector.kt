@@ -23,7 +23,7 @@ interface BestActionSelector<
   ContextType : DecodingContext<ContextType, ItemType>> {
 
   /**
-   * @param sortedActions a list of scored actions, sorted by score and then by transition priority
+   * @param sortedActions a list of scored actions, sorted by descending score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    *
    * @return the best action among the given [sortedActions]

@@ -112,9 +112,9 @@ abstract class SyntaxDecoder<
    * @param supportStructure the scoring support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
-   * @return a list of scored actions
+   * @return a list of scored actions, sorted by descending score and then by transition priority
    */
-  protected fun getScoredActions(
+  private fun getScoredActions(
     supportStructure: ScoringStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): List<Transition<TransitionType, StateType>.Action> {

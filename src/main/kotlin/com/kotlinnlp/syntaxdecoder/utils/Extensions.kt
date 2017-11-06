@@ -18,7 +18,7 @@ private val scoreTransitionComparator
   = compareByDescending<Transition<*, *>.Action> { it.score }.thenBy { it.transition.priority }
 
 /**
- * Sort a list of actions by score and then by transition priority.
+ * Sort a list of actions by descending score and then by transition priority.
  */
 fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
   List<Transition<TransitionType, StateType>.Action>.sortByScoreAndPriority()

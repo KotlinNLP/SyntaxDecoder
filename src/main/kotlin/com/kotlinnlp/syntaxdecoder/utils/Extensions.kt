@@ -42,12 +42,12 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
 
 /**
  * Groups the elements of the original deprels collection by the Deprel.Position property.
- *
  * The returned map preserves the order of the original collection.
  *
- * @return a new Map<Deprel.Position, List<Deprel>>
+ * @return a map of Deprel.Position to List<Deprel>
  */
 fun List<Deprel>.groupByPosition(): Map<Deprel.Position, List<Deprel>> {
+
   val result = mutableMapOf<Deprel.Position, List<Deprel>>()
 
   Deprel.Position.values().forEach { position ->
@@ -120,9 +120,3 @@ fun <E>ArrayList<E>.getItemOrNull(index: Int): E? {
   val accessIndex = if (index < 0) this.size + index else index
   return if (accessIndex in 0..this.lastIndex) this[accessIndex] else null
 }
-
-/**
- * @param keys keys
- * @return true if all the map contain all the keys
- */
-fun <K, V>Map<K, V>.containsKeys(vararg keys: K): Boolean = keys.all { this.containsKey(it) }

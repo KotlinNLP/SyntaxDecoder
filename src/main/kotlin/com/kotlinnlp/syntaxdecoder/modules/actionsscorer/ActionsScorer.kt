@@ -37,7 +37,7 @@ abstract class ActionsScorer<
       StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>)
 
   /**
-   * @return a support structure for this [ActionsScorer]
+   * @return the scoring support structure for this [ActionsScorer]
    */
   abstract fun supportStructureFactory(): StructureType
 }

@@ -18,7 +18,7 @@ import com.kotlinnlp.syntaxdecoder.utils.getItemOrNull
  * @param state an ArcEagerSpine state
  * @property transition an ArcEagerSpine transition
  */
-class ArcEagerSpineContext(
+class ArcEagerSpineVirtualState(
   private val state: ArcEagerSpineState,
   private val transition: Transition<ArcEagerSpineTransition, ArcEagerSpineState>
 ) {

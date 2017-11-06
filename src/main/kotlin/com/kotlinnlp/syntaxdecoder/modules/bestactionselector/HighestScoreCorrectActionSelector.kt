@@ -16,7 +16,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 /**
  * This [BestActionSelector] selects the first correct highest score action.
  */
-class HighestScoringCorrectActionSelector<
+class HighestScoreCorrectActionSelector<
   StateType: State<StateType>,
   TransitionType: Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,

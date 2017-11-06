@@ -25,6 +25,22 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
   = this.sortedWith(scoreTransitionComparator)
 
 /**
+ * @return a list actions grouped by their transitions
+ */
+fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
+  List<Transition<TransitionType, StateType>.Action>.groupByTransitions():
+  Map<TransitionType, List<Transition<TransitionType, StateType>.Action>>
+  = this.groupBy { it.transition }
+
+/**
+ * @return a list transitions
+ */
+fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
+  List<Transition<TransitionType, StateType>.Action>.toTransitions():
+  List<TransitionType>
+  = this.groupByTransitions().keys.toList()
+
+/**
  * Groups the elements of the original deprels collection by the Deprel.Position property.
  *
  * The returned map preserves the order of the original collection.

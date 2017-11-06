@@ -40,18 +40,4 @@ abstract class ActionsScorer<
    * @return a support structure for this [ActionsScorer]
    */
   abstract fun supportStructureFactory(): StructureType
-
-  /**
-   * @return a list actions grouped by their transitions
-   */
-  protected fun List<Transition<TransitionType, StateType>.Action>.groupByTransitions():
-    Map<TransitionType, List<Transition<TransitionType, StateType>.Action>>
-    = this.groupBy { it.transition }
-
-  /**
-   * @return a list transitions
-   */
-  protected fun List<Transition<TransitionType, StateType>.Action>.toTransitions():
-    List<TransitionType>
-    = this.groupByTransitions().keys.toList()
 }

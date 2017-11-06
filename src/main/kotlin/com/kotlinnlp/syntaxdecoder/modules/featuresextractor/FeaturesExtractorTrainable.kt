@@ -38,14 +38,14 @@ abstract class FeaturesExtractorTrainable<
   Updatable {
 
   /**
-   * Backward errors through this [FeaturesExtractor], starting from the features of the given [supportStructure].
+   * Backward errors through this [FeaturesExtractor], starting from the features of the given [structure].
    * Errors are required to be already set into the given features.
    *
-   * @param supportStructure the transition support structure that contains extracted features with their errors
+   * @param structure the transition support structure that contains extracted features with their errors
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
-    supportStructure: TransitionSupportStructure<
+    structure: TransitionSupportStructure<
       StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>,
     propagateToInput: Boolean)
 }

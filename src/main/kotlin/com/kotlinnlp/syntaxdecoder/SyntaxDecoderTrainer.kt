@@ -176,7 +176,7 @@ class SyntaxDecoderTrainer<
 
       if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
         structure.features.errors = this.actionsScorer.getFeaturesErrors(structure)
-        this.featuresExtractor.backward(supportStructure = structure, propagateToInput = propagateToInput)
+        this.featuresExtractor.backward(structure = structure, propagateToInput = propagateToInput)
       }
     }
   }

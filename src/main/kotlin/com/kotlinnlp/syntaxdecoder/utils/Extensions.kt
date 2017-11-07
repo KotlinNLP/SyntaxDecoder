@@ -43,12 +43,8 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
  * @return a map of transition ids to the related transitions that generated this actions
  */
 fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
-  List<Transition<TransitionType, StateType>.Action>.toTransitionsMap(): Map<Int, TransitionType> {
-
-  val transitions: List<TransitionType> = this.toTransitions()
-
-  return mapOf(*Array(size = transitions.size, init = { i -> transitions[i].id to transitions[i] }))
-}
+  List<Transition<TransitionType, StateType>.Action>.toTransitionsMap(): Map<Int, TransitionType>
+  = this.toTransitions().associateBy { it.id }
 
 /**
  * Groups the elements of the original deprels collection by the Deprel.Position property.

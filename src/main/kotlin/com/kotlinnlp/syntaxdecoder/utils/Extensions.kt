@@ -40,6 +40,17 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
   = this.groupByTransitions().keys.toList()
 
 /**
+ * @return a map of transition ids to the related transitions that generated this actions
+ */
+fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
+  List<Transition<TransitionType, StateType>.Action>.toTransitionsMap(): Map<Int, TransitionType> {
+
+  val transitions: List<TransitionType> = this.groupByTransitions().keys.toList()
+
+  return mapOf(*Array(size = transitions.size, init = { i -> transitions[i].id to transitions[i] }))
+}
+
+/**
  * Groups the elements of the original deprels collection by the Deprel.Position property.
  * The returned map preserves the order of the original collection.
  *

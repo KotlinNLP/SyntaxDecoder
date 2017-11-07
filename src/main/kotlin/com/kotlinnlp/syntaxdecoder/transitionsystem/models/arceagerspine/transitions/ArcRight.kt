@@ -31,7 +31,7 @@ class ArcRight(
   /**
    * The Transition type, from which depends the building of the related Action.
    */
-  override val type: Type = Type.ARC_LEFT
+  override val type: Type = Type.ARC_RIGHT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.

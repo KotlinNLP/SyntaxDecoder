@@ -20,7 +20,7 @@ import com.kotlinnlp.syntaxdecoder.utils.getItemOrNull
  */
 class ArcEagerSpineVirtualState(
   private val state: ArcEagerSpineState,
-  private val transition: Transition<ArcEagerSpineTransition, ArcEagerSpineState>
+  val transition: Transition<ArcEagerSpineTransition, ArcEagerSpineState>
 ) {
 
   /**

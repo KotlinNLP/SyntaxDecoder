@@ -45,7 +45,7 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
 fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
   List<Transition<TransitionType, StateType>.Action>.toTransitionsMap(): Map<Int, TransitionType> {
 
-  val transitions: List<TransitionType> = this.groupByTransitions().keys.toList()
+  val transitions: List<TransitionType> = this.toTransitions()
 
   return mapOf(*Array(size = transitions.size, init = { i -> transitions[i].id to transitions[i] }))
 }

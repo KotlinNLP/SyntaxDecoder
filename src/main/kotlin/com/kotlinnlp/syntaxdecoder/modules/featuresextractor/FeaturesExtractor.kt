@@ -20,12 +20,11 @@ import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
  */
 abstract class FeaturesExtractor<
   StateType: State<StateType>,
-  TransitionType: Transition<TransitionType, StateType>,
+  TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  StructureType: ScoringSupportStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>> {
+  in StructureType : ScoringSupportStructure> {
 
   /**
    * Set the features property in the given [supportStructure].

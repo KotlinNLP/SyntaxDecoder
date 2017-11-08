@@ -30,7 +30,7 @@ abstract class ActionsScorerTrainable<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  StructureType: ScoringSupportStructure<StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
+  StructureType: ScoringSupportStructure>
   :
   ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>(),
   ExampleScheduling,

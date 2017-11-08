@@ -29,8 +29,7 @@ class TransitionSupportStructure<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  StructureType : ScoringSupportStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
+  out StructureType : ScoringSupportStructure>
 (
   val structure: StructureType,
   val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,

@@ -28,8 +28,7 @@ abstract class FeaturesExtractorTrainable<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  StructureType: ScoringSupportStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
+  in StructureType: ScoringSupportStructure>
   :
   FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>(),
   ExampleScheduling,

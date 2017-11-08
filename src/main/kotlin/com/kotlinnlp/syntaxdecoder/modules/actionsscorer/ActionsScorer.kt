@@ -24,8 +24,7 @@ abstract class ActionsScorer<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  StructureType: ScoringSupportStructure<
-    StructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>> {
+  in StructureType: ScoringSupportStructure> {
 
   /**
    * Assign scores to the actions contained into the given [structure] using the features contained in it.
@@ -35,9 +34,4 @@ abstract class ActionsScorer<
   abstract fun score(
     structure: TransitionSupportStructure<
       StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>)
-
-  /**
-   * @return the scoring support structure for this [ActionsScorer]
-   */
-  abstract fun supportStructureFactory(): StructureType
 }

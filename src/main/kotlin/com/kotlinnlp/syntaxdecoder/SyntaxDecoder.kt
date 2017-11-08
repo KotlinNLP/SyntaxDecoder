@@ -18,6 +18,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 
@@ -39,8 +40,7 @@ abstract class SyntaxDecoder<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringStructureType : ScoringSupportStructure<
-    ScoringStructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
+  ScoringStructureType : ScoringSupportStructure>
 (
   val transitionSystem: TransitionSystem<StateType, TransitionType>,
   val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
@@ -48,7 +48,9 @@ abstract class SyntaxDecoder<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   val actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
-  val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
+  val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
+  protected val supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>
 ) {
 
   /**
@@ -88,18 +90,18 @@ abstract class SyntaxDecoder<
   /**
    * Get the best action to apply, given a [State] and an [ExtendedState].
    *
-   * @param supportStructure the scoring support structure
+   * @param scoringSupportStructure the scoring support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return the best action to apply to the given state
    */
   protected fun getBestAction(
-    supportStructure: ScoringStructureType,
+    scoringSupportStructure: ScoringStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): Transition<TransitionType, StateType>.Action {
 
     val scoredActions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(
-      supportStructure = supportStructure,
+      scoringSupportStructure = scoringSupportStructure,
       extendedState = extendedState)
 
     return this.bestActionSelector.select(sortedActions = scoredActions, extendedState = extendedState)
@@ -109,17 +111,18 @@ abstract class SyntaxDecoder<
    * Generate the possible actions allowed in a given state, assigns them a score and returns them in descending order
    * according to the score.
    *
-   * @param supportStructure the scoring support structure
+   * @param scoringSupportStructure the scoring support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return a list of scored actions, sorted by descending score and then by transition priority
    */
   private fun getScoredActions(
-    supportStructure: ScoringStructureType,
+    scoringSupportStructure: ScoringStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
-    val transitionSupportStructure = supportStructure.buildTransitionStructure(
+    val transitionSupportStructure = this.supportStructureFactory.transitionStructure(
+      scoringSupportStructure = scoringSupportStructure,
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)

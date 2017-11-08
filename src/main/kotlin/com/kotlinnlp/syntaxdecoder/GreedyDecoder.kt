@@ -19,6 +19,7 @@ import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 
 /**
@@ -41,8 +42,7 @@ class GreedyDecoder<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringStructureType : ScoringSupportStructure<
-    ScoringStructureType, StateType, TransitionType, ContextType, ItemType, FeaturesType>>
+  ScoringStructureType : ScoringSupportStructure>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
@@ -50,20 +50,23 @@ class GreedyDecoder<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
-  bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>
+  bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
+  supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>
 ) :
   SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>(
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,
-    bestActionSelector = bestActionSelector
+    bestActionSelector = bestActionSelector,
+    supportStructureFactory = supportStructureFactory
   ) {
 
   /**
    * The support structure to score actions and extract features.
    */
-  private val supportStructure = actionsScorer.supportStructureFactory()
+  private val scoringSupportStructure = this.supportStructureFactory.scoringStructure()
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
@@ -81,7 +84,7 @@ class GreedyDecoder<
     while (!extendedState.state.isTerminal) {
 
       val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(
-        supportStructure = this.supportStructure,
+        scoringSupportStructure = this.scoringSupportStructure,
         extendedState = extendedState)
 
       beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback

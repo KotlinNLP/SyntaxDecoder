@@ -23,7 +23,7 @@ import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
  * @property extendedState the extended state to use for the scoring
  * @property actions the actions to score
  */
-class TransitionSupportStructure<
+open class TransitionSupportStructure<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,

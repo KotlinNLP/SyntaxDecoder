@@ -12,8 +12,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
 
 /**
  * The actions scorer.

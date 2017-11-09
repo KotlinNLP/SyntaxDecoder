@@ -16,8 +16,8 @@ import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
 
 /**
  * The trainable [FeaturesExtractor].

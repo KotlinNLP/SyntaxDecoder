@@ -17,8 +17,8 @@ import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 
 /**
  * The trainable [ActionsScorer].
@@ -30,11 +30,12 @@ abstract class ActionsScorerTrainable<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  out ScoringStructureType: ScoringSupportStructure,
-  in TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>>
+  out ScoringGlobalStructureType: ScoringGlobalSupportStructure,
+  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringGlobalStructureType>>
   :
-  ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>(),
+  ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
+    ScoringStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -47,12 +48,12 @@ abstract class ActionsScorerTrainable<
    * @param structure the dynamic support structure that contains the scored actions
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
-  abstract fun backward(structure: TransitionStructureType, propagateToInput: Boolean)
+  abstract fun backward(structure: ScoringStructureType, propagateToInput: Boolean)
 
   /**
    * @param structure the dynamic support structure that contains the scored actions
    *
    * @return the errors of the features used to score the actions of the given [structure]
    */
-  abstract fun getFeaturesErrors(structure: TransitionStructureType): FeaturesErrorsType
+  abstract fun getFeaturesErrors(structure: ScoringStructureType): FeaturesErrorsType
 }

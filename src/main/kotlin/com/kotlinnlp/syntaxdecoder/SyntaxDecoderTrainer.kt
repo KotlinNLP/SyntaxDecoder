@@ -22,8 +22,8 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTrainable
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
@@ -41,21 +41,21 @@ class SyntaxDecoderTrainer<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  out ScoringStructureType: ScoringSupportStructure,
-  TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>>
+  out ScoringGlobalStructureType: ScoringGlobalSupportStructure,
+  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringGlobalStructureType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
-    ScoringStructureType, TransitionStructureType>,
+    ScoringGlobalStructureType, ScoringStructureType>,
   private val actionsScorer: ActionsScorerTrainable<StateType, TransitionType, ContextType, ItemType,
-    FeaturesErrorsType, FeaturesType, ScoringStructureType, TransitionStructureType>,
+    FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>,
   private val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType, TransitionStructureType>
+    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
 ) :
   BatchScheduling,
   EpochScheduling,
@@ -70,7 +70,8 @@ class SyntaxDecoderTrainer<
   /**
    * The support structure of the [actionsScorer].
    */
-  private val scoringSupportStructure: ScoringStructureType = this.supportStructuresFactory.scoringStructure()
+  private val scoringGlobalSupportStructure: ScoringGlobalStructureType
+    = this.supportStructuresFactory.globalStructure()
 
   /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].
@@ -126,19 +127,19 @@ class SyntaxDecoderTrainer<
                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                 context: ContextType) -> Unit)?) {
 
-    val transitionSupportStructure = this.supportStructuresFactory.transitionStructure(
-      scoringSupportStructure = this.scoringSupportStructure,
+    val scoringSupportStructure = this.supportStructuresFactory.localStructure(
+      scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
-    this.scoreActions(structure = transitionSupportStructure)
+    this.scoreActions(structure = scoringSupportStructure)
 
-    this.calculateAndPropagateErrors(structure = transitionSupportStructure, propagateToInput = propagateToInput)
+    this.calculateAndPropagateErrors(structure = scoringSupportStructure, propagateToInput = propagateToInput)
 
     this.applyAction(
       action = this.bestActionSelector.select(
-        sortedActions = transitionSupportStructure.sortedActions,
+        sortedActions = scoringSupportStructure.sortedActions,
         extendedState = extendedState),
       extendedState = extendedState,
       beforeApplyAction = beforeApplyAction)
@@ -147,9 +148,9 @@ class SyntaxDecoderTrainer<
   /**
    * Score the actions allowed in a given state.
    *
-   * @param structure the transition support structure
+   * @param structure the scoring support structure
    */
-  private fun scoreActions(structure: TransitionStructureType) {
+  private fun scoreActions(structure: ScoringStructureType) {
 
     this.featuresExtractor.setFeatures(structure)
     this.actionsScorer.score(structure)
@@ -161,7 +162,7 @@ class SyntaxDecoderTrainer<
    * @param structure the scoring support structure
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
-  private fun calculateAndPropagateErrors(structure: TransitionStructureType, propagateToInput: Boolean){
+  private fun calculateAndPropagateErrors(structure: ScoringStructureType, propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
       sortedActions = structure.sortedActions,

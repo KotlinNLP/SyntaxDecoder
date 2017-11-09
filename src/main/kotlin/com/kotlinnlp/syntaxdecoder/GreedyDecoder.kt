@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
@@ -20,7 +20,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 
 /**
@@ -43,22 +43,22 @@ class GreedyDecoder<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringStructureType : ScoringSupportStructure,
-  TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>>
+  ScoringGlobalStructureType : ScoringGlobalSupportStructure,
+  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringGlobalStructureType>>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
-  actionsScorer: ActionsScorer<
-    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
+  featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+    ScoringGlobalStructureType, ScoringStructureType>,
+  actionsScorer: ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+    ScoringGlobalStructureType, ScoringStructureType>,
   bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType, TransitionStructureType>
+    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
 ) :
-  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
-    TransitionStructureType>
+  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
+    ScoringStructureType>
   (
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,
@@ -71,7 +71,7 @@ class GreedyDecoder<
   /**
    * The support structure to score actions and extract features.
    */
-  private val scoringSupportStructure = this.supportStructuresFactory.scoringStructure()
+  private val scoringGlobalSupportStructure = this.supportStructuresFactory.globalStructure()
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
@@ -89,7 +89,7 @@ class GreedyDecoder<
     while (!extendedState.state.isTerminal) {
 
       val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(
-        scoringSupportStructure = this.scoringSupportStructure,
+        scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
         extendedState = extendedState)
 
       beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback

@@ -16,8 +16,8 @@ import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
 
 /**
  * The trainable [FeaturesExtractor].
@@ -28,12 +28,12 @@ abstract class FeaturesExtractorTrainable<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  out ScoringStructureType : ScoringSupportStructure,
-  in TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>>
+  out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
+  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringGlobalStructureType>>
   :
-  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
-    TransitionStructureType>(),
+  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
+    ScoringStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -43,8 +43,8 @@ abstract class FeaturesExtractorTrainable<
    * Backward errors through this [FeaturesExtractor], starting from the features of the given [structure].
    * Errors are required to be already set into the given features.
    *
-   * @param structure the transition support structure that contains extracted features with their errors
+   * @param structure the scoring support structure that contains extracted features with their errors
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
-  abstract fun backward(structure: TransitionStructureType, propagateToInput: Boolean)
+  abstract fun backward(structure: ScoringStructureType, propagateToInput: Boolean)
 }

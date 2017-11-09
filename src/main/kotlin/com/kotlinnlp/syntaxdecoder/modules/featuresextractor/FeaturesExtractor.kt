@@ -12,8 +12,8 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.TransitionSupportStructure
 
 /**
  * The features extractor.
@@ -24,25 +24,25 @@ abstract class FeaturesExtractor<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  out ScoringStructureType : ScoringSupportStructure,
-  in TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>> {
+  out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
+  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringGlobalStructureType>> {
 
   /**
    * Set the features property in the given [supportStructure].
    *
-   * @param supportStructure the transition support structure in which to set the extracted features
+   * @param supportStructure the scoring support structure in which to set the extracted features
    */
-  fun setFeatures(supportStructure: TransitionStructureType) {
+  fun setFeatures(supportStructure: ScoringStructureType) {
     supportStructure.features = this.extract(supportStructure)
   }
 
   /**
    * Extract features using the given [structure].
    *
-   * @param structure the transition support structure
+   * @param structure the scoring support structure
    *
    * @return the extracted [Features]
    */
-  abstract protected fun extract(structure: TransitionStructureType): FeaturesType
+  abstract protected fun extract(structure: ScoringStructureType): FeaturesType
 }

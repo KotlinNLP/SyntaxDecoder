@@ -7,10 +7,44 @@
 
 package com.kotlinnlp.syntaxdecoder.modules.supportstructures
 
-import com.kotlinnlp.syntaxdecoder.SyntaxDecoder
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
+import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
  * A support structure used to score actions and extract features.
- * It is created during the initialization of a [SyntaxDecoder].
+ * It is created for each decoding step (action applied).
+ *
+ * @property structure the support structure associated to this memory
+ * @property extendedState the extended state to use for the scoring
+ * @property actions the actions to score
  */
-interface ScoringSupportStructure
+open class ScoringSupportStructure<
+  StateType : State<StateType>,
+  TransitionType : Transition<TransitionType, StateType>,
+  ContextType : DecodingContext<ContextType, ItemType>,
+  ItemType : StateItem<ItemType, *, *>,
+  FeaturesType : Features<*, *>,
+  out StructureType : ScoringGlobalSupportStructure>
+(
+  val structure: StructureType,
+  val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  val actions: List<Transition<TransitionType, StateType>.Action>
+) {
+
+  /**
+   *
+   */
+  lateinit var features: FeaturesType
+
+  /**
+   * The [actions] sorted by descending score and then by transition priority.
+   */
+  val sortedActions: List<Transition<TransitionType, StateType>.Action> by lazy {
+    this.actions.sortByScoreAndPriority()
+  }
+}

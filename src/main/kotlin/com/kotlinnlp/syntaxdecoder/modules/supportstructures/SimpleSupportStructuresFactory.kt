@@ -15,7 +15,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 
 /**
- * The factory of a [ScoringSupportStructure] and its related [TransitionSupportStructure].
+ * The factory of a [ScoringGlobalSupportStructure] and its related [ScoringSupportStructure].
  */
 abstract class SimpleSupportStructuresFactory<
   StateType : State<StateType>,
@@ -23,28 +23,30 @@ abstract class SimpleSupportStructuresFactory<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringStructureType : ScoringSupportStructure>
+  ScoringGlobalStructureType : ScoringGlobalSupportStructure>
   :
-  SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
-    TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>>
+  SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
+    ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+      ScoringGlobalStructureType>>
 {
 
   /**
-   * Build a new [TransitionSupportStructure] associated to the given [scoringSupportStructure].
+   * Build a new [ScoringSupportStructure] associated to the given [scoringGlobalSupportStructure].
    *
-   * @param scoringSupportStructure a scoring support structure
+   * @param scoringGlobalSupportStructure a scoring global support structure
    * @param extendedState the extended state
    * @param actions the actions to score
    *
-   * @return a new transition support structure associated to the given [scoringSupportStructure]
+   * @return a new scoring support structure associated to the given [scoringGlobalSupportStructure]
    */
-  override fun transitionStructure(
-    scoringSupportStructure: ScoringStructureType,
+  override fun localStructure(
+    scoringGlobalSupportStructure: ScoringGlobalStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
     actions: List<Transition<TransitionType, StateType>.Action>
-  ): TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>
-    = TransitionSupportStructure(
-    structure = scoringSupportStructure,
+  ): ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+    ScoringGlobalStructureType>
+    = ScoringSupportStructure(
+    structure = scoringGlobalSupportStructure,
     extendedState = extendedState,
     actions = actions)
 }

@@ -19,6 +19,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 
@@ -40,17 +41,19 @@ abstract class SyntaxDecoder<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringStructureType : ScoringSupportStructure>
+  ScoringStructureType : ScoringSupportStructure,
+  TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>>
 (
   val transitionSystem: TransitionSystem<StateType, TransitionType>,
   val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   val featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   val actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   protected val supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>
+    FeaturesType, ScoringStructureType, TransitionStructureType>
 ) {
 
   /**

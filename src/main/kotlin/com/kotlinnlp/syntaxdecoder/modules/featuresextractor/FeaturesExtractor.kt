@@ -24,17 +24,16 @@ abstract class FeaturesExtractor<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  in StructureType : ScoringSupportStructure> {
+  out ScoringStructureType : ScoringSupportStructure,
+  in TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>> {
 
   /**
    * Set the features property in the given [supportStructure].
    *
    * @param supportStructure the transition support structure in which to set the extracted features
    */
-  fun setFeatures(
-    supportStructure: TransitionSupportStructure<
-      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>) {
-
+  fun setFeatures(supportStructure: TransitionStructureType) {
     supportStructure.features = this.extract(supportStructure)
   }
 
@@ -45,7 +44,5 @@ abstract class FeaturesExtractor<
    *
    * @return the extracted [Features]
    */
-  abstract protected fun extract(
-    structure: TransitionSupportStructure<
-      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>): FeaturesType
+  abstract protected fun extract(structure: TransitionStructureType): FeaturesType
 }

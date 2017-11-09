@@ -41,19 +41,21 @@ class SyntaxDecoderTrainer<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  ScoringStructureType: ScoringSupportStructure>
+  out ScoringStructureType: ScoringSupportStructure,
+  TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   private val featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
-    ScoringStructureType>,
+    ScoringStructureType, TransitionStructureType>,
   private val actionsScorer: ActionsScorerTrainable<StateType, TransitionType, ContextType, ItemType,
     FeaturesErrorsType, FeaturesType, ScoringStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>,
   private val supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>
+    FeaturesType, ScoringStructureType, TransitionStructureType>
 ) :
   BatchScheduling,
   EpochScheduling,
@@ -145,11 +147,9 @@ class SyntaxDecoderTrainer<
   /**
    * Score the actions allowed in a given state.
    *
-   * @param structure the scoring support structure
+   * @param structure the transition support structure
    */
-  private fun scoreActions(
-    structure: TransitionSupportStructure<
-      StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>) {
+  private fun scoreActions(structure: TransitionStructureType) {
 
     this.featuresExtractor.setFeatures(structure)
     this.actionsScorer.score(structure)
@@ -161,10 +161,7 @@ class SyntaxDecoderTrainer<
    * @param structure the scoring support structure
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
-  private fun calculateAndPropagateErrors(
-    structure: TransitionSupportStructure<
-      StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
-    propagateToInput: Boolean){
+  private fun calculateAndPropagateErrors(structure: TransitionStructureType, propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
       sortedActions = structure.sortedActions,

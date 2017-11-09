@@ -23,14 +23,17 @@ import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
  * The trainable [FeaturesExtractor].
  */
 abstract class FeaturesExtractorTrainable<
-  StateType: State<StateType>,
-  TransitionType: Transition<TransitionType, StateType>,
+  StateType : State<StateType>,
+  TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  in StructureType: ScoringSupportStructure>
+  out ScoringStructureType : ScoringSupportStructure,
+  in TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>>
   :
-  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>(),
+  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
+    TransitionStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -43,8 +46,5 @@ abstract class FeaturesExtractorTrainable<
    * @param structure the transition support structure that contains extracted features with their errors
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
-  abstract fun backward(
-    structure: TransitionSupportStructure<
-      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>,
-    propagateToInput: Boolean)
+  abstract fun backward(structure: TransitionStructureType, propagateToInput: Boolean)
 }

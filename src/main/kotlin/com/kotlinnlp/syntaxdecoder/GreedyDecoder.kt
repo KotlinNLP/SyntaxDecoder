@@ -20,6 +20,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
+import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 
 /**
@@ -42,19 +43,23 @@ class GreedyDecoder<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringStructureType : ScoringSupportStructure>
+  ScoringStructureType : ScoringSupportStructure,
+  TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   featuresExtractor: FeaturesExtractor<
-    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
   bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringStructureType>
+    FeaturesType, ScoringStructureType, TransitionStructureType>
 ) :
-  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>(
+  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
+    TransitionStructureType>
+  (
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,

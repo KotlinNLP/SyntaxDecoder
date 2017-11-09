@@ -23,7 +23,9 @@ interface SupportStructureFactory<
   ContextType : DecodingContext<ContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  StructureType : ScoringSupportStructure>
+  ScoringStructureType : ScoringSupportStructure,
+  out TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>>
 {
 
   /**
@@ -31,7 +33,7 @@ interface SupportStructureFactory<
    *
    * @return a new scoring support structure
    */
-  fun scoringStructure(): StructureType
+  fun scoringStructure(): ScoringStructureType
 
   /**
    * Build a new [TransitionSupportStructure] associated to the given [scoringSupportStructure].
@@ -42,13 +44,7 @@ interface SupportStructureFactory<
    *
    * @return a new transition support structure associated to the given [scoringSupportStructure]
    */
-  fun transitionStructure(
-    scoringSupportStructure: StructureType,
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
-    actions: List<Transition<TransitionType, StateType>.Action>
-  ): TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>
-    = TransitionSupportStructure(
-    structure = scoringSupportStructure,
-    extendedState = extendedState,
-    actions = actions)
+  fun transitionStructure(scoringSupportStructure: ScoringStructureType,
+                          extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+                          actions: List<Transition<TransitionType, StateType>.Action>): TransitionStructureType
 }

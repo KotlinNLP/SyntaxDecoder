@@ -18,7 +18,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
+import com.kotlinnlp.syntaxdecoder.modules.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
@@ -52,7 +52,7 @@ abstract class SyntaxDecoder<
   val actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
-  val supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
+  val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringStructureType, TransitionStructureType>
 ) {
 
@@ -124,7 +124,7 @@ abstract class SyntaxDecoder<
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
-    val transitionSupportStructure = this.supportStructureFactory.transitionStructure(
+    val transitionSupportStructure = this.supportStructuresFactory.transitionStructure(
       scoringSupportStructure = scoringSupportStructure,
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),

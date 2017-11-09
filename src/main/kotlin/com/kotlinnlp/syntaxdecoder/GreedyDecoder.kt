@@ -19,7 +19,7 @@ import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
+import com.kotlinnlp.syntaxdecoder.modules.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 
@@ -54,7 +54,7 @@ class GreedyDecoder<
   actionsScorer: ActionsScorer<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
-  supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
+  supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringStructureType, TransitionStructureType>
 ) :
   SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
@@ -65,13 +65,13 @@ class GreedyDecoder<
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,
     bestActionSelector = bestActionSelector,
-    supportStructureFactory = supportStructureFactory
+    supportStructuresFactory = supportStructuresFactory
   ) {
 
   /**
    * The support structure to score actions and extract features.
    */
-  private val scoringSupportStructure = this.supportStructureFactory.scoringStructure()
+  private val scoringSupportStructure = this.supportStructuresFactory.scoringStructure()
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.

@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 /**
  * The factory of a [ScoringSupportStructure] and its related [TransitionSupportStructure].
  */
-abstract class SimpleSupportStructureFactory<
+abstract class SimpleSupportStructuresFactory<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,
@@ -25,7 +25,7 @@ abstract class SimpleSupportStructureFactory<
   FeaturesType : Features<*, *>,
   ScoringStructureType : ScoringSupportStructure>
   :
-  SupportStructureFactory<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
+  SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType,
     TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>>
 {
 

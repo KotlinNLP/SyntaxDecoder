@@ -24,7 +24,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.TransitionSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.ScoringSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.SupportStructureFactory
+import com.kotlinnlp.syntaxdecoder.modules.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
@@ -54,7 +54,7 @@ class SyntaxDecoderTrainer<
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>,
-  private val supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
+  private val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringStructureType, TransitionStructureType>
 ) :
   BatchScheduling,
@@ -70,7 +70,7 @@ class SyntaxDecoderTrainer<
   /**
    * The support structure of the [actionsScorer].
    */
-  private val scoringSupportStructure: ScoringStructureType = this.supportStructureFactory.scoringStructure()
+  private val scoringSupportStructure: ScoringStructureType = this.supportStructuresFactory.scoringStructure()
 
   /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].
@@ -126,7 +126,7 @@ class SyntaxDecoderTrainer<
                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                 context: ContextType) -> Unit)?) {
 
-    val transitionSupportStructure = this.supportStructureFactory.transitionStructure(
+    val transitionSupportStructure = this.supportStructuresFactory.transitionStructure(
       scoringSupportStructure = this.scoringSupportStructure,
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),

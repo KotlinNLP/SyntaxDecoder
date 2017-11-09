@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 /**
  * The factory of a [ScoringSupportStructure] and its related [TransitionSupportStructure].
  */
-interface SupportStructureFactory<
+interface SupportStructuresFactory<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ContextType : DecodingContext<ContextType, ItemType>,

@@ -7,8 +7,10 @@
 
 package com.kotlinnlp.syntaxdecoder.modules.supportstructures
 
+import com.kotlinnlp.syntaxdecoder.SyntaxDecoder
+
 /**
- * A support structure for the actions scoring.
- * It is created for each decoding and contains data useful to extract features and score actions.
+ * A support structure used to score actions and extract features.
+ * It is created during the initialization of a [SyntaxDecoder].
  */
 interface ScoringSupportStructure

@@ -30,9 +30,11 @@ abstract class ActionsScorerTrainable<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  in StructureType: ScoringSupportStructure>
+  out ScoringStructureType: ScoringSupportStructure,
+  in TransitionStructureType : TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType,
+    FeaturesType, ScoringStructureType>>
   :
-  ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>(),
+  ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -45,17 +47,12 @@ abstract class ActionsScorerTrainable<
    * @param structure the dynamic support structure that contains the scored actions
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
-  abstract fun backward(
-    structure: TransitionSupportStructure<
-      StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>,
-    propagateToInput: Boolean)
+  abstract fun backward(structure: TransitionStructureType, propagateToInput: Boolean)
 
   /**
    * @param structure the dynamic support structure that contains the scored actions
    *
    * @return the errors of the features used to score the actions of the given [structure]
    */
-  abstract fun getFeaturesErrors(
-    structure: TransitionSupportStructure<StateType, TransitionType, ContextType, ItemType, FeaturesType, StructureType>
-  ): FeaturesErrorsType
+  abstract fun getFeaturesErrors(structure: TransitionStructureType): FeaturesErrorsType
 }

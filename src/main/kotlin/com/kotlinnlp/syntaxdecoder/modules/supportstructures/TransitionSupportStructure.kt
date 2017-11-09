@@ -16,8 +16,8 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 
 /**
- * The support structure created for each transition.
- * It contains data useful to extract features and score actions.
+ * A support structure for the actions scoring.
+ * It is created for each decoding step (action applied) and contains data useful to extract features and score actions.
  *
  * @property structure the support structure associated to this memory
  * @property extendedState the extended state to use for the scoring

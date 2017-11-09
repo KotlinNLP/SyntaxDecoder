@@ -50,7 +50,7 @@ class SyntaxDecoderTrainer<
   private val featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
     ScoringStructureType, TransitionStructureType>,
   private val actionsScorer: ActionsScorerTrainable<StateType, TransitionType, ContextType, ItemType,
-    FeaturesErrorsType, FeaturesType, ScoringStructureType>,
+    FeaturesErrorsType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>,

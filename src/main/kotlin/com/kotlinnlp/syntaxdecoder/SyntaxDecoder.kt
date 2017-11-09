@@ -50,7 +50,7 @@ abstract class SyntaxDecoder<
   val featuresExtractor: FeaturesExtractor<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   val actionsScorer: ActionsScorer<
-    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   protected val supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringStructureType, TransitionStructureType>

@@ -52,7 +52,7 @@ class GreedyDecoder<
   featuresExtractor: FeaturesExtractor<
     StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   actionsScorer: ActionsScorer<
-    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType>,
+    StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringStructureType, TransitionStructureType>,
   bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   supportStructureFactory: SupportStructureFactory<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringStructureType, TransitionStructureType>

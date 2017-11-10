@@ -8,15 +8,21 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions.*
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.StateTransitionView
 
 /**
- * The ArcSpineVirtualState is a higher level of abstraction of a [ArcSpineState] providing a uniform view of the state
- * in relation with a specific transition.
+ * A view of a [ArcSpineState] related to the given [transition].
  *
  * @param state an ArcSpine state
  * @property transition an ArcSpine transition
  */
-class ArcSpineVirtualState(private val state: ArcSpineState, val transition: ArcSpineTransition) {
+class ArcSpineStateView(
+  state: ArcSpineState,
+  transition: ArcSpineTransition
+) : StateTransitionView<ArcSpineState, ArcSpineTransition>(
+  state = state,
+  transition = transition
+) {
 
   /**
    * The virtual stack.

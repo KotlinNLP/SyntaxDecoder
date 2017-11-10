@@ -7,21 +7,22 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine
 
-import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.*
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.StateTransitionView
 import com.kotlinnlp.syntaxdecoder.utils.getItemOrNull
 
 /**
- * The ArcEagerSpineVirtualState is a higher level of abstraction of a [ArcEagerSpineState] providing a uniform view
- * of the state in relation with a specific transition.
+ * A view of a [ArcEagerSpineState] related to the given [transition].
  *
  * @param state an ArcEagerSpine state
  * @property transition an ArcEagerSpine transition
  */
-class ArcEagerSpineVirtualState(
-  private val state: ArcEagerSpineState,
-  val transition: Transition<ArcEagerSpineTransition, ArcEagerSpineState>
-) {
+class ArcEagerSpineStateView(
+  state: ArcEagerSpineState,
+  transition: ArcEagerSpineTransition
+): StateTransitionView<ArcEagerSpineState, ArcEagerSpineTransition>(
+  state = state,
+  transition = transition) {
 
   /**
    * The virtual stack.
@@ -36,14 +37,12 @@ class ArcEagerSpineVirtualState(
   /**
    * Grandparent (can be null)
    */
-  var grandparent: Int? = null
-    private set
+  private var grandparent: Int? = null
 
   /**
    * Great Grandparent (can be null)
    */
-  var greatGrandparent: Int? = null
-    private set
+  private var greatGrandparent: Int? = null
 
   /**
    * Initialize the virtual stack and buffer respect to the current 'stateView'.

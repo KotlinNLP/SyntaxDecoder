@@ -7,7 +7,6 @@
 
 package com.kotlinnlp.syntaxdecoder.utils
 
-import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 
@@ -45,26 +44,6 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
 fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
   List<Transition<TransitionType, StateType>.Action>.toTransitionsMap(): Map<Int, TransitionType>
   = this.toTransitions().associateBy { it.id }
-
-/**
- * Groups the elements of the original deprels collection by the Deprel.Position property.
- * The returned map preserves the order of the original collection.
- *
- * @return a map of Deprel.Position to List<Deprel>
- */
-fun List<Deprel>.groupByPosition(): Map<Deprel.Position, List<Deprel>> {
-
-  val result = mutableMapOf<Deprel.Position, List<Deprel>>()
-
-  Deprel.Position.values().forEach { position ->
-    if (position != Deprel.Position.NULL && this.any { it.direction == position }) {
-      result[position] = this.filter { it.direction == position }
-    }
-  }
-
-  return result
-}
-
 
 /**
  * Remove the last element

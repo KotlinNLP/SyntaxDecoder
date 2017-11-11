@@ -7,11 +7,8 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine
 
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.ArcLeft
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.ArcRight
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.Root
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.Shift
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.dependencytree.DependencyTree
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.transitions.*
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
@@ -53,7 +50,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
    * Initialize the support structures.
    */
   override fun initSupportStructure() {
-    this.reachableDependents = goldDependencyTree.ids.toMutableSet()
+    this.reachableDependents = goldDependencyTree.elements.toMutableSet()
   }
 
   /**
@@ -115,7 +112,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     if (this.isDependentReachable && !this.isArcCorrect) cost += 1
 
     cost += this.refState.stack.last().sumBy {
-      reachableDependents.intersect(goldDependencyTree.dependents[it].right).size
+      reachableDependents.intersect(goldDependencyTree.rightDependents[it]).size
     }
 
     return cost
@@ -131,10 +128,10 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     if (this.isDependentReachable && !this.isArcCorrect) cost += 1
 
     cost += reachableDependents.intersect(
-      goldDependencyTree.dependents[this.dependentId].left).size
+      goldDependencyTree.leftDependents[this.dependentId]).size
 
     cost += this.refState.stack.last().subListFrom(this.governorSpineIndex + 1)?.sumBy {
-      reachableDependents.intersect(goldDependencyTree.dependents[it].right).size
+      reachableDependents.intersect(goldDependencyTree.rightDependents[it]).size
     } ?: 0
 
     return cost
@@ -153,7 +150,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
       && (goldDependencyTree.heads[b0] != null
        && goldDependencyTree.heads[b0]!! < b0)) cost += 1
 
-    cost += reachableDependents.intersect(goldDependencyTree.dependents[b0].left).size
+    cost += reachableDependents.intersect(goldDependencyTree.leftDependents[b0]).size
 
     return cost
   }
@@ -170,7 +167,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
     reachableDependents.remove(this.dependentId)
 
     this.refState.stack.last().forEach {
-      reachableDependents.removeAll(goldDependencyTree.dependents[it].right)
+      reachableDependents.removeAll(goldDependencyTree.rightDependents[it])
     }
   }
 
@@ -179,10 +176,10 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
    */
   private fun ArcRight.removeUnreachableDependents() {
     reachableDependents.remove(this.dependentId)
-    reachableDependents.removeAll(goldDependencyTree.dependents[this.dependentId].left)
+    reachableDependents.removeAll(goldDependencyTree.leftDependents[this.dependentId])
 
     this.refState.stack.last().subListFrom(this.governorSpineIndex + 1)?.forEach {
-      reachableDependents.removeAll(goldDependencyTree.dependents[it].right)
+      reachableDependents.removeAll(goldDependencyTree.rightDependents[it])
     }
   }
 
@@ -196,7 +193,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
       reachableDependents.remove(b0)
     }
 
-    reachableDependents.removeAll(goldDependencyTree.dependents[b0].left)
+    reachableDependents.removeAll(goldDependencyTree.leftDependents[b0])
   }
 
   /**

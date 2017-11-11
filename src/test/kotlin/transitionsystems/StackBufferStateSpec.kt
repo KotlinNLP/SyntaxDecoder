@@ -36,7 +36,7 @@ object StackBufferStateSpec: Spek({
         }
 
         it("should contain the same dependencyTree (empty)") {
-          assertEquals(true, clonedState.dependencyTree.match(state.dependencyTree))
+          assertEquals(true, clonedState.dependencyTree.equals(state.dependencyTree))
         }
       }
     }
@@ -59,7 +59,7 @@ object StackBufferStateSpec: Spek({
         }
 
         it("should contain the same dependencyTree") {
-          assertEquals(true, clonedState.dependencyTree.match(state.dependencyTree))
+          assertEquals(true, clonedState.dependencyTree == state.dependencyTree)
         }
       }
     }
@@ -74,7 +74,7 @@ object StackBufferStateSpec: Spek({
         val clonedState = state.copy()
 
         it("should contain the same dependencyTree") {
-          assertEquals(true, clonedState.dependencyTree.match(state.dependencyTree))
+          assertEquals(true, clonedState.dependencyTree == state.dependencyTree)
         }
       }
     }

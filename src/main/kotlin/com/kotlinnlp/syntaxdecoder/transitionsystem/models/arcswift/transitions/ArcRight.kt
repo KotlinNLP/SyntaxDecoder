@@ -60,7 +60,7 @@ class ArcRight(
    * True if all the elements until [governorStackIndex] are already attached.
    */
   private val attachedElementsUntilK: Boolean get() =
-    this.refState.stack.subList(0, this.governorStackIndex - 1).all { this.refState.dependencyTree.isAttached(it) }
+    this.refState.stack.subList(0, this.governorStackIndex - 1).all { this.refState.dependencyTree.isAssigned(it) }
 
   /**
    * Ensures that the value of 'governorStackIndex' is within the limits.

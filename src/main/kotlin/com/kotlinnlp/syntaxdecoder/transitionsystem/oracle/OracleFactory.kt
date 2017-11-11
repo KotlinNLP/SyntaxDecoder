@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.oracle
 
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 

@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder
 
+import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
@@ -20,7 +21,6 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 
 /**

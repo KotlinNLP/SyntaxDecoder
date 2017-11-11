@@ -7,8 +7,8 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem
 
+import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
-import com.kotlinnlp.syntaxdecoder.syntax.Deprel
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 
@@ -216,10 +216,20 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
      *
      */
     override fun perform(state: StateType) {
-      state.dependencyTree.setArc(
-        dependentId = this.dependentId,
-        governorId = this.governorId,
-        deprel = deprel)
+
+      if (this.governorId != null) {
+
+        state.dependencyTree.setArc(
+          dependent = this.dependentId,
+          governor = this.governorId,
+          deprel = this.deprel)
+
+      } else if (this.deprel != null) {
+
+        state.dependencyTree.setDeprel(
+          dependent = this.dependentId,
+          deprel = this.deprel!!)
+      }
     }
 
     /**

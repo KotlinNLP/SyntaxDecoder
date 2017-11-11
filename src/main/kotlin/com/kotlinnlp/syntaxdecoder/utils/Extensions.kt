@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.utils
 
-import com.kotlinnlp.syntaxdecoder.syntax.Deprel
+import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 

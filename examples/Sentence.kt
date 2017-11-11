@@ -6,8 +6,8 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.conllio.Token
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
-import com.kotlinnlp.syntaxdecoder.syntax.Deprel
+import com.kotlinnlp.dependencytree.DependencyTree
+import com.kotlinnlp.dependencytree.Deprel
 
 /**
  * The Sentence.
@@ -42,7 +42,7 @@ data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? =
      */
     private fun buildDependencyTree(sentence: com.kotlinnlp.conllio.Sentence): DependencyTree {
 
-      val dependencyTree = DependencyTree()
+      val dependencyTree = DependencyTree(size = sentence.tokens.size)
 
       sentence.tokens.forEach { token -> dependencyTree.addArc(token) }
 
@@ -67,7 +67,11 @@ data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? =
           else -> Deprel.Position.RIGHT
         })
 
-      this.setArc(dependentId = id, governorId = head, deprel = deprel)
+      if (head != null) {
+        this.setArc(dependent = id, governor = head, deprel = deprel)
+      } else {
+        this.setDeprel(dependent = id, deprel = deprel)
+      }
     }
   }
 }

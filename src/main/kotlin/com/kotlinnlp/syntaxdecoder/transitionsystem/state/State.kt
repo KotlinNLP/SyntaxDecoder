@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state
 
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.dependencytree.DependencyTree
 import java.util.concurrent.atomic.AtomicInteger
 
 /**

@@ -7,9 +7,9 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid
 
+import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.transitions.*
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory

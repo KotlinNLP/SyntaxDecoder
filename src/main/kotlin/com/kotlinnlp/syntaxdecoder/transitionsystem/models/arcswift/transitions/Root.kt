@@ -70,5 +70,5 @@ class Root(refState: StackBufferState, id: Int): ArcSwiftTransition(refState, id
    * @return a list of unattached element on the stack.
    */
   private val StackBufferState.unattachedStackElements: List<Int> get() =
-    this.stack.filter { this.dependencyTree.isUnattached(it) }
+    this.stack.filter { this.dependencyTree.isNotAssigned(it) }
 }

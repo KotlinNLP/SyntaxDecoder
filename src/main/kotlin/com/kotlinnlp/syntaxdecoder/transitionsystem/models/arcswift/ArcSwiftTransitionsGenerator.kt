@@ -65,7 +65,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
   private fun ArrayList<ArcSwiftTransition>.addArcLeft(state: StackBufferState) {
 
     if (state.buffer.isNotEmpty()){
-      val si: Int = state.stack.indexOfFirst { state.dependencyTree.isUnattached(it) }
+      val si: Int = state.stack.indexOfFirst { state.dependencyTree.isNotAssigned(it) }
       if (si > -1) this.add(ArcLeft(state, dependentStackIndex =  si, id = this.getNextId()))
     }
   }
@@ -78,7 +78,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
     if (state.buffer.size > 1 || (state.buffer.size == 1 && state.unattachedStackElements.size == 1)){
       loop@for (si in 0 until state.stack.size){
         this.add(ArcRight(state, governorStackIndex = si, id = this.getNextId()))
-        if (state.dependencyTree.isUnattached(state.stack[si])) break@loop
+        if (state.dependencyTree.isNotAssigned(state.stack[si])) break@loop
       }
     }
   }
@@ -87,5 +87,5 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
    * @return the list of unattached elements on the stack.
    */
   private val StackBufferState.unattachedStackElements: List<Int> get() =
-    this.stack.filter { this.dependencyTree.isUnattached(it) }
+    this.stack.filter { this.dependencyTree.isNotAssigned(it) }
 }

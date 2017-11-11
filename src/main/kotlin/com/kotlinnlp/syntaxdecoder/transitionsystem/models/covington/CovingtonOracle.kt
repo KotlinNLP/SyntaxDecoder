@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington
 
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.transitions.*
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory

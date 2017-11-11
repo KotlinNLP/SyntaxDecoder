@@ -7,10 +7,10 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine
 
+import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions.Shift
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
 
 /**
  * The ArcSpine Non Deterministic Oracle

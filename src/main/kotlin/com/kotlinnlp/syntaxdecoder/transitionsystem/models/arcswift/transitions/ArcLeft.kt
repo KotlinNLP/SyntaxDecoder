@@ -52,7 +52,7 @@ class ArcLeft(
    */
   override val isAllowed: Boolean get() =
     this.refState.buffer.isNotEmpty() && this.dependentStackIndex <= this.refState.stack.lastIndex &&
-      this.refState.dependencyTree.isUnattached(this.refState.stack[this.dependentStackIndex])
+      this.refState.dependencyTree.isNotAssigned(this.refState.stack[this.dependentStackIndex])
 
   /**
    * Ensures that the value of 'dependentStackIndex' is within the limits.

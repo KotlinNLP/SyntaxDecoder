@@ -7,6 +7,8 @@
 
 package com.kotlinnlp.syntaxdecoder.syntax
 
+import com.kotlinnlp.dependencytree.Deprel
+
 /**
  * Extends a syntactic dependency with the relation between the dependent and its governor.
  */

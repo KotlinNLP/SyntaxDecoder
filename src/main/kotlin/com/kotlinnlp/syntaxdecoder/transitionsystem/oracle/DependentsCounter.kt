@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.oracle
 
-import com.kotlinnlp.syntaxdecoder.syntax.DependencyTree
+import com.kotlinnlp.dependencytree.DependencyTree
 
 /**
  * The DependentsCounter.
@@ -27,8 +27,8 @@ class DependentsCounter(private val countList: ArrayList<Int>) {
 
       val countList = ArrayList<Int>()
 
-      dependencyTree.heads.indices.forEach {
-        countList.add(dependencyTree.dependents[it].count)
+      dependencyTree.elements.forEach {
+        countList.add(dependencyTree.dependentsOf(it).size)
       }
 
       return DependentsCounter(countList)
@@ -38,7 +38,7 @@ class DependentsCounter(private val countList: ArrayList<Int>) {
   /**
    * @param elementId an element id.
    *
-   * @return the number of dependents of the [index]th-element.
+   * @return the number of dependents of the given [elementId]
    */
   operator fun get(elementId: Int): Int = this.countList[elementId]
 

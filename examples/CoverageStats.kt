@@ -9,6 +9,8 @@ import com.kotlinnlp.conllio.CoNLLReader
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpine
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybrid
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybridNP
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybridNPOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybridOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.ArcSpine
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.ArcSpineNonDetOracle
@@ -50,6 +52,12 @@ fun main(args: Array<String>){
       oracle = ArcHybridOracle(),
       errorExploring = false)
 
+    TransitionSystemType.ARC_HYBRID_NON_PROJECTIVE -> TransitionSystemCoverage(
+      transitionSystem = ArcHybridNP(),
+      oracle = ArcHybridNPOracle(),
+      errorExploring = false,
+      verbose = false)
+
     TransitionSystemType.ARC_SWIFT -> TransitionSystemCoverage(
       transitionSystem = ArcSwift(),
       oracle = ArcSwiftOracle(),
@@ -89,10 +97,10 @@ fun main(args: Array<String>){
       verbose = false)
 
     TransitionSystemType.NON_LOCAL_COVINGTON ->  TransitionSystemCoverage(
-        transitionSystem = NLCovington(),
-        oracle = CovingtonOracle(),
-        errorExploring = false,
-        verbose = false)
+      transitionSystem = NLCovington(),
+      oracle = CovingtonOracle(),
+      errorExploring = false,
+      verbose = false)
 
   }
 

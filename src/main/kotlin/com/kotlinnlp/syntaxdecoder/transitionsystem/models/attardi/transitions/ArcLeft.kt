@@ -23,12 +23,12 @@ import com.kotlinnlp.syntaxdecoder.utils.removeLast
  * L-3l  (σ|i|j|k, m|β, A)  ⇒  (σ, j|k|m|β, A ∪ {(m, l, i)})
  *
  * @property refState the [State] on which this transition operates
- * @property dependentStackIndex the position in the stack of the dependent element
+ * @property degree the position in the stack of the dependent element
  * @property id the transition id
  */
 class ArcLeft(
   refState: StackBufferState,
-  val dependentStackIndex: Int,
+  val degree: Int,
   id: Int
 ) : AttardiTransition(refState, id), SyntacticDependency {
 
@@ -50,13 +50,18 @@ class ArcLeft(
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.refState.stack[this.dependentStackIndex]
+  override val dependentId: Int get() = this.refState.stack[this.stackSize - 1 - this.degree]
 
   /**
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.refState.buffer.isNotEmpty() && this.dependentStackIndex in 0 .. this.refState.stack.lastIndex
+    this.refState.buffer.isNotEmpty() && this.stackSize >= this.degree
+
+  /**
+   * The size of the Stack.
+   */
+  private val stackSize: Int = this.refState.stack.size
 
   /**
    * Perform this [Transition] on the given [state].
@@ -70,14 +75,14 @@ class ArcLeft(
 
     when {
 
-      this.dependentStackIndex == state.stack.lastIndex ->
+      this.degree == 0 ->
         state.stack.removeLast()
 
-      this.dependentStackIndex == state.stack.lastIndex - 1 ->
-        state.stack.removeAt(this.dependentStackIndex)
+      this.degree == 1 ->
+        state.stack.removeAt(this.refState.stack.lastIndex - 1)
 
       else -> {
-        state.buffer.addAll(0, state.stack.extract(this.dependentStackIndex - 1 .. this.refState.stack.lastIndex))
+        state.buffer.addAll(0, state.stack.extract(this.stackSize - this.degree + 1 .. this.refState.stack.lastIndex))
         state.stack.removeLast()
       }
     }
@@ -86,5 +91,5 @@ class ArcLeft(
   /**
    * @return the string representation of this transition.
    */
-  override fun toString(): String = "arc-left(${this.dependentStackIndex})"
+  override fun toString(): String = "arc-left(${this.degree})"
 }

@@ -24,6 +24,14 @@ import kotlin.reflect.KClass
  */
 class Attardi : TransitionSystem<StackBufferState, AttardiTransition>() {
 
+  companion object {
+
+    /**
+     *
+     */
+    val maxNonProjectiveDistance: Int = 1
+  }
+
   /**
    * The [KClass] of the StateType used in the [getInitialState] function.
    */

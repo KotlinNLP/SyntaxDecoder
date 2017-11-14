@@ -23,12 +23,12 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFirst
  * R-3l (σ|i|j|k, m|β, A)  ⇒  (σ, i|j|k|β, A ∪ {(i, l, m)})
  *
  * @property refState the [State] on which this transition operates
- * @property governorStackIndex the position in the stack of the dependent element
+ * @property degree the position in the stack of the dependent element
  * @property id the transition id
  */
 class ArcRight(
   refState: StackBufferState,
-  val governorStackIndex: Int,
+  val degree: Int,
   id: Int) : AttardiTransition(refState, id), SyntacticDependency {
 
   /**
@@ -44,7 +44,7 @@ class ArcRight(
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.refState.stack[this.governorStackIndex]
+  override val governorId: Int get() = this.refState.stack[this.stackSize - 1 - this.degree]
 
   /**
    * The dependent id.
@@ -55,7 +55,12 @@ class ArcRight(
    * Returns True if the action is allowed in the given parser state.
    */
   override val isAllowed: Boolean get() =
-    this.refState.buffer.isNotEmpty() && this.governorStackIndex in 0 .. this.refState.stack.lastIndex
+    this.refState.buffer.isNotEmpty() && this.stackSize >= this.degree
+
+  /**
+   * The size of the Stack.
+   */
+  private val stackSize: Int = this.refState.stack.size
 
   /**
    * Perform this [Transition] on the given [state].
@@ -67,11 +72,11 @@ class ArcRight(
    */
   override fun perform(state: StackBufferState) {
     state.buffer.removeFirst()
-    state.buffer.addAll(0, state.stack.extract(this.governorStackIndex .. this.refState.stack.lastIndex))
+    state.buffer.addAll(0, state.stack.extract(this.stackSize - 1 - this.degree .. this.refState.stack.lastIndex))
   }
 
   /**
    * @return the string representation of this transition.
    */
-  override fun toString(): String = "arc-right(${this.governorStackIndex})"
+  override fun toString(): String = "arc-right(${this.degree})"
 }

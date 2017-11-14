@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.AttardiTransition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
-import com.kotlinnlp.syntaxdecoder.utils.extract
+import com.kotlinnlp.syntaxdecoder.utils.extractAndRemove
 import com.kotlinnlp.syntaxdecoder.utils.removeLast
 
 /**
@@ -82,7 +82,7 @@ class ArcLeft(
         state.stack.removeAt(this.refState.stack.lastIndex - 1)
 
       else -> {
-        state.buffer.addAll(0, state.stack.extract(this.stackSize - this.degree .. this.refState.stack.lastIndex))
+        state.buffer.addAll(0, state.stack.extractAndRemove(this.stackSize - this.degree .. this.refState.stack.lastIndex))
         state.stack.removeLast()
       }
     }

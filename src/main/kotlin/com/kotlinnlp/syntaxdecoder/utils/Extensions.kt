@@ -63,9 +63,9 @@ fun <E>ArrayList<E>.removeFrom(index: Int): ArrayList<E> {
 /**
  * Returns a list containing elements at indices in the specified [indices] range removing them from the origin.
  */
-fun <E>ArrayList<E>.extract(indices: IntRange): List<E> {
+fun <E>ArrayList<E>.extractAndRemove(indices: IntRange): List<E> {
   val elements = this.slice(indices)
-  this.subList(indices.start, indices.endInclusive).clear()
+  indices.reversed().forEach { this.removeAt(it) }
   return elements
 }
 

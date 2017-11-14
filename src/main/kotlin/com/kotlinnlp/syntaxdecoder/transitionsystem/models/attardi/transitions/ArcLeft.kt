@@ -70,14 +70,14 @@ class ArcLeft(
 
     when {
 
-      this.dependentStackIndex == 0 ->
+      this.dependentStackIndex == state.stack.lastIndex ->
         state.stack.removeLast()
 
-      this.dependentStackIndex == 1 ->
+      this.dependentStackIndex == state.stack.lastIndex - 1 ->
         state.stack.removeAt(this.dependentStackIndex)
 
-      this.dependentStackIndex > 1 -> {
-        state.buffer.addAll(0, state.stack.extract(this.dependentStackIndex + 1 .. this.refState.stack.lastIndex))
+      else -> {
+        state.buffer.addAll(0, state.stack.extract(this.dependentStackIndex - 1 .. this.refState.stack.lastIndex))
         state.stack.removeLast()
       }
     }

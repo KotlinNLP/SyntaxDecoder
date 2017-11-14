@@ -21,5 +21,6 @@ enum class TransitionSystemType {
   ARC_SWIFT,
   EASY_FIRST,
   COVINGTON,
-  NON_LOCAL_COVINGTON
+  NON_LOCAL_COVINGTON,
+  ATTARDI
 }

@@ -54,7 +54,8 @@ class ArcRight(
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.refState.stack.size > 1
+  override val isAllowed: Boolean get() =
+    this.refState.buffer.isNotEmpty() && this.governorStackIndex in 0 .. this.refState.stack.lastIndex
 
   /**
    * Perform this [Transition] on the given [state].

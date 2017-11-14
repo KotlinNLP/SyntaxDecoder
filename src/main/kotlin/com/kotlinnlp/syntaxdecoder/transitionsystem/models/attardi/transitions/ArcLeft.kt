@@ -82,7 +82,7 @@ class ArcLeft(
         state.stack.removeAt(this.refState.stack.lastIndex - 1)
 
       else -> {
-        state.buffer.addAll(0, state.stack.extract(this.stackSize - this.degree + 1 .. this.refState.stack.lastIndex))
+        state.buffer.addAll(0, state.stack.extract(this.stackSize - this.degree .. this.refState.stack.lastIndex))
         state.stack.removeLast()
       }
     }

@@ -49,7 +49,7 @@ class ArcHybridNPOracle : Oracle<StackBufferState, ArcHybridTransition>() {
   /**
    * It contains the position of element i in the projective order
    */
-  private lateinit var projectiveOrder: Array<Int>
+  private lateinit var projectiveOrder: List<Int>
 
   /**
    * Initialize the support structures.

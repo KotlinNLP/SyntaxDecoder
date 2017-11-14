@@ -61,6 +61,15 @@ fun <E>ArrayList<E>.removeFrom(index: Int): ArrayList<E> {
 }
 
 /**
+ * Returns a list containing elements at indices in the specified [indices] range removing them from the origin.
+ */
+fun <E>ArrayList<E>.extract(indices: IntRange): List<E> {
+  val elements = this.slice(indices)
+  this.subList(indices.start, indices.endInclusive).clear()
+  return elements
+}
+
+/**
  *
  */
 fun <E>ArrayList<E>.subListFrom(fromIndex: Int): MutableList<E>? =

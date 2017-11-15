@@ -35,7 +35,8 @@ class Shift(refState: StackBufferState, id: Int) : AttardiTransition(refState, i
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() = this.refState.buffer.isNotEmpty()
+  override val isAllowed: Boolean get() =
+    this.refState.buffer.isNotEmpty() && (this.refState.stack.isEmpty() || this.refState.buffer.size > 1)
 
   /**
    * Perform this [Transition] on the given [state].

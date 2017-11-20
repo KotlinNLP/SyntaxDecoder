@@ -20,7 +20,6 @@ import com.kotlinnlp.syntaxdecoder.utils.Clonable
  *
  * @property state a [State]
  * @property context a [DecodingContext]
- * @property score a score (default 0.0)
  * @property oracle an [Oracle] (optional)
  */
 data class ExtendedState<
@@ -30,19 +29,44 @@ data class ExtendedState<
   ContextType : DecodingContext<ContextType, ItemType>>(
   val state: StateType,
   val context: ContextType,
-  var score: Double = 0.0,
   val oracle: Oracle<StateType, TransitionType>? = null
 ) : Clonable<ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
+
+  /**
+   * The score of goodness of this state (a value in the range (0.0, 1.0]), default 1.0.
+   */
+  val score: Double get() = 1 / (-0.1 * this._score + 1) // convert the domain (-inf, 0.0] to (0.0, 1.0]
+
+  /**
+   * The score of goodness of this state (a value in the range (-inf, 0.0]), default 0.0.
+   * It is the result of more additions of the logarithm of scores in the range (0.0, 1.0], done calling the
+   * [accumulateScore] method.
+   */
+  private var _score: Double = 0.0
+
+  /**
+   * Accumulate the given [score] into this state as joint probability of its score (after have transformed it by
+   * natural logarithm, to avoid underflow).
+   *
+   * @param score a score in the range (0.0, 1.0]
+   */
+  fun accumulateScore(score: Double) {
+    assert(score > 0 && score in 0.0 .. 1.0) { "Invalid score: $score, must be in range (0.0, 1.0]." }
+    this._score += Math.log(score)
+  }
 
   /**
    * @return a copy of this [ExtendedState]
    */
   override fun copy(): ExtendedState<StateType, TransitionType, ItemType, ContextType> {
 
-    return ExtendedState(
+    val clonedState = ExtendedState(
       state = this.state.copy(),
       context = this.context.copy(),
-      score = score,
       oracle = this.oracle?.copy())
+
+    clonedState._score = this._score
+
+    return clonedState
   }
 }

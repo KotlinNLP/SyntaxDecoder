@@ -33,8 +33,6 @@ class HighestScoreCorrectActionSelector<
   override fun select(
     sortedActions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
-  ): Transition<TransitionType, StateType>.Action {
-
-    return sortedActions.first { extendedState.oracle!!.isCorrect(it) }
-  }
+  ): Transition<TransitionType, StateType>.Action
+    = sortedActions.first { extendedState.oracle!!.isCorrect(it) }
 }

@@ -32,8 +32,6 @@ class HighestScoreActionSelector<
   override fun select(
     sortedActions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
-  ): Transition<TransitionType, StateType>.Action {
-
-    return sortedActions.first()
-  }
+  ): Transition<TransitionType, StateType>.Action
+    = sortedActions.first()
 }

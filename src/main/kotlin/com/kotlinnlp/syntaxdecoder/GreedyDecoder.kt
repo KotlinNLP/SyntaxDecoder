@@ -87,9 +87,7 @@ class GreedyDecoder<
 
     while (!extendedState.state.isTerminal) {
 
-      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(
-        scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
-        extendedState = extendedState)
+      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(extendedState)
 
       beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback
 
@@ -103,18 +101,16 @@ class GreedyDecoder<
   /**
    * Get the best action to apply, given the scoring support structure and an [ExtendedState].
    *
-   * @param scoringGlobalSupportStructure the scoring global support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return the best action to apply to the given state
    */
   private fun getBestAction(
-    scoringGlobalSupportStructure: ScoringGlobalStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): Transition<TransitionType, StateType>.Action {
 
     val scoredActions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(
-      scoringGlobalSupportStructure = scoringGlobalSupportStructure,
+      scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
       extendedState = extendedState)
 
     return this.bestActionSelector.select(sortedActions = scoredActions, extendedState = extendedState)

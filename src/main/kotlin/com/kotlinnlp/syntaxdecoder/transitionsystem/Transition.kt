@@ -11,6 +11,7 @@ import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+import kotlin.properties.Delegates
 
 /**
  * The State Transition.
@@ -40,17 +41,22 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   }
 
   /**
-   * The Action.
+   * The Action is a transition abstraction that allows you to ignore which transition-system you are using.
    *
-   * Transition abstraction that allows you to ignore which transition-system you are using.
+   * @property id a unique id that identifies this action within others generated at the same time
    */
-  inner abstract class Action internal constructor(val id: Int = -1, var score: Double) {
+  inner abstract class Action internal constructor(val id: Int = -1) {
 
     /**
      * The [Transition] from which this [Action] originated.
      */
     @Suppress("UNCHECKED_CAST")
     val transition: SelfType = this@Transition as SelfType
+
+    /**
+     * The score of goodness of this action (a value in the range [0.0, 1.0]), default 0.0.
+     */
+    var score: Double by Delegates.observable(0.0) { _, _, new -> assert(new in 0.0 .. 1.0) }
 
     /**
      * The error of the [score].
@@ -99,7 +105,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Shift Action.
    */
-  inner class Shift internal constructor(id: Int, score: Double) : Action(id, score) {
+  inner class Shift internal constructor(id: Int) : Action(id) {
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
@@ -120,7 +126,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Unshift Action.
    */
-  inner class Unshift internal constructor(id: Int, score: Double) : Action(id, score) {
+  inner class Unshift internal constructor(id: Int) : Action(id) {
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
@@ -141,7 +147,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Relocate Action (can be used to abstract the Swap transition).
    */
-  inner class Relocate internal constructor(id: Int, score: Double) : Action(id, score) {
+  inner class Relocate internal constructor(id: Int) : Action(id) {
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
@@ -162,7 +168,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * NoArc Action.
    */
-  inner class NoArc internal constructor(id: Int, score: Double) : Action(id, score) {
+  inner class NoArc internal constructor(id: Int) : Action(id) {
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
@@ -183,7 +189,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * Arc Action.
    */
-  inner class Arc internal constructor(id: Int, score: Double) : Action(id, score), DependencyRelation {
+  inner class Arc internal constructor(id: Int) : Action(id), DependencyRelation {
 
     /**
      * The dependent id.
@@ -262,13 +268,12 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Action] tied to this transition.
    */
-  fun actionFactory(id: Int = -1, score: Double = 0.0, deprel: Deprel? = null): Action {
+  fun actionFactory(id: Int = -1, deprel: Deprel? = null): Action {
 
-    val action: Action = this.buildAction(id, score)
+    val action: Action = this.buildAction(id)
 
     if (this is SyntacticDependency) {
       require(action is DependencyRelation) { "An arc Transition must be associated to a DependencyRelation" }
@@ -290,55 +295,49 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Action] tied to this transition.
    */
-  private fun buildAction(id: Int = -1, score: Double = 0.0): Action = when (this.type) {
-    Type.ARC_LEFT, Type.ARC_RIGHT, Type.ROOT -> this.buildArc(id, score)
-    Type.NO_ARC -> this.buildNoArc(id, score)
-    Type.RELOCATE -> this.buildRelocate(id, score)
-    Type.SHIFT, Type.WAIT -> this.buildShift(id, score)
-    Type.UNSHIFT -> this.buildUnshift(id, score)
+  private fun buildAction(id: Int = -1): Action = when (this.type) {
+    Type.ARC_LEFT, Type.ARC_RIGHT, Type.ROOT -> this.buildArc(id)
+    Type.NO_ARC -> this.buildNoArc(id)
+    Type.RELOCATE -> this.buildRelocate(id)
+    Type.SHIFT, Type.WAIT -> this.buildShift(id)
+    Type.UNSHIFT -> this.buildUnshift(id)
   }
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Shift] tied to this transition.
    */
-  private fun buildShift(id: Int = -1, score: Double = 0.0) = this.Shift(id = id, score = score)
+  private fun buildShift(id: Int = -1) = this.Shift(id)
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Unshift] tied to this transition.
    */
-  private fun buildUnshift(id: Int = -1, score: Double = 0.0) = this.Unshift(id = id, score = score)
+  private fun buildUnshift(id: Int = -1) = this.Unshift(id)
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Relocate] tied to this transition.
    */
-  private fun buildRelocate(id: Int = -1, score: Double = 0.0) = this.Relocate(id = id, score = score)
+  private fun buildRelocate(id: Int = -1) = this.Relocate(id)
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Arc] tied to this transition.
    */
-  private fun buildNoArc(id: Int = -1, score: Double = 0.0) = this.NoArc(id = id, score = score)
+  private fun buildNoArc(id: Int = -1) = this.NoArc(id)
 
   /**
    * @param id the id of the action
-   * @param score the score of the action
    *
    * @return a new [Arc] tied to this transition.
    */
-  private fun buildArc(id: Int = -1, score: Double = 0.0) = this.Arc(id = id, score = score)
+  private fun buildArc(id: Int = -1) = this.Arc(id)
 }

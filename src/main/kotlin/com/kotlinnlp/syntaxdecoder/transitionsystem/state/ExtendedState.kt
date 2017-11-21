@@ -33,14 +33,15 @@ data class ExtendedState<
   /**
    * The score of goodness of this state (a value in the range (0.0, 1.0]), default 1.0.
    */
-  val score: Double get() = 1 / (-0.1 * this._score + 1) // convert the domain (-inf, 0.0] to (0.0, 1.0]
+  val score: Double get() = 1 / (-0.1 * this.logScore + 1) // convert the domain (-inf, 0.0] to (0.0, 1.0]
 
   /**
    * The score of goodness of this state (a value in the range (-inf, 0.0]), default 0.0.
    * It is the result of more additions of the logarithm of scores in the range (0.0, 1.0], done calling the
    * [accumulateScore] method.
    */
-  private var _score: Double = 0.0
+  var logScore: Double = 0.0
+    private set
 
   /**
    * Accumulate the given [score] into this state as joint probability of its score (after have transformed it by
@@ -50,7 +51,7 @@ data class ExtendedState<
    */
   fun accumulateScore(score: Double) {
     assert(score > 0 && score in 0.0 .. 1.0) { "Invalid score: $score, must be in range (0.0, 1.0]." }
-    this._score += Math.log(score)
+    this.logScore += Math.log(score)
   }
 
   /**
@@ -65,7 +66,7 @@ data class ExtendedState<
       context = this.context.copy(),
       oracle = this.oracle?.copy())
 
-    clonedState._score = this._score
+    clonedState.logScore = this.logScore
 
     return clonedState
   }

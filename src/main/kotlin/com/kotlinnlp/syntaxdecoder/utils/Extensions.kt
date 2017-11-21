@@ -114,21 +114,20 @@ fun <E>ArrayList<E>.getItemOrNull(index: Int): E? {
 }
 
 /**
- * Group a list of threads into groups of threads that can run in parallel.
+ * Group a list of elements into groups of elements.
  *
- * @param maxParallelThreads the max number of threads that can run in parallel
+ * @param groupSize the max number of elements in a group
  *
- * @return a list of thread groups (lists of threads)
+ * @return a list of elements groups (lists of elements)
  */
-fun <ThreadType: DaemonThread<*, *>>
-  List<ThreadType>.groupParallel(maxParallelThreads: Int): List<List<ThreadType>> {
+fun <T: Any?> List<T>.groupBySize(groupSize: Int): List<List<T>> {
 
   var tIndex = 0
-  val remainder: Int = this.size % maxParallelThreads
+  val remainder: Int = this.size % groupSize
   val remainderStart: Int = this.size - remainder
 
   return this
-    .groupBy { if (tIndex < remainderStart) tIndex++ % maxParallelThreads else maxParallelThreads }
+    .groupBy { if (tIndex < remainderStart) tIndex++ % groupSize else groupSize }
     .values
     .toList()
 }

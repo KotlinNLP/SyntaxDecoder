@@ -21,7 +21,7 @@ import java.util.concurrent.Semaphore
  *
  * The [write] method blocks until the last output is read.
  */
-abstract class DaemonThread<InputType: Any, OutputType: Any>(val id: Int) : Thread() {
+abstract class DaemonThread<InputType: Any, OutputType: Any> : Thread() {
 
   /**
    * The reading semaphore.

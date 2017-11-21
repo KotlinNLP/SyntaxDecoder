@@ -11,7 +11,6 @@ import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.utils.Clonable
 
 /**
  * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [DecodingContext].
@@ -29,8 +28,7 @@ data class ExtendedState<
   ContextType : DecodingContext<ContextType, ItemType>>(
   val state: StateType,
   val context: ContextType,
-  val oracle: Oracle<StateType, TransitionType>? = null
-) : Clonable<ExtendedState<StateType, TransitionType, ItemType, ContextType>> {
+  val oracle: Oracle<StateType, TransitionType>? = null) {
 
   /**
    * The score of goodness of this state (a value in the range (0.0, 1.0]), default 1.0.
@@ -56,12 +54,14 @@ data class ExtendedState<
   }
 
   /**
-   * @return a copy of this [ExtendedState]
+   * @param state the new state that will replace the current one in the clone
+   *
+   * @return a clone of this [ExtendedState] replacing its state with the given [state]
    */
-  override fun copy(): ExtendedState<StateType, TransitionType, ItemType, ContextType> {
+  fun clone(state: StateType): ExtendedState<StateType, TransitionType, ItemType, ContextType> {
 
     val clonedState = ExtendedState(
-      state = this.state.copy(),
+      state = state,
       context = this.context.copy(),
       oracle = this.oracle?.copy())
 

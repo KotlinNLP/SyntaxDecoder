@@ -101,9 +101,7 @@ fun <E>ArrayList<E>.removeFirst(): E {
 /**
  * @return the second to last element
  */
-fun <E>ArrayList<E>.secondToLast(): E {
-  return this[this.lastIndex - 1]
-}
+fun <E>ArrayList<E>.secondToLast(): E = this[this.lastIndex - 1]
 
 /**
  * @param  index gets the nth element

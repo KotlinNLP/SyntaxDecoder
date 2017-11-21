@@ -112,3 +112,23 @@ fun <E>ArrayList<E>.getItemOrNull(index: Int): E? {
   val accessIndex = if (index < 0) this.size + index else index
   return if (accessIndex in 0..this.lastIndex) this[accessIndex] else null
 }
+
+/**
+ * Group a list of threads into groups of threads that can run in parallel.
+ *
+ * @param maxParallelThreads the max number of threads that can run in parallel
+ *
+ * @return a list of thread groups (lists of threads)
+ */
+fun <ThreadType: DaemonThread<*, *>>
+  List<ThreadType>.groupParallel(maxParallelThreads: Int): List<List<ThreadType>> {
+
+  var tIndex = 0
+  val remainder: Int = this.size % maxParallelThreads
+  val remainderStart: Int = this.size - remainder
+
+  return this
+    .groupBy { if (tIndex < remainderStart) tIndex++ % maxParallelThreads else maxParallelThreads }
+    .values
+    .toList()
+}

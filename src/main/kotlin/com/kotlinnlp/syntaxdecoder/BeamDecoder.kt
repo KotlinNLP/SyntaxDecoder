@@ -137,17 +137,24 @@ class BeamDecoder<
                             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                  context: ContextType) -> Unit)?): DependencyTree {
 
-    this.beamStates[0] = extendedState
+    try {
 
-    while (this.beamStates.any { it != null && !it.state.isTerminal }) {
+      this.beamStates[0] = extendedState
 
-      val bestActionsPerState = this.getBestActionsPerState()
-      val bestActions = this.selectBestActions(bestActionsPerState)
+      while (this.beamStates.any { it != null && !it.state.isTerminal }) {
 
-      this.updateBeam(bestActions = bestActions, beforeApplyAction = beforeApplyAction)
+        val bestActionsPerState = this.getBestActionsPerState()
+        val bestActions = this.selectBestActions(bestActionsPerState)
+
+        this.updateBeam(bestActions = bestActions, beforeApplyAction = beforeApplyAction)
+      }
+
+      return this.beamStates.first()!!.state.dependencyTree
+
+    } catch (e: RuntimeException) {
+      this.close()
+      throw e
     }
-
-    return this.beamStates.first()!!.state.dependencyTree
   }
 
   /**

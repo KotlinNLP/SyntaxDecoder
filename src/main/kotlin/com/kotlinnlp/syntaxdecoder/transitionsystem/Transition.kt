@@ -11,7 +11,7 @@ import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import kotlin.properties.Delegates
+import com.kotlinnlp.syntaxdecoder.utils.InvalidActionScore
 
 /**
  * The State Transition.
@@ -56,7 +56,11 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     /**
      * The score of goodness of this action (a value in the range [0.0, 1.0]), default 0.0.
      */
-    var score: Double by Delegates.observable(0.0) { _, _, newValue -> assert(newValue in 0.0 .. 1.0) }
+    var score: Double = 0.0
+      set(value) {
+        if (value !in 0.0 .. 1.0) throw InvalidActionScore(value)
+        field = value
+      }
 
     /**
      * The error of the [score].

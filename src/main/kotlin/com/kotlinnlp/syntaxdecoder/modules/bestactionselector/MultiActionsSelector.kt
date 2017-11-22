@@ -1,0 +1,35 @@
+/* Copyright 2017-present The KotlinNLP Authors. All Rights Reserved.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * ------------------------------------------------------------------*/
+
+package com.kotlinnlp.syntaxdecoder.modules.bestactionselector
+
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
+import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
+import com.kotlinnlp.syntaxdecoder.context.items.StateItem
+
+/**
+ * A multiple actions selector.
+ */
+interface MultiActionsSelector<
+  StateType: State<StateType>,
+  TransitionType: Transition<TransitionType, StateType>,
+  ItemType : StateItem<ItemType, *, *>,
+  ContextType : DecodingContext<ContextType, ItemType>> {
+
+  /**
+   * @param sortedActions a list of scored actions, sorted by descending score and then by transition priority
+   * @param extendedState the extended state of the last scored actions
+   * @param scoreThreshold the minimum score threshold (can be null)
+   *
+   * @return the list of best actions among the given [sortedActions]
+   */
+  fun select(sortedActions: List<Transition<TransitionType, StateType>.Action>,
+             extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+             scoreThreshold: Double?): List<Transition<TransitionType, StateType>.Action>
+}

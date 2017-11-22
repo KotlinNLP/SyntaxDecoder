@@ -122,7 +122,8 @@ class BeamDecoder<
    * Check the beam size.
    */
   init {
-    require(this.beamSize > 0) { "the size of the beam must be >= 1"}
+    require(this.beamSize > 0) { "the size of the beam must be > 0"}
+    require(this.maxParallelThreads > 0) { "the number of max parallel threads must be > 0"}
   }
 
   /**

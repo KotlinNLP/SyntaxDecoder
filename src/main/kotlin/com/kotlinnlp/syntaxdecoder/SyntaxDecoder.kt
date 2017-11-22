@@ -32,6 +32,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
  * @property actionsGenerator an actions generator
  * @property featuresExtractor a features extractor
  * @property actionsScorer an actions scorer
+ * @property supportStructuresFactory a support structures factory
  */
 abstract class SyntaxDecoder<
   StateType : State<StateType>,

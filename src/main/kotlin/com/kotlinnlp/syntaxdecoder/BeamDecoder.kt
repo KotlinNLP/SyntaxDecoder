@@ -140,7 +140,7 @@ class BeamDecoder<
 
     try {
 
-      this.beamStates[0] = extendedState
+      this.initBeam(extendedState)
 
       while (this.beamStates.any { it != null && !it.state.isTerminal }) {
 
@@ -163,6 +163,18 @@ class BeamDecoder<
    */
   fun close() {
     this.beamThreads.forEach { it.interrupt() }
+  }
+
+  /**
+   * Initialize the beam with the given state.
+   *
+   * @param extendedState the initializing extended state
+   */
+  private fun initBeam(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
+
+    this.beamStates[0] = extendedState
+
+    (1 until this.beamSize).forEach { i -> this.beamStates[i] = null }
   }
 
   /**

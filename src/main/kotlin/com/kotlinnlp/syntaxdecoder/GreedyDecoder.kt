@@ -36,6 +36,7 @@ import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStruc
  * @property featuresExtractor a features extractor
  * @property actionsScorer an actions scorer
  * @property bestActionSelector a best action selector
+ * @property supportStructuresFactory a support structures factory
  */
 class GreedyDecoder<
   StateType : State<StateType>,

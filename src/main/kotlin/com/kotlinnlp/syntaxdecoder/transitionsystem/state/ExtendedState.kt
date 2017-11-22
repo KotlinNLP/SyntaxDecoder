@@ -55,6 +55,16 @@ data class ExtendedState<
   }
 
   /**
+   * Simulate the application of a given [action] to the [state], returning the future score.
+   *
+   * @param action an action to apply to the [state]
+   *
+   * @return the logScore that this state will assume if applying the given [action] to its [state]
+   */
+  fun simulateFutureScore(action: Transition<TransitionType, StateType>.Action): Double
+    = this.logScore + Math.log(action.score)
+
+  /**
    * @param state the new state that will replace the current one in the clone
    *
    * @return a clone of this [ExtendedState] replacing its state with the given [state]

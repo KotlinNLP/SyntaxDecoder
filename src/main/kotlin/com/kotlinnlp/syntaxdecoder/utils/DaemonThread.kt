@@ -20,8 +20,10 @@ import java.util.concurrent.Semaphore
  * output is available.
  *
  * The [write] method blocks until the last output is read.
+ *
+ * @param debug a Boolean indicating whether to run the Daemon in debug mode (print logs)
  */
-abstract class DaemonThread<InputType: Any, OutputType: Any> : Thread() {
+abstract class DaemonThread<InputType: Any, OutputType: Any>(private val debug: Boolean = false) : Thread() {
 
   /**
    * The reading semaphore.
@@ -80,11 +82,12 @@ abstract class DaemonThread<InputType: Any, OutputType: Any> : Thread() {
    */
   fun read(): OutputType {
 
+    if (this.debug) println("${this.id}: Waiting for reading output")
     this.readSem.acquire()
-    println("${this.id}: Reading")
 
     val ret = this.outputValue
 
+    if (this.debug) println("${this.id}: Output read, release input writing")
     this.writeSem.release()
 
     return ret
@@ -97,12 +100,12 @@ abstract class DaemonThread<InputType: Any, OutputType: Any> : Thread() {
    */
   fun write(value: InputType) {
 
-    println("${this.id}: Waiting for writing")
+    if (this.debug) println("${this.id}: Waiting for writing input")
     this.writeSem.acquire()
 
     this.inputValue = value
 
-    println("${this.id}: Wrote, Release processing")
+    if (this.debug) println("${this.id}: Input written, release processing")
     this.processSem.release()
   }
 
@@ -111,12 +114,12 @@ abstract class DaemonThread<InputType: Any, OutputType: Any> : Thread() {
    */
   private fun process() {
 
+    if (this.debug) println("${this.id}: Waiting for processing")
     this.processSem.acquire()
-    println("${this.id}: Processing")
 
     this.processInput()
 
-    println("${this.id}: Release read")
+    if (this.debug) println("${this.id}: Data processed, release output reading")
     this.readSem.release()
   }
 

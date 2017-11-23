@@ -17,12 +17,6 @@ import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>> {
 
   /**
-   * Incremental actions id.
-   * It is reset before a new generation.
-   */
-  protected var actionId: Int = 0
-
-  /**
    * Generate the possible actions allowed in a given state.
    *
    * @param transitions the transitions from which to generate the actions.
@@ -32,11 +26,9 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
   fun generateFrom(transitions: List<TransitionType>):
     List<Transition<TransitionType, StateType>.Action> {
 
-    this.actionId = 0
-
     val result = arrayListOf<Transition<TransitionType, StateType>.Action>()
 
-    transitions.forEach { result.addAll(it.generateActions()) }
+    transitions.forEach { result.addAll(it.generateActions(startId = result.size)) }
 
     return result
   }
@@ -44,7 +36,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
   /**
    * @return a list of Actions
    */
-  abstract protected fun Transition<TransitionType, StateType>.generateActions():
+  abstract protected fun Transition<TransitionType, StateType>.generateActions(startId: Int):
     List<Transition<TransitionType, StateType>.Action>
 
   /**
@@ -57,15 +49,9 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
     /**
      * @return a list of Actions
      */
-    override fun Transition<TransitionType, StateType>.generateActions():
-      List<Transition<TransitionType, StateType>.Action> {
-
-      val actions = arrayListOf<Transition<TransitionType, StateType>.Action>()
-
-      actions.add(this.actionFactory(id = this@Unlabeled.actionId++))
-
-      return actions
-    }
+    override fun Transition<TransitionType, StateType>.generateActions(startId: Int):
+      List<Transition<TransitionType, StateType>.Action>
+      = listOf(this.actionFactory(id = startId))
   }
 
   /**
@@ -80,19 +66,20 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
     /**
      * @return a list of Actions
      */
-    override fun Transition<TransitionType, StateType>.generateActions():
+    override fun Transition<TransitionType, StateType>.generateActions(startId: Int):
       List<Transition<TransitionType, StateType>.Action> {
 
-      val actions = arrayListOf<Transition<TransitionType, StateType>.Action>()
+      val actions = mutableListOf<Transition<TransitionType, StateType>.Action>()
+      var actionId = startId
 
       if (this is SyntacticDependency && this.type.direction in this@Labeled.deprels) {
 
         this@Labeled.deprels.getValue(this.type.direction).forEach { deprel ->
-          actions.add(this.actionFactory(id = this@Labeled.actionId++, deprel = deprel))
+          actions.add(this.actionFactory(id = actionId++, deprel = deprel))
         }
 
       } else {
-        actions.add(this.actionFactory(id = this@Labeled.actionId++))
+        actions.add(this.actionFactory(id = actionId++))
       }
 
       return actions

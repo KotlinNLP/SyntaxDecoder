@@ -114,7 +114,7 @@ fun <E>ArrayList<E>.getItemOrNull(index: Int): E? {
 }
 
 /**
- * Group a list of elements into groups of elements.
+ * Group a list of elements into groups of elements. 10 -> 4
  *
  * @param groupSize the max number of elements in a group
  *
@@ -123,11 +123,8 @@ fun <E>ArrayList<E>.getItemOrNull(index: Int): E? {
 fun <T: Any?> List<T>.groupBySize(groupSize: Int): List<List<T>> {
 
   var tIndex = 0
-  val remainder: Int = this.size % groupSize
-  val remainderStart: Int = this.size - remainder
+  val remainder = this.size % groupSize
+  val nGroups: Int = this.size / groupSize + (if (remainder == 0) 0 else 1)
 
-  return this
-    .groupBy { if (tIndex < remainderStart) tIndex++ % groupSize else groupSize }
-    .values
-    .toList()
+  return this.groupBy { tIndex++ % nGroups }.values.toList()
 }

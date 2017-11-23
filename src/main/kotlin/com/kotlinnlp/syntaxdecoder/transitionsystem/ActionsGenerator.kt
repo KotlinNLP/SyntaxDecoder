@@ -19,7 +19,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
   /**
    * Generate the possible actions allowed in a given state.
    *
-   * @param transitions the transitions from which to generate the actions.
+   * @param transitions the transitions from which to generate the actions
    *
    * @return a list of Actions
    */
@@ -34,6 +34,8 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
   }
 
   /**
+   * @param startId the first available id (incremental) to assign to the generated actions
+   *
    * @return a list of Actions
    */
   abstract protected fun Transition<TransitionType, StateType>.generateActions(startId: Int):
@@ -47,6 +49,8 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
     : ActionsGenerator<StateType, TransitionType>() {
 
     /**
+     * @param startId the first available id (incremental) to assign to the generated actions
+     *
      * @return a list of Actions
      */
     override fun Transition<TransitionType, StateType>.generateActions(startId: Int):

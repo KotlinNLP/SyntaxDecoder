@@ -189,8 +189,7 @@ class BeamDecoder<
       featuresExtractor = this.featuresExtractor,
       actionsScorer = this.actionsScorer,
       multiActionsSelector = this.multiActionsSelector,
-      supportStructuresFactory = this.supportStructuresFactory
-    )
+      supportStructuresFactory = this.supportStructuresFactory)
 
     thread.start()
 
@@ -206,7 +205,7 @@ class BeamDecoder<
    */
   private fun getBestActionsPerState(): Array<List<Transition<TransitionType, StateType>.Action>?> {
 
-    val scoreThreshold: Double? = this.getScoreThreshold()
+    val scoreThreshold: Double? = this.getLastTerminalState()?.logScore
     val bestActionsPerState = arrayOfNulls<List<Transition<TransitionType, StateType>.Action>>(this.beamSize)
 
     this.beamThreadsGroups.forEach { tGroup ->
@@ -224,10 +223,13 @@ class BeamDecoder<
   }
 
   /**
-   * @return the score threshold based on the lowest beam state log score (null if the beam is not already full)
+   * @return the last terminal beam state (the one with the lowest log score) or null if none
    */
-  private fun getScoreThreshold(): Double? =
-    if (this.beamStates.any { it == null }) null else this.beamStates.last { it != null }!!.logScore
+  private fun getLastTerminalState(): ExtendedState<StateType, TransitionType, ItemType, ContextType>? =
+    if (this.beamStates.none { it != null && it.state.isTerminal })
+      null
+    else
+      this.beamStates.last { it != null && it.state.isTerminal }!!
 
   /**
    * Select the best actions that will generate the next states of the beam.

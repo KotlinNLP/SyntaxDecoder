@@ -52,10 +52,10 @@ data class ExtendedState<
    * Accumulate the given [score] into this state as joint probability of its score (after have transformed it by
    * natural logarithm, to avoid underflow).
    *
-   * @param score a score in the range (0.0, 1.0]
+   * @param score a score in the range [0.0, 1.0]
    */
   fun accumulateScore(score: Double) {
-    require(score > 0 && score in 0.0 .. 1.0) { "Invalid score: $score, must be in range (0.0, 1.0]." }
+    require(score in 0.0 .. 1.0) { "Invalid score: $score, must be in range [0.0, 1.0]." }
     this.logScore += Math.log(maxOf(score, this.eps))
   }
 

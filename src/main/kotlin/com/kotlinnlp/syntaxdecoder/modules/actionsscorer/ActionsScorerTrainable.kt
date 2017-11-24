@@ -30,7 +30,7 @@ abstract class ActionsScorerTrainable<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  out ScoringGlobalStructureType: ScoringGlobalSupportStructure,
+  out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
   in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
   :

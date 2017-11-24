@@ -26,7 +26,7 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
   ItemType : StateItem<ItemType, *, *>,
   ContextType : DecodingContext<ContextType, ItemType>>
 (
-  private val minRelevantError: Double = 10e-03
+  private val minRelevantError: Double = 1.0e-03
 ) :
   ActionsErrorsSetter<
     StateType,
@@ -44,15 +44,13 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
                             extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
 
     val oracle: Oracle<StateType, TransitionType> = checkNotNull(extendedState.oracle)
-
     val highestScoreCorrectAction = actions.first { oracle.isCorrect(it) }
+    val correctActionError = highestScoreCorrectAction.score - 1.0
 
-    val loss = 1.0 - highestScoreCorrectAction.score
-
-    if (loss > this.minRelevantError) {
+    if (Math.abs(correctActionError) > this.minRelevantError) {
 
       actions.forEach {
-        it.error = if (it.id == highestScoreCorrectAction.id) loss else it.score
+        it.error = if (it.id == highestScoreCorrectAction.id) correctActionError else it.score
       }
 
       this.areErrorsRelevant = true

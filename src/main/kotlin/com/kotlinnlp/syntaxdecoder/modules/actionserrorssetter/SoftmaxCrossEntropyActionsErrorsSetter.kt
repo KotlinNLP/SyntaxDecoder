@@ -47,12 +47,12 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
 
     val highestScoreCorrectAction = actions.first { oracle.isCorrect(it) }
 
-    val loss = 1.0 - highestScoreCorrectAction.score
+    val correctActionError = highestScoreCorrectAction.score - 1.0
 
-    if (loss > this.minRelevantError) {
+    if (Math.abs(correctActionError) > this.minRelevantError) {
 
       actions.forEach {
-        it.error = if (it.id == highestScoreCorrectAction.id) loss else it.score
+        it.error = if (it.id == highestScoreCorrectAction.id) correctActionError else it.score
       }
 
       this.areErrorsRelevant = true

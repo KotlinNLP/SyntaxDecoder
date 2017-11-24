@@ -17,6 +17,15 @@ class LogarithmicAccumulator : ScoreAccumulator<LogarithmicAccumulator>() {
    */
   companion object Factory : ScoreAccumulator.Factory {
 
+    /**
+     * Private val used to serialize the class (needed from Serializable)
+     */
+    @Suppress("unused")
+    private const val serialVersionUID: Long = 1L
+
+    /**
+     * @return a new score accumulator
+     */
     override fun invoke() = LogarithmicAccumulator()
   }
 

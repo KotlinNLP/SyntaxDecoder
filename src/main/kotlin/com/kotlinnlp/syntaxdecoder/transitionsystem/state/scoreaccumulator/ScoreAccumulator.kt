@@ -8,6 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator
 
 import com.kotlinnlp.syntaxdecoder.utils.Clonable
+import java.io.Serializable
 
 /**
  * A score accumulator.
@@ -17,8 +18,11 @@ abstract class ScoreAccumulator<SelfType: ScoreAccumulator<SelfType>> : Clonable
   /**
    * The factory of a new [ScoreAccumulator].
    */
-  interface Factory {
+  interface Factory : Serializable {
 
+    /**
+     * @return a new score accumulator
+     */
     operator fun invoke(): ScoreAccumulator<*>
   }
 

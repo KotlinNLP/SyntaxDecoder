@@ -22,6 +22,7 @@ import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.MultiActionsSelector
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 import com.kotlinnlp.syntaxdecoder.utils.DaemonThread
 import com.kotlinnlp.syntaxdecoder.utils.groupBySize
 
@@ -42,6 +43,7 @@ import com.kotlinnlp.syntaxdecoder.utils.groupBySize
  * @property actionsScorer an actions scorer
  * @property multiActionsSelector a multiple actions selector
  * @property supportStructuresFactory a support structures factory
+ * @property scoreAccumulatorFactory a factory of score accumulators
  */
 class BeamDecoder<
   StateType : State<StateType>,
@@ -63,7 +65,8 @@ class BeamDecoder<
     ScoringGlobalStructureType, ScoringStructureType>,
   val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, ContextType>,
   supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
+  scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
   SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
     ScoringStructureType>
@@ -72,7 +75,8 @@ class BeamDecoder<
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,
-    supportStructuresFactory = supportStructuresFactory
+    supportStructuresFactory = supportStructuresFactory,
+    scoreAccumulatorFactory = scoreAccumulatorFactory
   ) {
 
   /**
@@ -205,7 +209,7 @@ class BeamDecoder<
    */
   private fun getBestActionsPerState(): Array<List<Transition<TransitionType, StateType>.Action>?> {
 
-    val scoreThreshold: Double? = this.getLastTerminalState()?.logScore
+    val scoreThreshold: Double? = this.getLastTerminalState()?.score
     val bestActionsPerState = arrayOfNulls<List<Transition<TransitionType, StateType>.Action>>(this.beamSize)
 
     this.beamThreadsGroups.forEach { tGroup ->
@@ -254,7 +258,7 @@ class BeamDecoder<
     }
 
     this.beamStates.forEachTerminal { stateIndex, state -> // add terminal states to consider them in the sorting
-      actionTriples.add(ActionTriple(futureScore = state.logScore, stateIndex = stateIndex, action = null))
+      actionTriples.add(ActionTriple(futureScore = state.score, stateIndex = stateIndex, action = null))
     }
 
     actionTriples.sortByDescending { it.futureScore }
@@ -277,7 +281,7 @@ class BeamDecoder<
 
     val terminalStates = this.beamStates.filter { it != null && it.state.isTerminal }.map { it!! }
     val newStates = bestActions.map { it.applyAndBuildNewState(beforeApplyAction) }
-    val replacingStates = (terminalStates + newStates).sortedByDescending { it.logScore }
+    val replacingStates = (terminalStates + newStates).sortedByDescending { it.score }
 
     this.replaceBeamStates(states = replacingStates.subList(0, minOf(this.beamSize, replacingStates.size)))
   }

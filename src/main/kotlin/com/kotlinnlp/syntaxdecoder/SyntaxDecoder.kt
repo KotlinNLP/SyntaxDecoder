@@ -21,6 +21,7 @@ import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 
 /**
  * The [SyntaxDecoder] decodes the implicit syntax of a list of items building a dependency tree.
@@ -33,6 +34,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
  * @property featuresExtractor a features extractor
  * @property actionsScorer an actions scorer
  * @property supportStructuresFactory a support structures factory
+ * @property scoreAccumulatorFactory a factory of score accumulators
  */
 abstract class SyntaxDecoder<
   StateType : State<StateType>,
@@ -51,7 +53,8 @@ abstract class SyntaxDecoder<
   val actionsScorer: ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
   val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
+  val scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) {
 
   /**
@@ -70,7 +73,8 @@ abstract class SyntaxDecoder<
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
       state = this.transitionSystem.getInitialState(context.items.map { it.id }),
       context = context,
-      oracle = null)
+      oracle = null,
+      scoreAccumulator = this.scoreAccumulatorFactory())
 
     return this.processState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
   }

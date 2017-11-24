@@ -22,6 +22,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 
 /**
  * The GreedyDecoder decodes the syntax of a list of items building a dependency tree.
@@ -37,6 +38,7 @@ import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStruc
  * @property actionsScorer an actions scorer
  * @property bestActionSelector a best action selector
  * @property supportStructuresFactory a support structures factory
+ * @property scoreAccumulatorFactory a factory of score accumulators
  */
 class GreedyDecoder<
   StateType : State<StateType>,
@@ -56,7 +58,8 @@ class GreedyDecoder<
     ScoringGlobalStructureType, ScoringStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
   supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
+  scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
   SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
     ScoringStructureType>
@@ -65,7 +68,8 @@ class GreedyDecoder<
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,
-    supportStructuresFactory = supportStructuresFactory
+    supportStructuresFactory = supportStructuresFactory,
+    scoreAccumulatorFactory = scoreAccumulatorFactory
   ) {
 
   /**

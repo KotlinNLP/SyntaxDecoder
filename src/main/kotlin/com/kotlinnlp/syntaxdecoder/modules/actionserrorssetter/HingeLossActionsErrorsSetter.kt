@@ -37,20 +37,20 @@ class HingeLossActionsErrorsSetter<
   ContextType>() {
 
   /**
-   * Assign errors to the given [actions] using the given [extendedState] as context.
+   * Assign errors to the given [sortedActions] using the given [extendedState] as context.
    *
-   * @param actions a list with the last scored actions, sorted by descending score
+   * @param sortedActions a list with the last scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    */
-  override fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+  override fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
                             extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
 
     val oracle: Oracle<StateType, TransitionType> = checkNotNull(extendedState.oracle)
 
-    if (actions.size > 1) {
+    if (sortedActions.size > 1) {
 
-      val highestScoringCorrectAction = actions.first { oracle.isCorrect(it) }
-      val highestScoringIncorrectAction = actions.first { !oracle.isCorrect(it) }
+      val highestScoringCorrectAction = sortedActions.first { oracle.isCorrect(it) }
+      val highestScoringIncorrectAction = sortedActions.first { !oracle.isCorrect(it) }
 
       val margin: Double = highestScoringCorrectAction.score - highestScoringIncorrectAction.score
 

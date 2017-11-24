@@ -35,21 +35,21 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
     ContextType>() {
 
   /**
-   * Assign errors to the given [actions] using the given [extendedState] as context.
+   * Assign errors to the given [sortedActions] using the given [extendedState] as context.
    *
-   * @param actions a list with the last scored actions
+   * @param sortedActions a list with the last scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    */
-  override fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+  override fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
                             extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
 
     val oracle: Oracle<StateType, TransitionType> = checkNotNull(extendedState.oracle)
-    val highestScoreCorrectAction = actions.first { oracle.isCorrect(it) }
+    val highestScoreCorrectAction = sortedActions.first { oracle.isCorrect(it) }
     val correctActionError = highestScoreCorrectAction.score - 1.0
 
     if (Math.abs(correctActionError) > this.minRelevantError) {
 
-      actions.forEach {
+      sortedActions.forEach {
         it.error = if (it.id == highestScoreCorrectAction.id) correctActionError else it.score
       }
 

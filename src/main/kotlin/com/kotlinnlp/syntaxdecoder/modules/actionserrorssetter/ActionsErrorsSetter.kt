@@ -39,15 +39,15 @@ abstract class ActionsErrorsSetter<
 
     this.areErrorsRelevant = false
 
-    this.assignErrors(actions = sortedActions, extendedState = extendedState)
+    this.assignErrors(sortedActions = sortedActions, extendedState = extendedState)
   }
 
   /**
-   * Assign errors to the given [actions] using the given [extendedState] as context.
+   * Assign errors to the given [sortedActions] using the given [extendedState] as context.
    *
-   * @param actions a list with the last scored actions
+   * @param sortedActions a list with the last scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    */
-  abstract protected fun assignErrors(actions: List<Transition<TransitionType, StateType>.Action>,
+  abstract protected fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
                                       extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>)
 }

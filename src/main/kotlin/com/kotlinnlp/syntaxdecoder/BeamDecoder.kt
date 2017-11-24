@@ -248,7 +248,7 @@ class BeamDecoder<
       if (actions != null) {
         val state: ExtendedState<StateType, TransitionType, ItemType, ContextType> = this.beamStates[stateIndex]!!
         actionTriples.addAll(actions.map {
-          ActionTriple(futureScore = state.simulateFutureScore(it), stateIndex = stateIndex, action = it)
+          ActionTriple(futureScore = state.estimateFutureScore(it), stateIndex = stateIndex, action = it)
         })
       }
     }

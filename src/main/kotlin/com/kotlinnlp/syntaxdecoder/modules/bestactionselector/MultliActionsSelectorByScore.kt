@@ -40,7 +40,7 @@ class MultliActionsSelectorByScore<
     }
 
     return sortedActions.takeWhile {
-      scoreThreshold == null || extendedState.simulateFutureScore(it) >= scoreThreshold
+      scoreThreshold == null || extendedState.estimateFutureScore(it) >= scoreThreshold
     }
   }
 }

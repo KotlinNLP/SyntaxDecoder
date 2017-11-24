@@ -50,18 +50,18 @@ data class ExtendedState<
    * @param score a score in the range (0.0, 1.0]
    */
   fun accumulateScore(score: Double) {
-    assert(score > 0 && score in 0.0 .. 1.0) { "Invalid score: $score, must be in range (0.0, 1.0]." }
+    require(score > 0 && score in 0.0 .. 1.0) { "Invalid score: $score, must be in range (0.0, 1.0]." }
     this.logScore += Math.log(score)
   }
 
   /**
-   * Simulate the application of a given [action] to the [state], returning the future score.
+   * Simulate the application of a given [action] to the [state], returning the estimated future score.
    *
    * @param action an action to apply to the [state]
    *
    * @return the logScore that this state will assume if applying the given [action] to its [state]
    */
-  fun simulateFutureScore(action: Transition<TransitionType, StateType>.Action): Double
+  fun estimateFutureScore(action: Transition<TransitionType, StateType>.Action): Double
     = this.logScore + Math.log(action.score)
 
   /**

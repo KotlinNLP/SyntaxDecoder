@@ -11,7 +11,6 @@ import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.utils.InvalidActionScore
 
 /**
  * The State Transition.
@@ -54,13 +53,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     val transition: SelfType = this@Transition as SelfType
 
     /**
-     * The score of goodness of this action (a value in the range [0.0, 1.0]), default 0.0.
+     * The score of goodness of this action.
      */
     var score: Double = 0.0
-      set(value) {
-        if (value !in 0.0 .. 1.0) throw InvalidActionScore(value)
-        field = value
-      }
 
     /**
      * The error of the [score].

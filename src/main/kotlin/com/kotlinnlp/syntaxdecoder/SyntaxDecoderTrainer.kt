@@ -114,7 +114,8 @@ class SyntaxDecoderTrainer<
     val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
       state = state,
       context = context,
-      oracle = this.oracleFactory(goldDependencyTree))
+      oracle = this.oracleFactory(goldDependencyTree),
+      scoreAccumulator = this.syntaxDecoder.scoreAccumulatorFactory())
 
     while (!state.isTerminal) {
 

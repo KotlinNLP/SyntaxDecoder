@@ -11,7 +11,6 @@ import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.context.DecodingContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.modules.actionserrorssetter.ActionsErrorsSetter
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.*
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.BestActionSelector
@@ -19,14 +18,11 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.FeaturesErrors
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
-import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTrainable
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
-import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
 
@@ -45,17 +41,11 @@ class SyntaxDecoderTrainer<
   ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
 (
-  private val transitionSystem: TransitionSystem<StateType, TransitionType>,
-  private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  private val featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  private val syntaxDecoder: SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
-  private val actionsScorer: ActionsScorerTrainable<StateType, TransitionType, ContextType, ItemType,
-    FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
-  private val oracleFactory: OracleFactory<StateType, TransitionType>,
-  private val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+  private val oracleFactory: OracleFactory<StateType, TransitionType>
 ) :
   BatchScheduling,
   EpochScheduling,
@@ -66,6 +56,34 @@ class SyntaxDecoderTrainer<
    */
   var relevantErrorsCount: Int = 0
     private set
+
+  /**
+   *
+   */
+  private val transitionSystem = this.syntaxDecoder.transitionSystem
+
+  /**
+   *
+   */
+  private val actionsGenerator = this.syntaxDecoder.actionsGenerator
+
+  /**
+   *
+   */
+  private val featuresExtractor = this.syntaxDecoder.featuresExtractor
+
+  /**
+   *
+   */
+  @Suppress("UNCHECKED_CAST")
+  private val actionsScorer = this.syntaxDecoder.actionsScorer as ActionsScorerTrainable<StateType, TransitionType,
+    ContextType, ItemType, FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+
+  /**
+   *
+   */
+  private val supportStructuresFactory = this.syntaxDecoder.supportStructuresFactory
+
 
   /**
    * The support structure of the [actionsScorer].

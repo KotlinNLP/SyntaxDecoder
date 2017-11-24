@@ -44,6 +44,11 @@ data class ExtendedState<
     private set
 
   /**
+   * The lower bound to limit accumulating scores (to avoid overflow and manage zero scores).
+   */
+  private val eps = 1.0e-08
+
+  /**
    * Accumulate the given [score] into this state as joint probability of its score (after have transformed it by
    * natural logarithm, to avoid underflow).
    *
@@ -51,7 +56,7 @@ data class ExtendedState<
    */
   fun accumulateScore(score: Double) {
     require(score > 0 && score in 0.0 .. 1.0) { "Invalid score: $score, must be in range (0.0, 1.0]." }
-    this.logScore += Math.log(score)
+    this.logScore += Math.log(maxOf(score, this.eps))
   }
 
   /**
@@ -62,7 +67,7 @@ data class ExtendedState<
    * @return the logScore that this state will assume if applying the given [action] to its [state]
    */
   fun estimateFutureScore(action: Transition<TransitionType, StateType>.Action): Double
-    = this.logScore + Math.log(action.score)
+    = this.logScore + Math.log(maxOf(action.score, this.eps))
 
   /**
    * @param state the new state that will replace the current one in the clone

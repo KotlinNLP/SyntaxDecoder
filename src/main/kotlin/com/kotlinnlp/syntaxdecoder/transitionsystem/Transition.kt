@@ -53,6 +53,11 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     val transition: SelfType = this@Transition as SelfType
 
     /**
+     *  True if the transition is allowed in the given parser state.
+     */
+    val isAllowed: Boolean by lazy { this.transition.isAllowed }
+
+    /**
      * The score of goodness of this action.
      */
     var score: Double = 0.0

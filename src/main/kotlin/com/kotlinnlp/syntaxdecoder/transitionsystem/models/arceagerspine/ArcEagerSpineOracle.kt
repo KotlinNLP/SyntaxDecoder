@@ -16,8 +16,11 @@ import com.kotlinnlp.syntaxdecoder.utils.subListFrom
 
 /**
  * The ArcEagerSpine Dynamic Oracle.
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>() {
+class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
+  : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -33,7 +36,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
      */
     override operator fun invoke(goldDependencyTree: DependencyTree): Oracle<
       ArcEagerSpineState, ArcEagerSpineTransition
-      > = ArcEagerSpineOracle().initialize(goldDependencyTree)
+      > = ArcEagerSpineOracle(goldDependencyTree)
   }
 
   /**
@@ -44,23 +47,17 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
   /**
    * The set of reachable dependents.
    */
-  private lateinit var reachableDependents: MutableSet<Int>
-
-  /**
-   * Initialize the support structures.
-   */
-  override fun initSupportStructure() {
-    this.reachableDependents = goldDependencyTree.elements.toMutableSet()
-  }
+  private var reachableDependents: MutableSet<Int> = this.goldDependencyTree.elements.toMutableSet()
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<ArcEagerSpineState, ArcEagerSpineTransition> {
 
-    val clone = ArcEagerSpineOracle()
+    val clone = ArcEagerSpineOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
+    clone.reachableDependents.clear()
     clone.reachableDependents.addAll(this.reachableDependents)
 
     return clone
@@ -74,7 +71,7 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: ArcEagerSpineTransition): Int =
+  override fun cost(transition: ArcEagerSpineTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -90,8 +87,8 @@ class ArcEagerSpineOracle : Oracle<ArcEagerSpineState, ArcEagerSpineTransition>(
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: ArcEagerSpineTransition) {
-    this.loss += this.calculateCostOf(transition)
+  override fun apply(transition: ArcEagerSpineTransition) {
+    this.loss += this.cost(transition)
 
     when (transition) {
       is ArcLeft -> transition.removeUnreachableDependents()

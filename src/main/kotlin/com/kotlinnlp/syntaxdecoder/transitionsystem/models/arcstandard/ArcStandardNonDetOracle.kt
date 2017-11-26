@@ -19,8 +19,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferS
  * In the projective arc-standard non-deterministic oracle, the Shift transition
  * is retrieved if there are no left-arc and right-arc (as for the static oracle)
  * or if there exists a right dependent of s0 into the buffer.
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-open class ArcStandardNonDetOracle : ArcStandardOracle() {
+open class ArcStandardNonDetOracle(goldDependencyTree: DependencyTree)
+  : ArcStandardOracle(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -35,7 +38,7 @@ open class ArcStandardNonDetOracle : ArcStandardOracle() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcStandardTransition>
-      = ArcStandardNonDetOracle().initialize(goldDependencyTree)
+      = ArcStandardNonDetOracle(goldDependencyTree)
   }
 
   /**
@@ -48,7 +51,7 @@ open class ArcStandardNonDetOracle : ArcStandardOracle() {
    */
   override fun copy(): Oracle<StackBufferState, ArcStandardTransition> {
 
-    val clone = ArcStandardNonDetOracle()
+    val clone = ArcStandardNonDetOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()

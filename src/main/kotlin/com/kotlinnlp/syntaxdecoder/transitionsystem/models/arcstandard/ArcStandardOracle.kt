@@ -23,8 +23,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
  * When applying an attachment the counter of the dependent’s gold head element is decreased.
  * When the counter reaches 0, the sub-tree rooted at that word has no pending dependents,
  * and is considered complete (resolved).
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>() {
+open class ArcStandardOracle(goldDependencyTree: DependencyTree)
+  : Oracle<StackBufferState, ArcStandardTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -39,7 +42,7 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcStandardTransition>
-      = ArcStandardOracle().initialize(goldDependencyTree)
+      = ArcStandardOracle(goldDependencyTree)
   }
 
   /**
@@ -50,21 +53,14 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
   /**
    * Dependent counter (support structure).
    */
-  protected lateinit var dependentsCounter: DependentsCounter
-
-  /**
-   * Initializes the support structures.
-   */
-  override fun initSupportStructure() {
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-  }
+  protected var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<StackBufferState, ArcStandardTransition> {
 
-    val clone = ArcStandardOracle()
+    val clone = ArcStandardOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -80,7 +76,7 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: ArcStandardTransition): Int =
+  override fun cost(transition: ArcStandardTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -96,7 +92,7 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: ArcStandardTransition) {
+  override fun apply(transition: ArcStandardTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       dependentsCounter.decrease(transition.governorId!!)
     }
@@ -141,5 +137,5 @@ open class ArcStandardOracle : Oracle<StackBufferState, ArcStandardTransition>()
   protected fun thereAreCorrectArcs(state: StackBufferState): Boolean =
     ArcStandardTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
-      .any { hasZeroCost(it) }
+      .any { it.isAllowed && hasZeroCost(it) }
 }

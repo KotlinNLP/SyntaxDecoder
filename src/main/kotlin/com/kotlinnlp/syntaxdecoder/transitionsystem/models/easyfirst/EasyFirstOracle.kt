@@ -22,8 +22,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
  * When applying an attachment the counter of the dependent’s gold head element is decreased.
  * When the counter reaches 0, the sub-tree rooted at that word has no pending dependents,
  * and is considered complete (resolved).
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
+class EasyFirstOracle(goldDependencyTree: DependencyTree)
+  : Oracle<PendingListState, EasyFirstTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -38,7 +41,7 @@ class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<PendingListState, EasyFirstTransition>
-      = EasyFirstOracle().initialize(goldDependencyTree)
+      = EasyFirstOracle(goldDependencyTree)
   }
 
   /**
@@ -49,21 +52,14 @@ class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
-
-  /**
-   * Initializes the support structures.
-   */
-  override fun initSupportStructure() {
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-  }
+  private var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<PendingListState, EasyFirstTransition> {
 
-    val clone = EasyFirstOracle()
+    val clone = EasyFirstOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -79,7 +75,7 @@ class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: EasyFirstTransition): Int =
+  override fun cost(transition: EasyFirstTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -94,7 +90,7 @@ class EasyFirstOracle : Oracle<PendingListState, EasyFirstTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: EasyFirstTransition) {
+  override fun apply(transition: EasyFirstTransition) {
     if (transition.governorId != null) {
       this.dependentsCounter.decrease(transition.governorId!!)
     }

@@ -14,8 +14,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcspine.transitions.
 
 /**
  * The ArcSpine Non Deterministic Oracle
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class ArcSpineNonDetOracle : ArcSpineOracle() {
+class ArcSpineNonDetOracle(goldDependencyTree: DependencyTree)
+  : ArcSpineOracle(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -30,7 +33,7 @@ class ArcSpineNonDetOracle : ArcSpineOracle() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition>
-      = ArcSpineNonDetOracle().initialize(goldDependencyTree)
+      = ArcSpineNonDetOracle(goldDependencyTree)
   }
 
   /**
@@ -43,7 +46,7 @@ class ArcSpineNonDetOracle : ArcSpineOracle() {
    */
   override fun copy(): Oracle<ArcSpineState, ArcSpineTransition> {
 
-    val clone = ArcSpineNonDetOracle()
+    val clone = ArcSpineNonDetOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()

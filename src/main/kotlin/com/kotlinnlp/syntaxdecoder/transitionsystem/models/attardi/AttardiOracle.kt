@@ -23,8 +23,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
  * When applying an attachment the counter of the dependent’s gold head element is decreased.
  * When the counter reaches 0, the sub-tree rooted at that word has no pending dependents,
  * and is considered complete (resolved).
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class AttardiOracle : Oracle<StackBufferState, AttardiTransition>() {
+class AttardiOracle(goldDependencyTree: DependencyTree)
+  : Oracle<StackBufferState, AttardiTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -39,7 +42,7 @@ class AttardiOracle : Oracle<StackBufferState, AttardiTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, AttardiTransition>
-      = AttardiOracle().initialize(goldDependencyTree)
+      = AttardiOracle(goldDependencyTree)
   }
 
   /**
@@ -50,21 +53,14 @@ class AttardiOracle : Oracle<StackBufferState, AttardiTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
-
-  /**
-   * Initializes the support structures.
-   */
-  override fun initSupportStructure() {
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-  }
+  private var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<StackBufferState, AttardiTransition> {
 
-    val clone = AttardiOracle()
+    val clone = AttardiOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -80,7 +76,7 @@ class AttardiOracle : Oracle<StackBufferState, AttardiTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: AttardiTransition): Int =
+  override fun cost(transition: AttardiTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -96,7 +92,7 @@ class AttardiOracle : Oracle<StackBufferState, AttardiTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: AttardiTransition) {
+  override fun apply(transition: AttardiTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       dependentsCounter.decrease(transition.governorId!!)
     }
@@ -141,5 +137,5 @@ class AttardiOracle : Oracle<StackBufferState, AttardiTransition>() {
   private fun thereAreCorrectArcs(state: StackBufferState): Boolean =
     AttardiTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
-      .any { hasZeroCost(it) }
+      .any { it.isAllowed && hasZeroCost(it) }
 }

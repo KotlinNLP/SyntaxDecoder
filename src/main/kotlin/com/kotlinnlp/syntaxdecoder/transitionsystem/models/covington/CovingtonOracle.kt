@@ -14,8 +14,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 
 /**
  * The Covington Static Oracle.
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
+open class CovingtonOracle(goldDependencyTree: DependencyTree)
+  : Oracle<CovingtonState, CovingtonTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -30,7 +33,7 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<CovingtonState, CovingtonTransition>
-      = CovingtonOracle().initialize(goldDependencyTree)
+      = CovingtonOracle(goldDependencyTree)
   }
 
   /**
@@ -39,16 +42,11 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
   override val type: Type = Oracle.Type.STATIC
 
   /**
-   * Initializes the support structures.
-   */
-  override fun initSupportStructure() = Unit
-
-  /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<CovingtonState, CovingtonTransition> {
 
-    val clone = CovingtonOracle()
+    val clone = CovingtonOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
 
@@ -63,7 +61,7 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: CovingtonTransition): Int =
+  override fun cost(transition: CovingtonTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -79,7 +77,7 @@ open class CovingtonOracle : Oracle<CovingtonState, CovingtonTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: CovingtonTransition) = Unit
+  override fun apply(transition: CovingtonTransition) = Unit
 
   /**
    * Calculate the cost of the ArcLeft transition.

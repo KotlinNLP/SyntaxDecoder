@@ -23,8 +23,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
  * When applying an attachment the counter of the dependent’s gold head element is decreased.
  * When the counter reaches 0, the sub-tree rooted at that word has no pending dependents,
  * and is considered complete (resolved).
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
+class ArcHybridOracle(goldDependencyTree: DependencyTree)
+  : Oracle<StackBufferState, ArcHybridTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -39,7 +42,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcHybridTransition>
-      = ArcHybridOracle().initialize(goldDependencyTree)
+      = ArcHybridOracle(goldDependencyTree)
   }
 
   /**
@@ -50,21 +53,14 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
-
-  /**
-   * Initialize the support structures.
-   */
-  override fun initSupportStructure() {
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-  }
+  private var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<StackBufferState, ArcHybridTransition> {
 
-    val clone = ArcHybridOracle()
+    val clone = ArcHybridOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -80,7 +76,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: ArcHybridTransition): Int =
+  override fun cost(transition: ArcHybridTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -96,7 +92,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: ArcHybridTransition) {
+  override fun apply(transition: ArcHybridTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       this.dependentsCounter.decrease(transition.governorId!!)
     }
@@ -108,7 +104,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    * @return the cost of this transition.
    */
   private fun ArcLeft.calculateCost(): Int
-    = if (this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
+    = if (this.isAllowed && this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
 
   /**
    * Calculate the cost of the ArcRight transition.
@@ -116,14 +112,14 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    * @return the cost of this transition.
    */
   private fun ArcRight.calculateCost(): Int
-    = if (this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
+    = if (this.isAllowed &&this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
 
   /**
    * Calculate the cost of the Root transition.
    *
    * @return the cost of this transition.
    */
-  private fun Root.calculateCost(): Int = if (goldDependencyTree.heads[this.dependentId] == null) 0 else 1
+  private fun Root.calculateCost(): Int = if (this.isAllowed && goldDependencyTree.heads[this.dependentId] == null) 0 else 1
 
   /**
    * Calculate the cost of the Shift transition.
@@ -131,7 +127,7 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    * @return the cost of this transition.
    */
   private fun Shift.calculateCost(): Int =
-    if (this@ArcHybridOracle.thereAreCorrectArcs(this.refState)) 1 else 0
+    if (this.isAllowed && this@ArcHybridOracle.thereAreCorrectArcs(this.refState)) 1 else 0
 
   /**
    * @param state a state
@@ -141,5 +137,5 @@ class ArcHybridOracle : Oracle<StackBufferState, ArcHybridTransition>() {
   private fun thereAreCorrectArcs(state: StackBufferState): Boolean =
     ArcHybridTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
-      .any { hasZeroCost(it) }
+      .any { it.isAllowed && hasZeroCost(it) }
 }

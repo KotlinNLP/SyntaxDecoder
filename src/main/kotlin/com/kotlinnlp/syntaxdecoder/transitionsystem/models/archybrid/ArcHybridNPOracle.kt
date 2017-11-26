@@ -17,8 +17,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferS
 
 /**
  * The ArcHybrid Non Projective Static Oracle.
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class ArcHybridNPOracle : Oracle<StackBufferState, ArcHybridTransition>() {
+class ArcHybridNPOracle(goldDependencyTree: DependencyTree)
+  : Oracle<StackBufferState, ArcHybridTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -33,7 +36,7 @@ class ArcHybridNPOracle : Oracle<StackBufferState, ArcHybridTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcHybridTransition>
-      = ArcHybridNPOracle().initialize(goldDependencyTree)
+      = ArcHybridNPOracle(goldDependencyTree)
   }
 
   /**
@@ -44,28 +47,19 @@ class ArcHybridNPOracle : Oracle<StackBufferState, ArcHybridTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
+  private var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * It contains the position of element i in the projective order
    */
-  private lateinit var projectiveOrder: List<Int>
-
-  /**
-   * Initialize the support structures.
-   */
-  override fun initSupportStructure() {
-
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-    this.projectiveOrder = this.goldDependencyTree.projectiveOrder()
-  }
+  private var projectiveOrder: List<Int> = this.goldDependencyTree.projectiveOrder()
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<StackBufferState, ArcHybridTransition> {
 
-    val clone = ArcHybridNPOracle()
+    val clone = ArcHybridNPOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -82,7 +76,7 @@ class ArcHybridNPOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: ArcHybridTransition): Int =
+  override fun cost(transition: ArcHybridTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -99,7 +93,7 @@ class ArcHybridNPOracle : Oracle<StackBufferState, ArcHybridTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: ArcHybridTransition) {
+  override fun apply(transition: ArcHybridTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       this.dependentsCounter.decrease(transition.governorId!!)
     }

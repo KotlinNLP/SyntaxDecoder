@@ -18,8 +18,12 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * The Oracle.
  *
  * The Oracle is used to derive optimal transition sequences from gold dependency trees.
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>> {
+abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
+  val goldDependencyTree: DependencyTree
+) {
 
   /**
    * The Oracle Type.
@@ -49,16 +53,6 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
   var loss: Int = 0
 
   /**
-   * The gold dependency tree that the Oracle will try to reach.
-   */
-  protected lateinit var goldDependencyTree: DependencyTree
-
-  /**
-   * Initialize the support structures.
-   */
-  abstract protected fun initSupportStructure()
-
-  /**
    * Calculate the cost of the given [transition] in respect of the current state and the oracle configuration.
    * Make sure that the [transition] is allowed before calling the method.
    *
@@ -66,7 +60,7 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
    *
    * @return the cost of the given [transition].
    */
-  abstract fun calculateCostOf(transition: TransitionType): Int
+  abstract fun cost(transition: TransitionType): Int
 
   /**
    * Update the Oracle (the loss and its support structures) with a given [transition].
@@ -75,24 +69,7 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
    *
    * @param transition a transition
    */
-  abstract fun updateWith(transition: TransitionType)
-
-  /**
-   * Initialize the Oracle with a gold [dependencyTree].
-   * It is possible to initialize the same oracle multiple times.
-   *
-   * @param dependencyTree a gold dependency tree.
-   *
-   * @return this oracle.
-   */
-  fun initialize(dependencyTree: DependencyTree): Oracle<StateType, TransitionType> {
-
-    this.goldDependencyTree = dependencyTree
-    this.loss = 0
-    this.initSupportStructure()
-
-    return this
-  }
+  abstract fun apply(transition: TransitionType)
 
   /**
    * @return a copy of this Oracle
@@ -102,7 +79,7 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
   /**
    * True if the transition has zero cost.
    */
-  fun hasZeroCost(transition: TransitionType): Boolean = this.calculateCostOf(transition) == 0
+  fun hasZeroCost(transition: TransitionType): Boolean = this.cost(transition) == 0
 
   /**
    *  True if the action has zero cost.
@@ -119,7 +96,7 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
    * True if the action is correct.
    */
   fun isCorrect(action: Transition<TransitionType, StateType>.Action): Boolean
-    = this.isCorrect(action.transition) && (action !is DependencyRelation || action.isDeprelCorrect())
+    = action.transition.isAllowed && this.isCorrect(action.transition) && (action !is DependencyRelation || action.isDeprelCorrect())
 
   /**
    * @param dependentId a dependentId.
@@ -134,13 +111,13 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
    * @return True if the arc is correct.
    */
   val SyntacticDependency.isArcCorrect: Boolean get() =
-    isArcCorrect(dependentId = this.dependentId, governorId = this.governorId)
+    isArcCorrect(dependentId = this.dependentId!!, governorId = this.governorId)
 
   /**
    * @return True if the dependency relation (deprel) is correct.
    */
   private fun DependencyRelation.isDeprelCorrect(): Boolean
-    = this.deprel == null || this.deprel == this@Oracle.getGoldDeprel(this.dependentId)
+    = this.deprel == null || this.deprel == this@Oracle.getGoldDeprel(this.dependentId!!)
 
   /**
    * @param dependent a dependent id.

@@ -23,8 +23,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
  * When applying an attachment the counter of the dependent’s gold head element is decreased.
  * When the counter reaches 0, the sub-tree rooted at that word has no pending dependents,
  * and is considered complete (resolved).
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
+class ArcSwiftOracle(goldDependencyTree: DependencyTree)
+  : Oracle<StackBufferState, ArcSwiftTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -39,7 +42,7 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcSwiftTransition>
-      = ArcSwiftOracle().initialize(goldDependencyTree)
+      = ArcSwiftOracle(goldDependencyTree)
   }
 
   /**
@@ -50,21 +53,14 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  private lateinit var dependentsCounter: DependentsCounter
-
-  /**
-   * Initializes the support structures.
-   */
-  override fun initSupportStructure() {
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-  }
+  private var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<StackBufferState, ArcSwiftTransition> {
 
-    val clone = ArcSwiftOracle()
+    val clone = ArcSwiftOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -80,7 +76,7 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: ArcSwiftTransition): Int =
+  override fun cost(transition: ArcSwiftTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -96,7 +92,7 @@ class ArcSwiftOracle : Oracle<StackBufferState, ArcSwiftTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: ArcSwiftTransition) {
+  override fun apply(transition: ArcSwiftTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       dependentsCounter.decrease(transition.governorId!!)
     }

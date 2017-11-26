@@ -17,8 +17,11 @@ import com.kotlinnlp.syntaxdecoder.utils.secondToLast
 
 /**
  * The ArcSpine Static Oracle.
+ *
+ * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
+open class ArcSpineOracle(goldDependencyTree: DependencyTree)
+  : Oracle<ArcSpineState, ArcSpineTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
@@ -33,7 +36,7 @@ open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
      * @return a new Oracle
      */
     override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition>
-      = ArcSpineOracle().initialize(goldDependencyTree)
+      = ArcSpineOracle(goldDependencyTree)
   }
 
   /**
@@ -44,21 +47,14 @@ open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
   /**
    * Dependent counter (support structure).
    */
-  protected lateinit var dependentsCounter: DependentsCounter
-
-  /**
-   * Initializes the support structures.
-   */
-  override fun initSupportStructure() {
-    this.dependentsCounter = DependentsCounter(this.goldDependencyTree)
-  }
+  protected var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
    * @return a copy of this Oracle
    */
   override fun copy(): Oracle<ArcSpineState, ArcSpineTransition> {
 
-    val clone = ArcSpineOracle()
+    val clone = ArcSpineOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -74,7 +70,7 @@ open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
    *
    * @return the cost of the given [transition].
    */
-  override fun calculateCostOf(transition: ArcSpineTransition): Int =
+  override fun cost(transition: ArcSpineTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -90,7 +86,7 @@ open class ArcSpineOracle : Oracle<ArcSpineState, ArcSpineTransition>() {
    *
    * @param transition a transition
    */
-  override fun updateWith(transition: ArcSpineTransition) {
+  override fun apply(transition: ArcSpineTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       this.dependentsCounter.decrease(transition.governorId!!)
     }

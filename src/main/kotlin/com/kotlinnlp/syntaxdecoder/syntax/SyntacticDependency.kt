@@ -13,12 +13,12 @@ package com.kotlinnlp.syntaxdecoder.syntax
 interface SyntacticDependency {
 
   /**
-   * The dependent id.
+   * The dependent id (can be null)
    */
-  val dependentId: Int
+  val dependentId: Int?
 
   /**
-   * The governor id (can be null in case the governor is the root).
+   * The governor id (can be null).
    */
   val governorId: Int?
 }

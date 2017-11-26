@@ -191,14 +191,16 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   inner class Arc internal constructor(id: Int) : Action(id), DependencyRelation {
 
     /**
-     * The dependent id.
+     * The dependent id (can be null in case the transition is not allowed).
      */
-    override val dependentId: Int
+    override var dependentId: Int? = null
+      private set
 
     /**
-     * The governor id (can be null in case the governor is the root).
+     * The governor id (can be null in case the transition is not allowed or the governor is the root).
      */
-    override val governorId: Int?
+    override var governorId: Int? = null
+      private set
 
     /**
      * The Dependency Relation (can be null)
@@ -211,10 +213,11 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     init {
       require(this@Transition is SyntacticDependency)
 
-      this@Transition as SyntacticDependency
-
-      this.dependentId = this@Transition.dependentId
-      this.governorId = this@Transition.governorId
+      if (this.transition.isAllowed) {
+        this@Transition as SyntacticDependency
+        this.dependentId = this@Transition.dependentId
+        this.governorId = this@Transition.governorId
+      }
     }
 
     /**
@@ -222,17 +225,21 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
      */
     override fun perform(state: StateType) {
 
+      require(this.dependentId != null) {
+        "Required a not-null dependent."
+      }
+
       if (this.governorId != null) {
 
         state.dependencyTree.setArc(
-          dependent = this.dependentId,
-          governor = this.governorId,
+          dependent = this.dependentId!!,
+          governor = this.governorId!!,
           deprel = this.deprel)
 
       } else if (this.deprel != null) {
 
         state.dependencyTree.setDeprel(
-          dependent = this.dependentId,
+          dependent = this.dependentId!!,
           deprel = this.deprel!!)
       }
     }

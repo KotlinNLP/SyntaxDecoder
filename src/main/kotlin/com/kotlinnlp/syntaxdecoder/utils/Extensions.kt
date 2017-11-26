@@ -46,6 +46,14 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
   = this.toTransitions().associateBy { it.id }
 
 /**
+ * @return a randomly selected action
+ */
+fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<StateType>>
+  List<Transition<TransitionType, StateType>.Action>.getRandom():
+  Transition<TransitionType, StateType>.Action
+  = this[Math.round(Math.random() * this.lastIndex).toInt()]
+
+/**
  * Remove the last element
  */
 fun <E>ArrayList<E>.removeLast() {

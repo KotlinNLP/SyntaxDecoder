@@ -14,12 +14,11 @@ import kotlin.reflect.KClass
 /**
  * The Attardi Transition System (Attardi, 2006).
  *
- * Attardi (2006) instead introduced transitions that add dependency arcs between the roots of non-adjacent subtrees
- * (nonadjacent arc transitions) –  maintaining linear time complexity but with incomplete coverage of
- * non-projective structures.
+ * This [TransitionSystem] allows arcs between the roots of non-adjacent subtrees (non-adjacent arc transitions)
+ * maintaining linear time complexity but with incomplete coverage of non-projective structures.
  *
  * Notice that the implemented transitions rules are slightly different from those reported in Attardi (2006).
- * The fundamental difference is that each reduction rule puts back into the input queue the token that has been
+ * The fundamental difference is that each reduction rule puts back into the buffer the token that has been
  * connected as head. This allows for such token to be further involved in new transitions.
  */
 class Attardi : TransitionSystem<StackBufferState, AttardiTransition>() {
@@ -27,9 +26,13 @@ class Attardi : TransitionSystem<StackBufferState, AttardiTransition>() {
   companion object {
 
     /**
-     *
+     * The maximum distance in the stack of the nodes involved in the newly constructed dependency.
+     * When this distance (degree) is 0 the transition system is able to handle only projective dependencies.
+
+     * Note: the reported coverage in Attardi (2006) is already very high when the system is restricted
+     * to transitions of degree two or three (here values 1, 2).
      */
-    val maxNonProjectiveDistance: Int = 1
+    val maxTransitionDegree: Int = 3
   }
 
   /**

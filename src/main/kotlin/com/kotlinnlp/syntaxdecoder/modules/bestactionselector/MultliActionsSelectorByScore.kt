@@ -39,7 +39,7 @@ class MultliActionsSelectorByScore<
       "The score threshold must be <= 0.0 (given $scoreThreshold)."
     }
 
-    return sortedActions.takeWhile {
+    return sortedActions.filter { it.isAllowed  }.takeWhile {
       scoreThreshold == null || extendedState.estimateFutureScore(it) >= scoreThreshold
     }
   }

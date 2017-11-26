@@ -33,5 +33,5 @@ class HighestScoreActionSelector<
     sortedActions: List<Transition<TransitionType, StateType>.Action>,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
   ): Transition<TransitionType, StateType>.Action
-    = sortedActions.first()
+    = sortedActions.first { it.isAllowed }
 }

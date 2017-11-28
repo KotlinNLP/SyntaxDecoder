@@ -27,18 +27,10 @@ class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, Eas
 
     val transitions = ArrayList<EasyFirstTransition>()
 
-    transitions.addRoot(state)
+    transitions.add(Root(state, id = transitions.getNextId()))
     transitions.addArcs(state)
 
     return transitions
-  }
-
-  /**
-   * Add Root transition (if allowed).
-   */
-  private fun ArrayList<EasyFirstTransition>.addRoot(state: PendingListState){
-    val root = Root(state, id = this.getNextId())
-    if (root.isAllowed) this.add(root)
   }
 
   /**

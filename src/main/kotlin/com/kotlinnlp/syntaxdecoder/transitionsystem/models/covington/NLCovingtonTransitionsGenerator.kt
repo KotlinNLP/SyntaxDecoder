@@ -26,18 +26,10 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
 
     val transitions = ArrayList<CovingtonTransition>()
 
-    transitions.addShift(state)
+    transitions.add(Shift(state, id = transitions.getNextId()))
     transitions.addArcs(state)
 
     return transitions
-  }
-
-  /**
-   * Add Shift transitions (if allowed)
-   */
-  private fun ArrayList<CovingtonTransition>.addShift(state: CovingtonState) {
-    val shift = Shift(state, id = this.getNextId())
-    if (shift.isAllowed) this.add(shift)
   }
 
   /**
@@ -45,17 +37,14 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
    */
   private fun ArrayList<CovingtonTransition>.addArcs(state: CovingtonState){
 
-    if (state.buffer.isNotEmpty()) {
+    state.stack1.indices.forEach { k ->
 
-      state.stack1.indices.forEach { k ->
+      if (state.dependencyTree.heads[state.buffer.first()] == null) {
+        this.add(ArcRight(state, governorStack1Index = k + 1, id = this.getNextId()))
+      }
 
-        if (state.dependencyTree.heads[state.buffer.first()] == null) {
-          this.add(ArcRight(state, governorStack1Index = k + 1, id = this.getNextId()))
-        }
-
-        if (state.dependencyTree.heads[state.stack1[state.stack1.lastIndex - k]] == null){
-          this.add(ArcLeft(state, dependentStack1Index = k + 1, id = this.getNextId()))
-        }
+      if (state.dependencyTree.heads[state.stack1[state.stack1.lastIndex - k]] == null){
+        this.add(ArcLeft(state, dependentStack1Index = k + 1, id = this.getNextId()))
       }
     }
   }

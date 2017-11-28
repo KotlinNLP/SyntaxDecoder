@@ -25,5 +25,5 @@ class CovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Covin
     NoArc(state, id = 1),
     ArcLeft(state, dependentStack1Index = 1, id = 2),
     ArcRight(state, governorStack1Index = 1, id = 3)
-  ).filter { it.isAllowed }
+  )
 }

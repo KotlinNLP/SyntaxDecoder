@@ -28,27 +28,11 @@ class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpin
 
     val transitions = ArrayList<ArcSpineTransition>()
 
-    transitions.addRoot(state)
-    transitions.addShift(state)
+    transitions.add(Root(state, id = transitions.getNextId()))
+    transitions.add(Shift(state, id = transitions.getNextId()))
     transitions.addArcs(state)
 
     return transitions
-  }
-
-  /**
-   * Add Root transitions (if allowed)
-   */
-  private fun ArrayList<ArcSpineTransition>.addRoot(state: ArcSpineState){
-    val root = Root(state, id = this.getNextId())
-    if (root.isAllowed) this.add(root)
-  }
-
-  /**
-   * Add Shift transitions (if allowed)
-   */
-  private fun ArrayList<ArcSpineTransition>.addShift(state: ArcSpineState){
-    val shift = Shift(state, id = this.getNextId())
-    if (shift.isAllowed) this.add(shift)
   }
 
   /**

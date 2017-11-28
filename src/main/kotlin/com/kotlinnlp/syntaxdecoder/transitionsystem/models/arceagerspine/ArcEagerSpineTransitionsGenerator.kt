@@ -24,44 +24,21 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
 
     val transitions = ArrayList<ArcEagerSpineTransition>()
 
-    transitions.addRoot(state)
-    transitions.addShift(state)
-    transitions.addArcLeft(state)
+    transitions.add(Root(state, id = transitions.getNextId()))
+    transitions.add(Shift(state, id = transitions.getNextId()))
+    transitions.add(ArcLeft(state, id = transitions.getNextId()))
+
     transitions.addArcsRight(state)
 
     return transitions
   }
 
   /**
-   * Add Root transition (if allowed).
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addRoot(state: ArcEagerSpineState){
-    val root = Root(state, id = this.getNextId())
-    if (root.isAllowed) this.add(root)
-  }
-
-  /**
-   * Add Shift transition (if allowed).
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addShift(state: ArcEagerSpineState){
-    val shift = Shift(state, id = this.getNextId())
-    if (shift.isAllowed) this.add(shift)
-  }
-
-  /**
-   * Add ArcLeft transition (if allowed).
-   */
-  private fun ArrayList<ArcEagerSpineTransition>.addArcLeft(state: ArcEagerSpineState){
-    val arcLeft = ArcLeft(state, id = this.getNextId())
-    if (arcLeft.isAllowed) this.add(arcLeft)
-  }
-
-  /**
-   * Add multiple ArcRight transitions (if allowed)
+   * Add multiple ArcRight transitions
    */
   private fun ArrayList<ArcEagerSpineTransition>.addArcsRight(state: ArcEagerSpineState) {
 
-    if (state.stack.isNotEmpty() && state.buffer.isNotEmpty()) {
+    if (state.stack.isNotEmpty()) {
 
       state.stack.last().indices.forEach { k ->
         this.add(ArcRight(state, governorSpineIndex = k, id = this.getNextId()))

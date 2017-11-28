@@ -28,45 +28,23 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
 
     val transitions = ArrayList<ArcSwiftTransition>()
 
-    transitions.addRoot(state)
-    transitions.addShift(state)
-    transitions.addArcs(state)
+    transitions.add(Root(state, id = transitions.getNextId()))
+    transitions.add(Shift(state, id = transitions.getNextId()))
+
+    transitions.addArcLeft(state)
+    transitions.addArcRight(state)
 
     return transitions
   }
-
-  /**
-   * Add Root transitions (if allowed)
-   */
-  private fun ArrayList<ArcSwiftTransition>.addRoot(state: StackBufferState) {
-    val root = Root(state, id = this.getNextId())
-    if (root.isAllowed) this.add(root)
-  }
-
-  /**
-   * Add Shift transitions (if allowed)
-   */
-  private fun ArrayList<ArcSwiftTransition>.addShift(state: StackBufferState) {
-    val shift = Shift(state, id = this.getNextId())
-    if (shift.isAllowed) this.add(shift)
-  }
-
-  /**
-   * Add Arcs transitions (if allowed)
-   */
-  private fun ArrayList<ArcSwiftTransition>.addArcs(state: StackBufferState) {
-    this.addArcLeft(state)
-    this.addArcRight(state)
-  }
-
   /**
    * Add ArcLeft transitions (if allowed)
    */
   private fun ArrayList<ArcSwiftTransition>.addArcLeft(state: StackBufferState) {
 
-    if (state.buffer.isNotEmpty()){
-      val si: Int = state.stack.indexOfFirst { state.dependencyTree.isNotAssigned(it) }
-      if (si > -1) this.add(ArcLeft(state, dependentStackIndex =  si, id = this.getNextId()))
+    val dependentStackIndex: Int = state.stack.indexOfFirst { state.dependencyTree.isNotAssigned(it) }
+
+    if (dependentStackIndex > -1) {
+      this.add(ArcLeft(state, dependentStackIndex =  dependentStackIndex, id = this.getNextId()))
     }
   }
 
@@ -75,12 +53,12 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
    */
   private fun ArrayList<ArcSwiftTransition>.addArcRight(state: StackBufferState) {
 
-    if (state.buffer.size > 1 || (state.buffer.size == 1 && state.unattachedStackElements.size == 1)){
+   // if (state.buffer.size > 1 || (state.buffer.size == 1 && state.unattachedStackElements.size == 1)){
       loop@for (si in 0 until state.stack.size){
         this.add(ArcRight(state, governorStackIndex = si, id = this.getNextId()))
         if (state.dependencyTree.isNotAssigned(state.stack[si])) break@loop
       }
-    }
+    //}
   }
 
   /**

@@ -25,27 +25,11 @@ class AttardiTransitionsGenerator : TransitionsGenerator<StackBufferState, Attar
 
     val transitions = ArrayList<AttardiTransition>()
 
-    transitions.addRoot(state)
-    transitions.addShift(state)
+    transitions.add(Root(state, id = transitions.getNextId()))
+    transitions.add(Shift(state, id = transitions.getNextId()))
     transitions.addArcs(state)
 
     return transitions
-  }
-
-  /**
-   * Add Root transition (if allowed)
-   */
-  private fun ArrayList<AttardiTransition>.addRoot(state: StackBufferState) {
-    val root = Root(state, id = this.getNextId())
-    if (root.isAllowed) this.add(root)
-  }
-
-  /**
-   * Add Shift transition (if allowed)
-   */
-  private fun ArrayList<AttardiTransition>.addShift(state: StackBufferState) {
-    val shift = Shift(state, id = this.getNextId())
-    if (shift.isAllowed) this.add(shift)
   }
 
   /**
@@ -53,12 +37,10 @@ class AttardiTransitionsGenerator : TransitionsGenerator<StackBufferState, Attar
    */
   private fun ArrayList<AttardiTransition>.addArcs(state: StackBufferState){
 
-    if (state.buffer.isNotEmpty() && state.stack.isNotEmpty()) {
-
+    (0 until Attardi.maxTransitionDegree).reversed().forEach {
       (0 until minOf(state.stack.size, Attardi.maxTransitionDegree)).reversed().forEach {
-        this.add(ArcLeft(state, degree = it, id = this.getNextId()))
-        this.add(ArcRight(state, degree = it, id = this.getNextId()))
-      }
+      this.add(ArcLeft(state, degree = it, id = this.getNextId()))
+      this.add(ArcRight(state, degree = it, id = this.getNextId()))
     }
   }
 }

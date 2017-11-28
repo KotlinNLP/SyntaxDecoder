@@ -29,5 +29,5 @@ class ArcStandardTransitionsGenerator : TransitionsGenerator<StackBufferState, A
     Shift(state, id = 1),
     ArcLeft(state, id = 2),
     ArcRight(state, id = 3)
-  ).filter { it.isAllowed }
+  )
 }

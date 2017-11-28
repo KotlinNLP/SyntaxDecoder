@@ -27,5 +27,5 @@ class ArcHybridNPTransitionsGenerator : TransitionsGenerator<StackBufferState, A
     ArcLeft(state, id = 2),
     ArcRight(state, id = 3),
     Swap(state, id = 4)
-  ).filter { it.isAllowed }
+  )
 }

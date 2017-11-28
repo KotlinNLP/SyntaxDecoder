@@ -5,27 +5,21 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
+import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
+import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 
 /**
  *
  */
 class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
-  private val oracle: Oracle<StateType, TransitionType>,
+  private val oracleFactory: OracleFactory<StateType, TransitionType>,
   private val errorExploring: Boolean,
   private val verbose: Boolean = false){
-
-  init {
-    require(!this.errorExploring || this.oracle.type == Oracle.Type.DYNAMIC) {
-      "error-exploring not supported by ${this.oracle.type} oracle."
-    }
-  }
 
   /**
    *
@@ -35,32 +29,26 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
   /**
    *
    */
-  fun testCoverage(sentences: ArrayList<Sentence>) {
+  fun run(sentence: Sentence) {
 
-    val progress = ProgressIndicatorBar(sentences.size)
+    val oracle = oracleFactory(sentence.dependencyTree!!)
 
-    sentences.forEach {
-      progress.tick()
-      this.compute(it)
+    require(!this.errorExploring || oracle.type == Oracle.Type.DYNAMIC) {
+      "error-exploring not supported by ${oracle.type} oracle."
     }
-  }
-
-  /**
-   *
-   */
-  private fun compute(sentence: Sentence) {
-
-    this.oracle.initialize(sentence.dependencyTree!!)
 
     val state = this.transitionSystem.getInitialState(itemIds = sentence.tokens)
 
     while (!state.isTerminal){
+
       if (this.verbose) { println(state) }
 
-      val possibleActions = this.generatePossibleActions(state)
-      val actionToApply = this.chooseAction(possibleActions)
+      val bestAction = this.getBestAction(state = state, oracle = oracle)
 
-      this.applyAction(actionToApply)
+      if (this.verbose) println("apply: ${bestAction.transition}")
+
+      oracle.apply(bestAction.transition) // important
+      bestAction.apply()
     }
 
     if (!this.errorExploring) {
@@ -73,44 +61,20 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
   /**
    *
    */
-  private fun generatePossibleActions(state: StateType): List<Transition<TransitionType, StateType>.Action>{
-
-    val transitions: List<TransitionType> = this.transitionSystem.generateTransitions(state)
-
-    return this.actionsGenerator.generateFrom(transitions)
-  }
-
-  /**
-   *
-   */
-  private fun chooseAction(actions: List<Transition<TransitionType, StateType>.Action>):
+  private fun getBestAction(state: StateType, oracle: Oracle<StateType, TransitionType>):
     Transition<TransitionType, StateType>.Action {
 
-    require(actions.any { this.oracle.hasZeroCost(it) }) { "there should always be a 0 cost action" }
+    val actions = this.actionsGenerator.generateFrom(this.transitionSystem.generateTransitions(state))
 
-    return actions.let {
-      if (this.errorExploring) it.getRandomAction() else it.first {  this.oracle.isCorrect(it) }
+    require(actions.any { it.transition.isAllowed && oracle.hasZeroCost(it) }) {
+      "there should always be a 0 cost action"
     }
-  }
 
-  /**
-   *
-   */
-  private fun applyAction(action: Transition<TransitionType, StateType>.Action){
-
-    if (this.verbose) println("apply: ${action.transition}")
-
-    this.oracle.updateWith(action.transition) // important
-
-    action.apply()
-  }
-
-  /**
-   *
-   */
-  private fun List<Transition<TransitionType, StateType>.Action>.getRandomAction():
-    Transition<TransitionType, StateType>.Action {
-
-    return this[Math.round(Math.random() * this.lastIndex).toInt()]
+    return if (this.errorExploring){
+      val allowedActions = actions.filter { it.transition.isAllowed }
+      allowedActions[Math.round(Math.random() * allowedActions.lastIndex).toInt()]
+    } else {
+      actions.first {  it.transition.isAllowed && oracle.isCorrect(it) }
+    }
   }
 }

@@ -6,6 +6,7 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.conllio.CoNLLReader
+import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpine
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybrid
@@ -41,72 +42,72 @@ fun main(args: Array<String>){
 
     TransitionSystemType.ARC_STANDARD -> TransitionSystemCoverage(
       transitionSystem = ArcStandard(),
-      oracle = ArcStandardOracle(),
+      oracleFactory = ArcStandardOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_STANDARD_NON_DET -> TransitionSystemCoverage(
       transitionSystem = ArcStandard(),
-      oracle = ArcStandardNonDetOracle(),
+      oracleFactory = ArcStandardNonDetOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_HYBRID -> TransitionSystemCoverage(
       transitionSystem = ArcHybrid(),
-      oracle = ArcHybridOracle(),
+      oracleFactory = ArcHybridOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_HYBRID_NON_PROJECTIVE -> TransitionSystemCoverage(
       transitionSystem = ArcHybridNP(),
-      oracle = ArcHybridNPOracle(),
+      oracleFactory = ArcHybridNPOracle.Factory,
       errorExploring = false,
       verbose = false)
 
     TransitionSystemType.ARC_SWIFT -> TransitionSystemCoverage(
       transitionSystem = ArcSwift(),
-      oracle = ArcSwiftOracle(),
+      oracleFactory = ArcSwiftOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_SPINE -> TransitionSystemCoverage(
       transitionSystem = ArcSpine(),
-      oracle = ArcSpineOracle(),
+      oracleFactory = ArcSpineOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_SPINE_NON_DET -> TransitionSystemCoverage(
       transitionSystem = ArcSpine(),
-      oracle = ArcSpineNonDetOracle(),
+      oracleFactory = ArcSpineNonDetOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_EAGER_SPINE -> TransitionSystemCoverage(
       transitionSystem = ArcEagerSpine(),
-      oracle = ArcEagerSpineOracle(),
+      oracleFactory = ArcEagerSpineOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_EAGER_SPINE_EXPLORE -> TransitionSystemCoverage(
       transitionSystem = ArcEagerSpine(),
-      oracle = ArcEagerSpineOracle(),
+      oracleFactory = ArcEagerSpineOracle.Factory,
       errorExploring = true)
 
     TransitionSystemType.EASY_FIRST -> TransitionSystemCoverage(
       transitionSystem = EasyFirst(),
-      oracle = EasyFirstOracle(),
+      oracleFactory = EasyFirstOracle.Factory,
       errorExploring = false)
 
     TransitionSystemType.ARC_RELOCATE -> TODO("not-implemented")
 
     TransitionSystemType.COVINGTON ->  TransitionSystemCoverage(
       transitionSystem = Covington(),
-      oracle = CovingtonOracle(),
+      oracleFactory = CovingtonOracle.Factory,
       errorExploring = false,
       verbose = false)
 
     TransitionSystemType.NON_LOCAL_COVINGTON ->  TransitionSystemCoverage(
       transitionSystem = NLCovington(),
-      oracle = CovingtonOracle(),
+      oracleFactory = CovingtonOracle.Factory,
       errorExploring = false,
       verbose = false)
 
     TransitionSystemType.ATTARDI ->  TransitionSystemCoverage(
       transitionSystem = Attardi(),
-      oracle = AttardiOracle(),
+      oracleFactory = AttardiOracle.Factory,
       errorExploring = false,
       verbose = false)
   }
@@ -117,7 +118,12 @@ fun main(args: Array<String>){
 
   sentences.loadFromTreeBank(args[0])
 
-  transitionSystemCoverage(TransitionSystemType.valueOf(args[1])).testCoverage(sentences)
+  val progress = ProgressIndicatorBar(sentences.size)
+
+  sentences.forEach {
+    progress.tick()
+    transitionSystemCoverage(TransitionSystemType.valueOf(args[1])).run(it)
+  }
 }
 
 /**

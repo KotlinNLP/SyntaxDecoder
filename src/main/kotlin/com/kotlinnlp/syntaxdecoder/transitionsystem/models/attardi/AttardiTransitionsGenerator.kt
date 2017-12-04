@@ -55,7 +55,7 @@ class AttardiTransitionsGenerator : TransitionsGenerator<StackBufferState, Attar
 
     if (state.buffer.isNotEmpty() && state.stack.isNotEmpty()) {
 
-      (0 until minOf(state.stack.size, Attardi.maxNonProjectiveDistance)).reversed().forEach {
+      (0 until minOf(state.stack.size, Attardi.maxTransitionDegree)).reversed().forEach {
         this.add(ArcLeft(state, degree = it, id = this.getNextId()))
         this.add(ArcRight(state, degree = it, id = this.getNextId()))
       }

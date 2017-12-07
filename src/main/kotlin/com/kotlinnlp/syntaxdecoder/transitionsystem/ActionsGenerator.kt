@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem
 
+import com.google.common.collect.HashMultimap
 import com.kotlinnlp.dependencytree.Deprel
 import com.kotlinnlp.dependencytree.POSTag
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
@@ -98,7 +99,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
    */
   class MorphoSyntacticLabeled<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
     private val deprels: Map<Deprel.Position, List<Deprel>>,
-    private val deprelPosTagCombinations: Map<Deprel, List<POSTag>>
+    private val deprelPosTagCombinations: HashMultimap<Deprel, POSTag>
   ) : ActionsGenerator<StateType, TransitionType>(){
 
     /**
@@ -113,7 +114,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
       if (this is SyntacticDependency && this.type.direction in this@MorphoSyntacticLabeled.deprels) {
 
         this@MorphoSyntacticLabeled.deprels.getValue(this.type.direction).forEach { deprel ->
-          this@MorphoSyntacticLabeled.deprelPosTagCombinations.getValue(deprel).forEach { posTag ->
+          this@MorphoSyntacticLabeled.deprelPosTagCombinations.get(deprel).forEach { posTag ->
 
             actions.add(this.actionFactory(id = actionId++, deprel = deprel, posTag = posTag))
           }

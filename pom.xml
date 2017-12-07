@@ -12,6 +12,7 @@
         <kotlin.version>1.1.60</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <spek.version>1.1.4</spek.version>
+        <google-guava.version>23.2-jre</google-guava.version>
     </properties>
 
     <build>
@@ -115,6 +116,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google-guava.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

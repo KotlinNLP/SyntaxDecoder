@@ -9,6 +9,7 @@ package com.kotlinnlp.syntaxdecoder.transitionsystem.oracle
 
 import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.dependencytree.Deprel
+import com.kotlinnlp.dependencytree.POSTag
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
@@ -96,7 +97,8 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
    * True if the action is correct.
    */
   fun isCorrect(action: Transition<TransitionType, StateType>.Action): Boolean
-    = action.transition.isAllowed && this.isCorrect(action.transition) && (action !is DependencyRelation || action.isDeprelCorrect())
+    = action.transition.isAllowed && this.isCorrect(action.transition)
+    && (action !is DependencyRelation || action.isCorrect())
 
   /**
    * @param dependentId a dependentId.
@@ -114,10 +116,21 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
     isArcCorrect(dependentId = this.dependentId!!, governorId = this.governorId)
 
   /**
-   * @return True if the dependency relation (deprel) is correct.
+   * @return True if the dependency relation (deprel and posTag) is correct.
+   */
+  private fun DependencyRelation.isCorrect(): Boolean = this.isDeprelCorrect() && this.isPosTagCorrect()
+
+  /**
+   * @return True if the syntactic component of a dependency relation (deprel) is correct.
    */
   private fun DependencyRelation.isDeprelCorrect(): Boolean
     = this.deprel == null || this.deprel == this@Oracle.getGoldDeprel(this.dependentId!!)
+
+  /**
+   * @return True if the morphological component of a dependency relation (posTag) is correct.
+   */
+  private fun DependencyRelation.isPosTagCorrect(): Boolean
+    = this.posTag == null || this.posTag == this@Oracle.getGoldPosTag(this.dependentId!!)
 
   /**
    * @param dependent a dependent id.
@@ -125,4 +138,11 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
    * @return the deprel of this dependent on the gold dependency tree (can be null).
    */
   private fun getGoldDeprel(dependent: Int): Deprel? = this.goldDependencyTree.deprels[dependent]
+
+  /**
+   * @param dependent a dependent id.
+   *
+   * @return the pos tag of this dependent on the gold dependency tree (can be null).
+   */
+  private fun getGoldPosTag(dependent: Int): POSTag? = this.goldDependencyTree.posTags[dependent]
 }

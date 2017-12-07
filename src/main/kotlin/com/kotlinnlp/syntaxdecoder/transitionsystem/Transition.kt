@@ -8,6 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem
 
 import com.kotlinnlp.dependencytree.Deprel
+import com.kotlinnlp.dependencytree.POSTag
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
@@ -208,9 +209,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
       private set
 
     /**
-     * The Dependency Relation (can be null)
+     * The syntactic component of a dependency relation (can be null)
      */
     override var deprel: Deprel? = null
+
+    /**
+     * The morphological component of a dependency relation (can be null)
+     */
+    override var posTag: POSTag? = null
 
     /**
      * Initialize the action.
@@ -239,20 +245,32 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
         state.dependencyTree.setArc(
           dependent = this.dependentId!!,
           governor = this.governorId!!,
-          deprel = this.deprel)
+          deprel = this.deprel,
+          posTag = this.posTag)
 
       } else if (this.deprel != null) {
 
         state.dependencyTree.setDeprel(
           dependent = this.dependentId!!,
           deprel = this.deprel!!)
+
+        if (this.posTag != null) {
+
+          state.dependencyTree.setPosTag(
+            dependent = this.dependentId!!,
+            posTag = this.posTag!!
+          )
+        }
       }
     }
 
     /**
      * @return its string representation.
      */
-    override fun toString(): String = "${deprel?:"arc"}(${this.governorId} -> ${this.dependentId})"
+    override fun toString(): String = if (this.posTag != null)
+      "${this.posTag!!}~${this.deprel!!}(${this.governorId} -> ${this.dependentId})"
+    else
+      "${this.deprel?:"arc"}(${this.governorId} -> ${this.dependentId})"
   }
 
   /**
@@ -282,13 +300,16 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Action] tied to this transition.
    */
-  fun actionFactory(id: Int = -1, deprel: Deprel? = null): Action {
+  fun actionFactory(id: Int = -1, deprel: Deprel? = null, posTag: POSTag? = null): Action {
 
     val action: Action = this.buildAction(id)
 
     if (this is SyntacticDependency) {
-      require(action is DependencyRelation) { "An arc Transition must be associated to a DependencyRelation" }
-      (action as DependencyRelation).deprel = deprel
+
+      action as DependencyRelation // An arc Transition must be associated to a DependencyRelation
+
+      action.deprel = deprel
+      action.posTag = posTag
     }
 
     return action

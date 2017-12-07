@@ -8,6 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.syntax
 
 import com.kotlinnlp.dependencytree.Deprel
+import com.kotlinnlp.dependencytree.POSTag
 
 /**
  * Extends a syntactic dependency with the relation between the dependent and its governor.
@@ -15,7 +16,12 @@ import com.kotlinnlp.dependencytree.Deprel
 interface DependencyRelation : SyntacticDependency {
 
   /**
-   * The Dependency Relation (can be null)
+   * The syntactic component of the dependency relation (can be null)
    */
   var deprel: Deprel?
+
+  /**
+   * The morphological component of the dependency relation (can be null)
+   */
+  var posTag: POSTag?
 }

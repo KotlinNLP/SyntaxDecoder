@@ -35,12 +35,13 @@ class AttardiTransitionsGenerator : TransitionsGenerator<StackBufferState, Attar
   /**
    * Add multiple ArcLeft and ArcRight transitions.
    */
-  private fun ArrayList<AttardiTransition>.addArcs(state: StackBufferState){
+  private fun ArrayList<AttardiTransition>.addArcs(state: StackBufferState) {
 
     (0 until Attardi.maxTransitionDegree).reversed().forEach {
       (0 until minOf(state.stack.size, Attardi.maxTransitionDegree)).reversed().forEach {
-      this.add(ArcLeft(state, degree = it, id = this.getNextId()))
-      this.add(ArcRight(state, degree = it, id = this.getNextId()))
+        this.add(ArcLeft(state, degree = it, id = this.getNextId()))
+        this.add(ArcRight(state, degree = it, id = this.getNextId()))
+      }
     }
   }
 }

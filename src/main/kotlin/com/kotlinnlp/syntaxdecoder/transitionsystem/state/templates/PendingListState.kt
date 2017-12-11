@@ -14,7 +14,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  *
  * @property itemIds the list of item ids used to initialize the state
  */
-class PendingListState(itemIds: List<Int>) : State<PendingListState>(itemIds) {
+class PendingListState(itemIds: List<Int>) : State<PendingListState>(itemIds), Focusable {
 
   /**
    * The PendingList.

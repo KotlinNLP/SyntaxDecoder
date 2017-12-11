@@ -21,4 +21,4 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 abstract class EasyFirstTransition(
   refState: PendingListState,
   id: Int
-) : Transition<EasyFirstTransition, PendingListState>(refState, id), SyntacticDependency
+) : Transition<EasyFirstTransition, PendingListState>(refState, id), FocusedArc, SyntacticDependency

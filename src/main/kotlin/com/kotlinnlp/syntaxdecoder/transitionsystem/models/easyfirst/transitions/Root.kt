@@ -31,6 +31,11 @@ class Root(refState: PendingListState, id: Int) : EasyFirstTransition(refState, 
   override val priority: Int = 0
 
   /**
+   * The index of the focus element in the pending list.
+   */
+  override val pendingListFocus: Int = 0
+
+  /**
    * The governor id.
    */
   override val governorId: Int? = null

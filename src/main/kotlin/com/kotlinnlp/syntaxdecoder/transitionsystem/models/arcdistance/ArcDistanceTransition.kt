@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi
+package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
@@ -13,12 +13,12 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferS
 
 
 /**
- * The State Transition of the Attardi transition system.
+ * The State Transition of the ArcDistance transition system.
  *
  * @property refState the [State] on which this transition operates
  * @property id the transition id
  */
-abstract class AttardiTransition(
+abstract class ArcDistanceTransition(
   refState: StackBufferState,
   id: Int
-) : Transition<AttardiTransition, StackBufferState>(refState, id)
+) : Transition<ArcDistanceTransition, StackBufferState>(refState, id)

@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.transitions
+package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.transitions
 
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.AttardiTransition
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.ArcDistanceTransition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.utils.pop
 
@@ -21,7 +21,7 @@ import com.kotlinnlp.syntaxdecoder.utils.pop
  * @property refState the [State] on which this transition operates
  * @property id the transition id
  */
-class Root(refState: StackBufferState, id: Int) : AttardiTransition(refState, id), SyntacticDependency {
+class Root(refState: StackBufferState, id: Int) : ArcDistanceTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.

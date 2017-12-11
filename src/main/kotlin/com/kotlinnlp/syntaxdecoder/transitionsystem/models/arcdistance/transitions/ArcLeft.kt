@@ -5,51 +5,52 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.transitions
+package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.transitions
 
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.AttardiTransition
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.ArcDistanceTransition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.utils.extractAndRemove
-import com.kotlinnlp.syntaxdecoder.utils.removeFirst
+import com.kotlinnlp.syntaxdecoder.utils.removeLast
 
 /**
- * The ArcRight transition.
+ * The ArcLeft transition.
  *
- * R-1l (σ|i, j|β, A)  ⇒  (σ, i|β, A ∪ {(i, l, j)})
- * R-2l (σ|i|j, k|β, A)  ⇒  (σ, i|j|β, A ∪ {(i, l, k)})
- * R-3l (σ|i|j|k, m|β, A)  ⇒  (σ, i|j|k|β, A ∪ {(i, l, m)})
+ * L-1l  (σ|i, j|β, A)  ⇒  (σ, j|β, A ∪ {(j, l, i)})
+ * L-2l  (σ|i|j, k|β, A)  ⇒  (σ|j, k|β, A ∪ {(k, l, i)})
+ * L-3l  (σ|i|j|k, m|β, A)  ⇒  (σ, j|k|m|β, A ∪ {(m, l, i)})
  *
  * @property refState the [State] on which this transition operates
  * @property degree the position in the stack of the dependent element
  * @property id the transition id
  */
-class ArcRight(
+class ArcLeft(
   refState: StackBufferState,
   val degree: Int,
-  id: Int) : AttardiTransition(refState, id), SyntacticDependency {
+  id: Int
+) : ArcDistanceTransition(refState, id), SyntacticDependency {
 
   /**
    * The Transition type, from which depends the building of the related Action.
    */
-  override val type: Type = Type.ARC_RIGHT
+  override val type: Type = Type.ARC_LEFT
 
   /**
    * The priority of the transition in case of spurious-ambiguities.
    */
-  override val priority: Int = 3
+  override val priority: Int = 2
 
   /**
    * The governor id.
    */
-  override val governorId: Int get() = this.refState.stack[this.stackSize - 1 - this.degree]
+  override val governorId: Int get() = this.refState.buffer.first()
 
   /**
    * The dependent id.
    */
-  override val dependentId: Int get() = this.refState.buffer.first()
+  override val dependentId: Int get() = this.refState.stack[this.stackSize - 1 - this.degree]
 
   /**
    * Returns True if the action is allowed in the given parser state.
@@ -71,12 +72,24 @@ class ArcRight(
    * @param state a State
    */
   override fun perform(state: StackBufferState) {
-    state.buffer.removeFirst()
-    state.buffer.addAll(0, state.stack.extractAndRemove(this.stackSize - 1 - this.degree .. this.refState.stack.lastIndex))
+
+    when {
+
+      this.degree == 0 ->
+        state.stack.removeLast()
+
+      this.degree == 1 ->
+        state.stack.removeAt(this.refState.stack.lastIndex - 1)
+
+      else -> {
+        state.buffer.addAll(0, state.stack.extractAndRemove(this.stackSize - this.degree .. this.refState.stack.lastIndex))
+        state.stack.removeLast()
+      }
+    }
   }
 
   /**
    * @return the string representation of this transition.
    */
-  override fun toString(): String = "arc-right(${this.degree})"
+  override fun toString(): String = "arc-left(${this.degree})"
 }

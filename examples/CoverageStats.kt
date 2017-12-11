@@ -21,8 +21,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.ArcStanda
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcstandard.ArcStandardOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwift
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftOracle
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.Attardi
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.AttardiOracle
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.ArcDistance
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.ArcDistanceOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.Covington
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.CovingtonOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.NLCovington
@@ -106,8 +106,8 @@ fun main(args: Array<String>){
       verbose = false)
 
     TransitionSystemType.ATTARDI ->  TransitionSystemCoverage(
-      transitionSystem = Attardi(),
-      oracleFactory = AttardiOracle.Factory,
+      transitionSystem = ArcDistance(),
+      oracleFactory = ArcDistanceOracle.Factory,
       errorExploring = false,
       verbose = false)
   }

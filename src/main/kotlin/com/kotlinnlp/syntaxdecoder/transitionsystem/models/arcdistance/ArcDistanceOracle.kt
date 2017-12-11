@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi
+package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance
 
 import com.kotlinnlp.dependencytree.DependencyTree
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.transitions.*
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.transitions.*
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
@@ -16,7 +16,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
 
 /**
- * The Attardi Static Oracle.
+ * The ArcDistance Static Oracle.
  *
  * To efficiently identify complete dependents we hold a counter [dependentsCounter] for each element
  * which is initialized to the number of dependents the element has in the gold tree.
@@ -26,13 +26,13 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.DependentsCounter
  *
  * @property goldDependencyTree the dependency tree that the Oracle will try to reach
  */
-class AttardiOracle(goldDependencyTree: DependencyTree)
-  : Oracle<StackBufferState, AttardiTransition>(goldDependencyTree) {
+class ArcDistanceOracle(goldDependencyTree: DependencyTree)
+  : Oracle<StackBufferState, ArcDistanceTransition>(goldDependencyTree) {
 
   /**
    * The OracleFactory.
    */
-  companion object Factory : OracleFactory<StackBufferState, AttardiTransition> {
+  companion object Factory : OracleFactory<StackBufferState, ArcDistanceTransition> {
 
     /**
      * Initialize a new Oracle with a [goldDependencyTree].
@@ -41,8 +41,8 @@ class AttardiOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, AttardiTransition>
-      = AttardiOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcDistanceTransition>
+      = ArcDistanceOracle(goldDependencyTree)
   }
 
   /**
@@ -58,9 +58,9 @@ class AttardiOracle(goldDependencyTree: DependencyTree)
   /**
    * @return a copy of this Oracle
    */
-  override fun copy(): Oracle<StackBufferState, AttardiTransition> {
+  override fun copy(): Oracle<StackBufferState, ArcDistanceTransition> {
 
-    val clone = AttardiOracle(this.goldDependencyTree)
+    val clone = ArcDistanceOracle(this.goldDependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
@@ -76,7 +76,7 @@ class AttardiOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of the given [transition].
    */
-  override fun cost(transition: AttardiTransition): Int =
+  override fun cost(transition: ArcDistanceTransition): Int =
     when (transition) {
       is ArcLeft -> transition.calculateCost()
       is ArcRight -> transition.calculateCost()
@@ -92,7 +92,7 @@ class AttardiOracle(goldDependencyTree: DependencyTree)
    *
    * @param transition a transition
    */
-  override fun apply(transition: AttardiTransition) {
+  override fun apply(transition: ArcDistanceTransition) {
     if (transition is SyntacticDependency && transition.governorId != null){
       dependentsCounter.decrease(transition.governorId!!)
     }
@@ -127,7 +127,7 @@ class AttardiOracle(goldDependencyTree: DependencyTree)
    * @return the cost of this transition.
    */
   private fun Shift.calculateCost(): Int =
-    if (this@AttardiOracle.thereAreCorrectArcs(this.refState)) 1 else 0
+    if (this@ArcDistanceOracle.thereAreCorrectArcs(this.refState)) 1 else 0
 
   /**
    * @param state a state
@@ -135,7 +135,7 @@ class AttardiOracle(goldDependencyTree: DependencyTree)
    * @return True if there are any zero-cost arc-transition in the given [state] configuration.
    */
   private fun thereAreCorrectArcs(state: StackBufferState): Boolean =
-    AttardiTransitionsGenerator().generate(state)
+    ArcDistanceTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight }
       .any { it.isAllowed && hasZeroCost(it) }
 }

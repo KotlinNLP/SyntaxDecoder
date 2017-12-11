@@ -5,25 +5,25 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi
+package com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionsGenerator
-import com.kotlinnlp.syntaxdecoder.transitionsystem.models.attardi.transitions.*
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.transitions.*
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.templates.StackBufferState
 
 /**
- * The TransitionsGenerator for the Attardi Transition System.
+ * The TransitionsGenerator for the ArcDistance Transition System.
  */
-class AttardiTransitionsGenerator : TransitionsGenerator<StackBufferState, AttardiTransition>() {
+class ArcDistanceTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcDistanceTransition>() {
 
   /**
    * @param state the state from which to extract valid transitions.
    *
    * @return a list of valid transitions for the given [state].
    */
-  override fun generate(state: StackBufferState): List<AttardiTransition> {
+  override fun generate(state: StackBufferState): List<ArcDistanceTransition> {
 
-    val transitions = ArrayList<AttardiTransition>()
+    val transitions = ArrayList<ArcDistanceTransition>()
 
     transitions.add(Root(state, id = transitions.getNextId()))
     transitions.add(Shift(state, id = transitions.getNextId()))
@@ -35,10 +35,10 @@ class AttardiTransitionsGenerator : TransitionsGenerator<StackBufferState, Attar
   /**
    * Add multiple ArcLeft and ArcRight transitions.
    */
-  private fun ArrayList<AttardiTransition>.addArcs(state: StackBufferState) {
+  private fun ArrayList<ArcDistanceTransition>.addArcs(state: StackBufferState) {
 
-    (0 until Attardi.maxTransitionDegree).reversed().forEach {
-      (0 until minOf(state.stack.size, Attardi.maxTransitionDegree)).reversed().forEach {
+    (0 until ArcDistance.maxTransitionDegree).reversed().forEach {
+      (0 until minOf(state.stack.size, ArcDistance.maxTransitionDegree)).reversed().forEach {
         this.add(ArcLeft(state, degree = it, id = this.getNextId()))
         this.add(ArcRight(state, degree = it, id = this.getNextId()))
       }

@@ -16,7 +16,7 @@ import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
 import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 
 /**
@@ -28,9 +28,9 @@ abstract class FeaturesExtractorTrainable<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  in ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+  in SupportStructureType : DecodingSupportStructure>
   :
-  FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>(),
+  FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType, SupportStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -47,6 +47,6 @@ abstract class FeaturesExtractorTrainable<
    */
   abstract fun backward(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: ScoringGlobalStructureType,
+    supportStructure: SupportStructureType,
     propagateToInput: Boolean)
 }

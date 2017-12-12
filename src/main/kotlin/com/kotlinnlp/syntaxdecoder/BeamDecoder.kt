@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
@@ -50,21 +50,21 @@ class BeamDecoder<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+  SupportStructureType : DecodingSupportStructure>
 (
   val beamSize: Int,
   val maxParallelThreads: Int,
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
+    SupportStructureType>,
   actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
+    SupportStructureType>,
   val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, InputContextType>,
-  supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>,
+  supportStructureFactory: SupportStructureFactory<SupportStructureType>,
   scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
-  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>
+  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, SupportStructureType>
   (
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,
@@ -181,7 +181,7 @@ class BeamDecoder<
    * @return a new [BeamDecoderThread] already started.
    */
   private fun buildThread(): BeamDecoderThread<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType> {
+    SupportStructureType> {
 
     val thread = BeamDecoderThread(
       transitionSystem = this.transitionSystem,
@@ -334,11 +334,11 @@ class BeamDecoder<
    * Loop threads and related states (with index), only whose state is not null.
    */
   private fun List<BeamDecoderThread<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>>.forEachNotNullState(
+    SupportStructureType>>.forEachNotNullState(
     callback: (stateIndex: Int,
                state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                thread: BeamDecoderThread<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-                 ScoringGlobalStructureType>) -> Unit) {
+                 SupportStructureType>) -> Unit) {
 
     this.forEach { thread ->
 

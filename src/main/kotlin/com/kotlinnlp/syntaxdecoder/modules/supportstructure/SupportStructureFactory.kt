@@ -10,15 +10,15 @@ package com.kotlinnlp.syntaxdecoder.modules.supportstructure
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 
 /**
- * The factory of a [ScoringGlobalSupportStructure] and its related [DecodingContext].
+ * The factory of a [DecodingSupportStructure] and its related [DecodingContext].
  */
-interface SupportStructureFactory<out ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+interface SupportStructureFactory<out SupportStructureType : DecodingSupportStructure>
 {
 
   /**
-   * Build a new [ScoringGlobalSupportStructure].
+   * Build a new [DecodingSupportStructure].
    *
    * @return a new scoring global support structure
    */
-  fun globalStructure(): ScoringGlobalStructureType
+  fun globalStructure(): SupportStructureType
 }

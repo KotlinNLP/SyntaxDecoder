@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 
 /**
@@ -24,7 +24,7 @@ abstract class FeaturesExtractor<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  in ScoringGlobalStructureType : ScoringGlobalSupportStructure> {
+  in SupportStructureType : DecodingSupportStructure> {
 
   /**
    * Set the features property in the given [decodingContext] using the given [supportStructure].
@@ -34,7 +34,7 @@ abstract class FeaturesExtractor<
    */
   fun setFeatures(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: ScoringGlobalStructureType
+    supportStructure: SupportStructureType
   ) {
     decodingContext.features = this.extract(decodingContext = decodingContext, supportStructure = supportStructure)
   }
@@ -49,6 +49,6 @@ abstract class FeaturesExtractor<
    */
   abstract protected fun extract(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: ScoringGlobalStructureType
+    supportStructure: SupportStructureType
   ): FeaturesType
 }

@@ -13,7 +13,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
@@ -42,15 +42,15 @@ abstract class SyntaxDecoder<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+  SupportStructureType : DecodingSupportStructure>
 (
   val transitionSystem: TransitionSystem<StateType, TransitionType>,
   val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   val featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
+    SupportStructureType>,
   val actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
-  val supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>,
+    SupportStructureType>,
+  val supportStructureFactory: SupportStructureFactory<SupportStructureType>,
   val scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) {
 
@@ -95,13 +95,13 @@ abstract class SyntaxDecoder<
    * Generate the possible actions allowed in a given state, assigns them a score and returns them in descending order
    * according to the score.
    *
-   * @param scoringGlobalSupportStructure the scoring support structure
+   * @param supportStructure the scoring support structure
    * @param extendedState the [ExtendedState] containing items, context and state
    *
    * @return a list of scored actions, sorted by descending score and then by transition priority
    */
   protected fun getScoredActions(
-    scoringGlobalSupportStructure: ScoringGlobalStructureType,
+    supportStructure: SupportStructureType,
     extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
@@ -110,9 +110,9 @@ abstract class SyntaxDecoder<
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
-    this.featuresExtractor.setFeatures(decodingContext = decodingContext, supportStructure = scoringGlobalSupportStructure)
+    this.featuresExtractor.setFeatures(decodingContext = decodingContext, supportStructure = supportStructure)
 
-    this.actionsScorer.score(decodingContext = decodingContext, supportStructure = scoringGlobalSupportStructure)
+    this.actionsScorer.score(decodingContext = decodingContext, supportStructure = supportStructure)
 
     return decodingContext.sortedActions
   }

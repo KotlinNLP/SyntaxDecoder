@@ -13,7 +13,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
@@ -45,19 +45,19 @@ class GreedyDecoder<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+  SupportStructureType : DecodingSupportStructure>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
+    SupportStructureType>,
   actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
+    SupportStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, InputContextType>,
-  supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>,
+  supportStructureFactory: SupportStructureFactory<SupportStructureType>,
   scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
-  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>
+  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, SupportStructureType>
   (
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,
@@ -70,7 +70,7 @@ class GreedyDecoder<
   /**
    * The support structure to score actions and extract features.
    */
-  private val scoringGlobalSupportStructure = this.supportStructureFactory.globalStructure()
+  private val supportStructure = this.supportStructureFactory.globalStructure()
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
@@ -110,7 +110,7 @@ class GreedyDecoder<
   ): Transition<TransitionType, StateType>.Action {
 
     val scoredActions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(
-      scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
+      supportStructure = this.supportStructure,
       extendedState = extendedState)
 
     return this.bestActionSelector.select(sortedActions = scoredActions, extendedState = extendedState)

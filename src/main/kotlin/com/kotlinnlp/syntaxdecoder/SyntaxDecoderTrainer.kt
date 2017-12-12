@@ -22,7 +22,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTr
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
 
@@ -37,10 +37,10 @@ class SyntaxDecoderTrainer<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  out ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+  out SupportStructureType : DecodingSupportStructure>
 (
   private val syntaxDecoder: SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType>,
+    SupportStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, InputContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, InputContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
@@ -75,7 +75,7 @@ class SyntaxDecoderTrainer<
    */
   @Suppress("UNCHECKED_CAST")
   private val actionsScorer = this.syntaxDecoder.actionsScorer as ActionsScorerTrainable<StateType, TransitionType,
-    InputContextType, ItemType, FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType>
+    InputContextType, ItemType, FeaturesErrorsType, FeaturesType, SupportStructureType>
 
   /**
    *
@@ -86,7 +86,7 @@ class SyntaxDecoderTrainer<
   /**
    * The support structure of the [actionsScorer].
    */
-  private val scoringGlobalSupportStructure: ScoringGlobalStructureType
+  private val supportStructure: SupportStructureType
     = this.supportStructureFactory.globalStructure()
 
   /**
@@ -173,11 +173,11 @@ class SyntaxDecoderTrainer<
 
     this.featuresExtractor.setFeatures(
       decodingContext = decodingContext,
-      supportStructure = this.scoringGlobalSupportStructure)
+      supportStructure = this.supportStructure)
 
     this.actionsScorer.score(
       decodingContext = decodingContext,
-      supportStructure = this.scoringGlobalSupportStructure)
+      supportStructure = this.supportStructure)
   }
 
   /**
@@ -200,18 +200,18 @@ class SyntaxDecoderTrainer<
 
       this.actionsScorer.backward(
         decodingContext = decodingContext,
-        supportStructure = this.scoringGlobalSupportStructure,
+        supportStructure = this.supportStructure,
         propagateToInput = propagateToInput)
 
       if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
 
         decodingContext.features.errors = this.actionsScorer.getFeaturesErrors(
           decodingContext = decodingContext,
-          supportStructure = this.scoringGlobalSupportStructure)
+          supportStructure = this.supportStructure)
 
         this.featuresExtractor.backward(
           decodingContext = decodingContext,
-          supportStructure = this.scoringGlobalSupportStructure,
+          supportStructure = this.supportStructure,
           propagateToInput = propagateToInput)
       }
     }

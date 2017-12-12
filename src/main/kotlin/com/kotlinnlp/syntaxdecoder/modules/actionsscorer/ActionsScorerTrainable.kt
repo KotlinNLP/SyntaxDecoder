@@ -18,7 +18,7 @@ import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
-import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.DecodingSupportStructure
 
 /**
  * The trainable [ActionsScorer].
@@ -30,9 +30,9 @@ abstract class ActionsScorerTrainable<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  in ScoringGlobalStructureType : ScoringGlobalSupportStructure>
+  in SupportStructureType : DecodingSupportStructure>
   :
-  ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>(),
+  ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType, SupportStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
@@ -48,7 +48,7 @@ abstract class ActionsScorerTrainable<
    */
   abstract fun backward(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: ScoringGlobalStructureType,
+    supportStructure: SupportStructureType,
     propagateToInput: Boolean)
 
   /**
@@ -59,6 +59,6 @@ abstract class ActionsScorerTrainable<
    */
   abstract fun getFeaturesErrors(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: ScoringGlobalStructureType
+    supportStructure: SupportStructureType
   ): FeaturesErrorsType
 }

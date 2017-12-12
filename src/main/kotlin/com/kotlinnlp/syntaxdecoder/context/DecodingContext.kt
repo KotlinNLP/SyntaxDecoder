@@ -25,4 +25,9 @@ interface DecodingContext<SelfType: DecodingContext<SelfType, ItemType>, ItemTyp
    * The length of the sentence.
    */
   val length: Int
+
+  /**
+   * @return the items id to initialize a [State]
+   */
+  fun getInitialStateItemsId() = this.items.map { it.id }
 }

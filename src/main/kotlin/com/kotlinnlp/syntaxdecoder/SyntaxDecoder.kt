@@ -71,7 +71,9 @@ abstract class SyntaxDecoder<
                          context: ContextType) -> Unit)? = null): DependencyTree {
 
     val extendedState = ExtendedState<StateType, TransitionType, ItemType, ContextType>(
-      state = this.transitionSystem.getInitialState(context.items.map { it.id }),
+      state = this.transitionSystem.getInitialState(
+        itemIds = context.getInitialStateItemsId(),
+        size = context.length),
       context = context,
       oracle = null,
       scoreAccumulator = this.scoreAccumulatorFactory())

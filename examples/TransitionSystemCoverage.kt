@@ -37,7 +37,7 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
       "error-exploring not supported by ${oracle.type} oracle."
     }
 
-    val state = this.transitionSystem.getInitialState(itemIds = sentence.tokens)
+    val state = this.transitionSystem.getInitialState(itemIds = sentence.tokens, size = sentence.tokens.size)
 
     while (!state.isTerminal){
 

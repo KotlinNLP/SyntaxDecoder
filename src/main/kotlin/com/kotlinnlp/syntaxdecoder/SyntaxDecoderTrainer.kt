@@ -109,7 +109,9 @@ class SyntaxDecoderTrainer<
             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                  context: ContextType) -> Unit)? = null): DependencyTree {
 
-    val state: StateType = this.transitionSystem.getInitialState(context.items.map { it.id } )
+    val state: StateType = this.transitionSystem.getInitialState(
+      itemIds = context.getInitialStateItemsId(),
+      size = context.items.size)
 
     val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
       state = state,

@@ -20,4 +20,9 @@ interface DecodingContext<SelfType: DecodingContext<SelfType, ItemType>, ItemTyp
    * A list of [StateItem].
    */
   val items: List<ItemType>
+
+  /**
+   * The length of the sentence.
+   */
+  val length: Int
 }

@@ -61,10 +61,9 @@ class BeamDecoderThread<
     List<Transition<TransitionType, StateType>.Action>>() {
 
   /**
-   * The global support structure to score actions and extract features.
+   * The decoding support structure used to score actions and extract features.
    */
-  private val supportStructure: SupportStructureType
-    = this.supportStructureFactory.globalStructure()
+  private val supportStructure: SupportStructureType = this.supportStructureFactory.globalStructure()
 
   /**
    * Called every time a new input is written into this thread.

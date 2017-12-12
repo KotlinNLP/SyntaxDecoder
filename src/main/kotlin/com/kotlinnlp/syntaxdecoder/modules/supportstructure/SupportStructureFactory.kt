@@ -18,7 +18,7 @@ interface SupportStructureFactory<out SupportStructureType : DecodingSupportStru
   /**
    * Build a new [DecodingSupportStructure].
    *
-   * @return a new scoring global support structure
+   * @return a new decoding support structure
    */
   fun globalStructure(): SupportStructureType
 }

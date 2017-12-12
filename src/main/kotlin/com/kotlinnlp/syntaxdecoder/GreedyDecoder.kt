@@ -68,7 +68,7 @@ class GreedyDecoder<
   ) {
 
   /**
-   * The support structure to score actions and extract features.
+   * The decoding support structure to score actions and extract features.
    */
   private val supportStructure = this.supportStructureFactory.globalStructure()
 

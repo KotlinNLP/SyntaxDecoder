@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder
 
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
@@ -22,9 +22,9 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 data class BeamDecoderThreadInput<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>>
 (
-  val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  val extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
   val scoreThreshold: Double?
 )

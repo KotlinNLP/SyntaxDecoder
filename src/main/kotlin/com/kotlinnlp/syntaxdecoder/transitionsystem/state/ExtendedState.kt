@@ -7,28 +7,28 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state
 
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 
 /**
- * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [DecodingContext].
+ * The [ExtendedState] extends a [State] with the list of [StateItem]s that compose it and a [InputContext].
  *
  * This structure allows you to keep aligned with state the properties that can evolve together with it.
  *
  * @property state a [State]
- * @property context a [DecodingContext]
+ * @property context a [InputContext]
  * @property oracle an [Oracle] (optional)
  */
 data class ExtendedState<
   StateType : State<StateType>,
   TransitionType: Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType, ItemType>>(
+  InputContextType : InputContext<InputContextType, ItemType>>(
   val state: StateType,
-  val context: ContextType,
+  val context: InputContextType,
   val scoreAccumulator: ScoreAccumulator<*>,
   val oracle: Oracle<StateType, TransitionType>? = null) {
 
@@ -59,7 +59,7 @@ data class ExtendedState<
    *
    * @return a clone of this [ExtendedState] replacing its state with the given [state]
    */
-  fun clone(state: StateType): ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
+  fun clone(state: StateType): ExtendedState<StateType, TransitionType, ItemType, InputContextType> = ExtendedState(
     state = state,
     context = this.context.copy(),
     oracle = this.oracle?.copy(),

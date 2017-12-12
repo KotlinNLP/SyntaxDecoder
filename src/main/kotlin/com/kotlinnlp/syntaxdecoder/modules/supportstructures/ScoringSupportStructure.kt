@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.modules.supportstructures
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
@@ -26,13 +26,13 @@ import com.kotlinnlp.syntaxdecoder.utils.sortByScoreAndPriority
 open class ScoringSupportStructure<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
   out StructureType : ScoringGlobalSupportStructure>
 (
   val structure: StructureType,
-  val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  val extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
   val actions: List<Transition<TransitionType, StateType>.Action>
 ) {
 

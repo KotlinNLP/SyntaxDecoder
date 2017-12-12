@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder
 
 import com.kotlinnlp.dependencytree.DependencyTree
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.OracleFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.actionserrorssetter.ActionsErrorsSetter
@@ -33,18 +33,18 @@ import com.kotlinnlp.syntaxdecoder.utils.Updatable
 class SyntaxDecoderTrainer<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
   out ScoringGlobalStructureType: ScoringGlobalSupportStructure,
-  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
 (
-  private val syntaxDecoder: SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  private val syntaxDecoder: SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
-  private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, ContextType>,
-  private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, ContextType>,
+  private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, InputContextType>,
+  private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, InputContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
 ) :
   BatchScheduling,
@@ -77,7 +77,7 @@ class SyntaxDecoderTrainer<
    */
   @Suppress("UNCHECKED_CAST")
   private val actionsScorer = this.syntaxDecoder.actionsScorer as ActionsScorerTrainable<StateType, TransitionType,
-    ContextType, ItemType, FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+    InputContextType, ItemType, FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
 
   /**
    *
@@ -96,24 +96,24 @@ class SyntaxDecoderTrainer<
    * The best local action is applied with a greedy approach until the final state is reached.
    * Before applying it, the temporary result is compared to the gold [DependencyTree] to
    *
-   * @param context a generic [DecodingContext] used to decode
+   * @param context a generic [InputContext] used to decode
    * @param goldDependencyTree the gold [DependencyTree]
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    * @param beforeApplyAction callback called before applying the best action (default = null)
    *
    * @return the [DependencyTree] built following a greedy approach
    */
-  fun learn(context: ContextType,
+  fun learn(context: InputContextType,
             goldDependencyTree: DependencyTree,
             propagateToInput: Boolean,
             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                 context: ContextType) -> Unit)? = null): DependencyTree {
+                                 context: InputContextType) -> Unit)? = null): DependencyTree {
 
     val state: StateType = this.transitionSystem.getInitialState(
       itemIds = context.getInitialStateItemsId(),
       size = context.items.size)
 
-    val extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType> = ExtendedState(
+    val extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType> = ExtendedState(
       state = state,
       context = context,
       oracle = this.oracleFactory(goldDependencyTree),
@@ -143,10 +143,10 @@ class SyntaxDecoderTrainer<
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    * @param beforeApplyAction callback called before applying the best action (default = null)
    */
-  private fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  private fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                            propagateToInput: Boolean,
                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                                context: ContextType) -> Unit)?) {
+                                                context: InputContextType) -> Unit)?) {
 
     val scoringSupportStructure = this.supportStructuresFactory.localStructure(
       scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
@@ -210,9 +210,9 @@ class SyntaxDecoderTrainer<
    * @param beforeApplyAction callback called before applying the [action] (default = null)
    */
   private fun applyAction(action: Transition<TransitionType, StateType>.Action,
-                          extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+                          extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                           beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                               context: ContextType) -> Unit)?) {
+                                               context: InputContextType) -> Unit)?) {
 
     beforeApplyAction?.invoke(action, extendedState.context)  // external callback
 

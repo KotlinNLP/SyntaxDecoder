@@ -11,9 +11,9 @@ import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.Clonable
 
 /**
- * The [DecodingContext] extends the input with adding properties.
+ * The [InputContext] extends the input with adding properties.
  */
-interface DecodingContext<SelfType: DecodingContext<SelfType, ItemType>, ItemType: StateItem<ItemType, *, *>>
+interface InputContext<SelfType: InputContext<SelfType, ItemType>, ItemType: StateItem<ItemType, *, *>>
   : Clonable<SelfType> {
 
   /**

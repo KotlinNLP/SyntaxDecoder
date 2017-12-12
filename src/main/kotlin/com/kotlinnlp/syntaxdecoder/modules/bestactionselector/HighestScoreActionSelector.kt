@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.modules.bestactionselector
 
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
@@ -20,8 +20,8 @@ class HighestScoreActionSelector<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType, ItemType>>
-  : BestActionSelector<StateType, TransitionType, ItemType, ContextType> {
+  InputContextType : InputContext<InputContextType, ItemType>>
+  : BestActionSelector<StateType, TransitionType, ItemType, InputContextType> {
 
   /**
    * @param sortedActions a list of scored actions, sorted by descending score and then by transition priority
@@ -31,7 +31,7 @@ class HighestScoreActionSelector<
    */
   override fun select(
     sortedActions: List<Transition<TransitionType, StateType>.Action>,
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>
   ): Transition<TransitionType, StateType>.Action
     = sortedActions.first { it.isAllowed }
 }

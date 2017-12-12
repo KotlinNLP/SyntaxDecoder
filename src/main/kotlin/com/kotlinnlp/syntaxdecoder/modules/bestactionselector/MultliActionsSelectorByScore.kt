@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.modules.bestactionselector
 
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
@@ -21,8 +21,8 @@ class MultliActionsSelectorByScore<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType, ItemType>>
-  : MultiActionsSelector<StateType, TransitionType, ItemType, ContextType> {
+  InputContextType : InputContext<InputContextType, ItemType>>
+  : MultiActionsSelector<StateType, TransitionType, ItemType, InputContextType> {
 
   /**
    * @param sortedActions a list of scored actions, sorted by descending score and then by transition priority
@@ -32,7 +32,7 @@ class MultliActionsSelectorByScore<
    * @return the list of best actions among the given [sortedActions]
    */
   override fun select(sortedActions: List<Transition<TransitionType, StateType>.Action>,
-                      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+                      extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                       scoreThreshold: Double?): List<Transition<TransitionType, StateType>.Action> {
 
     assert(scoreThreshold == null || scoreThreshold <= 0.0) {

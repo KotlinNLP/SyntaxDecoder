@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.modules.supportstructures
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
@@ -20,11 +20,11 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 interface SupportStructuresFactory<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
   ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  out ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+  out ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
 {
 
@@ -45,6 +45,6 @@ interface SupportStructuresFactory<
    * @return a new scoring support structure associated to the given [scoringGlobalSupportStructure]
    */
   fun localStructure(scoringGlobalSupportStructure: ScoringGlobalStructureType,
-                     extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+                     extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                      actions: List<Transition<TransitionType, StateType>.Action>): ScoringStructureType
 }

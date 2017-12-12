@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.modules.actionserrorssetter
 
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
@@ -27,14 +27,14 @@ class HingeLossActionsErrorsSetter<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType, ItemType>>
+  InputContextType : InputContext<InputContextType, ItemType>>
 (
   private val learningMarginThreshold: Double = 1.0
 ) : ActionsErrorsSetter<
   StateType,
   TransitionType,
   ItemType,
-  ContextType>() {
+  InputContextType>() {
 
   /**
    * Assign errors to the given [sortedActions] using the given [extendedState] as context.
@@ -43,7 +43,7 @@ class HingeLossActionsErrorsSetter<
    * @param extendedState the extended state of the last scored actions
    */
   override fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
-                            extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
+                            extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>) {
 
     val oracle: Oracle<StateType, TransitionType> = checkNotNull(extendedState.oracle)
 

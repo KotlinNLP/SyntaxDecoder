@@ -7,7 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.modules.actionserrorssetter
 
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
@@ -24,7 +24,7 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType, ItemType>>
+  InputContextType : InputContext<InputContextType, ItemType>>
 (
   private val minRelevantError: Double = 1.0e-03
 ) :
@@ -32,7 +32,7 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
     StateType,
     TransitionType,
     ItemType,
-    ContextType>() {
+    InputContextType>() {
 
   /**
    * Assign errors to the given [sortedActions] using the given [extendedState] as context.
@@ -41,7 +41,7 @@ class SoftmaxCrossEntropyActionsErrorsSetter<
    * @param extendedState the extended state of the last scored actions
    */
   override fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
-                            extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
+                            extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>) {
 
     val oracle: Oracle<StateType, TransitionType> = checkNotNull(extendedState.oracle)
     val highestScoreCorrectAction = sortedActions.first { oracle.isCorrect(it) }

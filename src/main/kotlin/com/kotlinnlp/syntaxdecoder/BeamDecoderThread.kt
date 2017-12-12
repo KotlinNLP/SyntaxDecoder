@@ -10,7 +10,7 @@ package com.kotlinnlp.syntaxdecoder
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
@@ -42,25 +42,25 @@ import com.kotlinnlp.syntaxdecoder.utils.DaemonThread
 class BeamDecoderThread<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
   out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  out ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+  out ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
 (
   private val transitionSystem: TransitionSystem<StateType, TransitionType>,
   private val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  private val featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  private val featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
-  private val actionsScorer: ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  private val actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
-  private val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, ContextType>,
-  private val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
+  private val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, InputContextType>,
+  private val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
 ) :
   DaemonThread<
-    BeamDecoderThreadInput<StateType, TransitionType, ContextType, ItemType>,
+    BeamDecoderThreadInput<StateType, TransitionType, InputContextType, ItemType>,
     List<Transition<TransitionType, StateType>.Action>>() {
 
   /**
@@ -85,7 +85,7 @@ class BeamDecoderThread<
    *
    * @return the list of best actions to apply to the given state
    */
-  private fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  private fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                            scoreThreshold: Double?) {
 
     val scoredActions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(
@@ -109,7 +109,7 @@ class BeamDecoderThread<
    */
   private fun getScoredActions(
     scoringGlobalSupportStructure: ScoringGlobalStructureType,
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>
+    extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
     val scoringSupportStructure = this.supportStructuresFactory.localStructure(

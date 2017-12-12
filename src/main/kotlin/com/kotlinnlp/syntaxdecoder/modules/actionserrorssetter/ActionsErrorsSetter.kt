@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.modules.actionserrorssetter
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
@@ -20,7 +20,7 @@ abstract class ActionsErrorsSetter<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
   ItemType : StateItem<ItemType, *, *>,
-  ContextType : DecodingContext<ContextType, ItemType>> {
+  InputContextType : InputContext<InputContextType, ItemType>> {
 
   /**
    * Whether last assigned errors have been considered relevant.
@@ -35,7 +35,7 @@ abstract class ActionsErrorsSetter<
    * @param extendedState the extended state of the last scored actions
    */
   fun setErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
-                extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
+                extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>) {
 
     this.areErrorsRelevant = false
 
@@ -49,5 +49,5 @@ abstract class ActionsErrorsSetter<
    * @param extendedState the extended state of the last scored actions
    */
   abstract protected fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
-                                      extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>)
+                                      extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>)
 }

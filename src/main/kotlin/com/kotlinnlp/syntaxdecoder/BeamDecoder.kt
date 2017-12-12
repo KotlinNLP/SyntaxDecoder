@@ -15,7 +15,7 @@ import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
@@ -48,27 +48,27 @@ import com.kotlinnlp.syntaxdecoder.utils.groupBySize
 class BeamDecoder<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
   ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
 (
   val beamSize: Int,
   val maxParallelThreads: Int,
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
-  featuresExtractor: FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
-  actionsScorer: ActionsScorer<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>,
-  val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, ContextType>,
-  supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, ContextType, ItemType,
+  val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, InputContextType>,
+  supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
   scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
-  SyntaxDecoder<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
+  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
     ScoringStructureType>
   (
     transitionSystem = transitionSystem,
@@ -105,7 +105,8 @@ class BeamDecoder<
   /**
    * The array of parallel states of a beam (elements can be null, all by default).
    */
-  private val beamStates = arrayOfNulls<ExtendedState<StateType, TransitionType, ItemType, ContextType>>(this.beamSize)
+  private val beamStates =
+    arrayOfNulls<ExtendedState<StateType, TransitionType, ItemType, InputContextType>>(this.beamSize)
 
   /**
    * The list beam threads, one per processing state.
@@ -138,9 +139,9 @@ class BeamDecoder<
    *
    * @return a dependency tree
    */
-  override fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
+  override fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                                 context: ContextType) -> Unit)?): DependencyTree {
+                                                 context: InputContextType) -> Unit)?): DependencyTree {
 
     try {
 
@@ -174,7 +175,7 @@ class BeamDecoder<
    *
    * @param extendedState the initializing extended state
    */
-  private fun initBeam(extendedState: ExtendedState<StateType, TransitionType, ItemType, ContextType>) {
+  private fun initBeam(extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>) {
 
     this.beamStates[0] = extendedState
 
@@ -184,7 +185,7 @@ class BeamDecoder<
   /**
    * @return a new [BeamDecoderThread] already started.
    */
-  private fun buildThread(): BeamDecoderThread<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  private fun buildThread(): BeamDecoderThread<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType> {
 
     val thread = BeamDecoderThread(
@@ -229,7 +230,7 @@ class BeamDecoder<
   /**
    * @return the last terminal beam state (the one with the lowest log score) or null if none
    */
-  private fun getLastTerminalState(): ExtendedState<StateType, TransitionType, ItemType, ContextType>? =
+  private fun getLastTerminalState(): ExtendedState<StateType, TransitionType, ItemType, InputContextType>? =
     if (this.beamStates.none { it != null && it.state.isTerminal })
       null
     else
@@ -250,7 +251,7 @@ class BeamDecoder<
 
     bestActionsPerState.forEachIndexed { stateIndex, actions ->
       if (actions != null) {
-        val state: ExtendedState<StateType, TransitionType, ItemType, ContextType> = this.beamStates[stateIndex]!!
+        val state: ExtendedState<StateType, TransitionType, ItemType, InputContextType> = this.beamStates[stateIndex]!!
         actionTriples.addAll(actions.map {
           ActionTriple(futureScore = state.estimateFutureScore(it), stateIndex = stateIndex, action = it)
         })
@@ -277,7 +278,7 @@ class BeamDecoder<
    */
   private fun updateBeam(bestActions: List<ActionPair<StateType, TransitionType>>,
                          beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                                              context: ContextType) -> Unit)?) {
+                                              context: InputContextType) -> Unit)?) {
 
     val terminalStates = this.beamStates.filter { it != null && it.state.isTerminal }.map { it!! }
     val newStates = bestActions.map { it.applyAndBuildNewState(beforeApplyAction) }
@@ -291,7 +292,7 @@ class BeamDecoder<
    *
    * @param states the states to replace in the current beam
    */
-  private fun replaceBeamStates(states: List<ExtendedState<StateType, TransitionType, ItemType, ContextType>>) {
+  private fun replaceBeamStates(states: List<ExtendedState<StateType, TransitionType, ItemType, InputContextType>>) {
     assert(states.size <= this.beamStates.size)
 
     (0 until this.beamStates.size).forEach { i ->
@@ -302,8 +303,8 @@ class BeamDecoder<
   /**
    * Loop extended states containing terminal states, with index.
    */
-  private fun Array<ExtendedState<StateType, TransitionType, ItemType, ContextType>?>.forEachTerminal(
-    callback: (stateIndex: Int, state: ExtendedState<StateType, TransitionType, ItemType, ContextType>) -> Unit
+  private fun Array<ExtendedState<StateType, TransitionType, ItemType, InputContextType>?>.forEachTerminal(
+    callback: (stateIndex: Int, state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>) -> Unit
   ) {
     this.forEachIndexed { stateIndex, state ->
       if (state != null && state.state.isTerminal) {
@@ -321,8 +322,8 @@ class BeamDecoder<
    */
   private fun ActionPair<StateType, TransitionType>.applyAndBuildNewState(
     beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
-                         context: ContextType) -> Unit)?
-  ): ExtendedState<StateType, TransitionType, ItemType, ContextType> {
+                         context: InputContextType) -> Unit)?
+  ): ExtendedState<StateType, TransitionType, ItemType, InputContextType> {
 
     val newState: StateType = this.action.apply(copyState = true)
     val newExtendedState = this@BeamDecoder.beamStates[this.stateIndex]!!.clone(state = newState)
@@ -337,17 +338,17 @@ class BeamDecoder<
   /**
    * Loop threads and related states (with index), only whose state is not null.
    */
-  private fun List<BeamDecoderThread<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+  private fun List<BeamDecoderThread<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType, ScoringStructureType>>.forEachNotNullState(
     callback: (stateIndex: Int,
-               state: ExtendedState<StateType, TransitionType, ItemType, ContextType>,
-               thread: BeamDecoderThread<StateType, TransitionType, ContextType, ItemType, FeaturesType,
+               state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
+               thread: BeamDecoderThread<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
                  ScoringGlobalStructureType, ScoringStructureType>) -> Unit) {
 
     this.forEach { thread ->
 
       val stateIndex: Int = thread.getStateIndex()
-      val state: ExtendedState<StateType, TransitionType, ItemType, ContextType>?
+      val state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>?
         = this@BeamDecoder.beamStates[stateIndex]
 
       if (state != null) {

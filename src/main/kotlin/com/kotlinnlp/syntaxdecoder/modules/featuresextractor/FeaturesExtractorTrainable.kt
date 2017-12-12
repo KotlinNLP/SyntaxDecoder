@@ -13,7 +13,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.BatchScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.utils.scheduling.ExampleScheduling
-import com.kotlinnlp.syntaxdecoder.context.DecodingContext
+import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
@@ -25,14 +25,14 @@ import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStruc
 abstract class FeaturesExtractorTrainable<
   StateType : State<StateType>,
   TransitionType : Transition<TransitionType, StateType>,
-  ContextType : DecodingContext<ContextType, ItemType>,
+  InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
   out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, ContextType, ItemType,
+  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
     FeaturesType, ScoringGlobalStructureType>>
   :
-  FeaturesExtractor<StateType, TransitionType, ContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
+  FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
     ScoringStructureType>(),
   ExampleScheduling,
   BatchScheduling,

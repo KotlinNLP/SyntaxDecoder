@@ -29,10 +29,12 @@ abstract class TransitionSystem<StateType : State<StateType>, TransitionType : T
    * Initialization function, mapping an ordered list of [itemIds] to an initial state.
    *
    * @property itemIds the list of item ids used to initialize the state
+   * @property size the size of the sentence
    *
    * @return a new initialized [State]
    */
-  fun getInitialState(itemIds: List<Int>): StateType = this.stateClass.constructors.first().call(itemIds)
+  fun getInitialState(itemIds: List<Int>, size: Int): StateType
+    = this.stateClass.constructors.first().call(itemIds, size)
 
   /**
    * Generate valid transitions for a given [state].

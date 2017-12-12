@@ -21,7 +21,6 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 
 /**
@@ -46,23 +45,19 @@ class GreedyDecoder<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType>>
+  ScoringGlobalStructureType : ScoringGlobalSupportStructure>
 (
   transitionSystem: TransitionSystem<StateType, TransitionType>,
   actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType, ScoringStructureType>,
+    ScoringGlobalStructureType>,
   actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType, ScoringStructureType>,
+    ScoringGlobalStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, InputContextType>,
-  supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
+  supportStructuresFactory: SupportStructuresFactory<ScoringGlobalStructureType>,
   scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
-  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
-    ScoringStructureType>
+  SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>
   (
     transitionSystem = transitionSystem,
     actionsGenerator = actionsGenerator,

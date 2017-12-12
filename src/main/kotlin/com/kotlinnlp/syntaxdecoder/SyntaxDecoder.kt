@@ -19,9 +19,9 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
+import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 
 /**
  * The [SyntaxDecoder] decodes the implicit syntax of a list of items building a dependency tree.
@@ -42,18 +42,15 @@ abstract class SyntaxDecoder<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType>>
+  ScoringGlobalStructureType : ScoringGlobalSupportStructure>
 (
   val transitionSystem: TransitionSystem<StateType, TransitionType>,
   val actionsGenerator: ActionsGenerator<StateType, TransitionType>,
   val featuresExtractor: FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType, ScoringStructureType>,
+    ScoringGlobalStructureType>,
   val actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType, ScoringStructureType>,
-  val supportStructuresFactory: SupportStructuresFactory<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType, ScoringStructureType>,
+    ScoringGlobalStructureType>,
+  val supportStructuresFactory: SupportStructuresFactory<ScoringGlobalStructureType>,
   val scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) {
 
@@ -108,16 +105,15 @@ abstract class SyntaxDecoder<
     extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>
   ): List<Transition<TransitionType, StateType>.Action> {
 
-    val scoringSupportStructure = this.supportStructuresFactory.localStructure(
-      scoringGlobalSupportStructure = scoringGlobalSupportStructure,
+    val decodingContext = DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>(
       actions = this.actionsGenerator.generateFrom(
         transitions = this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
-    this.featuresExtractor.setFeatures(scoringSupportStructure)
+    this.featuresExtractor.setFeatures(decodingContext = decodingContext, supportStructure = scoringGlobalSupportStructure)
 
-    this.actionsScorer.score(scoringSupportStructure)
+    this.actionsScorer.score(decodingContext = decodingContext, supportStructure = scoringGlobalSupportStructure)
 
-    return scoringSupportStructure.sortedActions
+    return decodingContext.sortedActions
   }
 }

@@ -17,7 +17,7 @@ import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 
 /**
  * The trainable [FeaturesExtractor].
@@ -28,23 +28,25 @@ abstract class FeaturesExtractorTrainable<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType>>
+  in ScoringGlobalStructureType : ScoringGlobalSupportStructure>
   :
-  FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType,
-    ScoringStructureType>(),
+  FeaturesExtractor<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>(),
   ExampleScheduling,
   BatchScheduling,
   EpochScheduling,
   Updatable {
 
   /**
-   * Backward errors through this [FeaturesExtractor], starting from the features of the given [structure].
+   * Backward errors through this [FeaturesExtractor], starting from the errors of the features contained in the given
+   * [decodingContext].
    * Errors are required to be already set into the given features.
    *
-   * @param structure the scoring support structure that contains extracted features with their errors
+   * @param decodingContext the decoding context that contains extracted features with their errors
+   * @param supportStructure the decoding support structure
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
-  abstract fun backward(structure: ScoringStructureType, propagateToInput: Boolean)
+  abstract fun backward(
+    decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
+    supportStructure: ScoringGlobalStructureType,
+    propagateToInput: Boolean)
 }

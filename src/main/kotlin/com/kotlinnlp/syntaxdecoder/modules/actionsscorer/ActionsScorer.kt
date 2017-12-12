@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 
 /**
@@ -24,14 +24,16 @@ abstract class ActionsScorer<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  out ScoringGlobalStructureType: ScoringGlobalSupportStructure,
-  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType>> {
+  in ScoringGlobalStructureType : ScoringGlobalSupportStructure> {
 
   /**
-   * Assign scores to the actions contained into the given [structure] using the features contained in it.
+   * Assign scores to the actions contained into the given [decodingContext] using the features contained in it and the
+   * given [supportStructure].
    *
-   * @param structure the scoring support structure that contains the actions to score
+   * @param decodingContext the decoding context that contains the actions to score
+   * @param supportStructure the decoding support structure
    */
-  abstract fun score(structure: ScoringStructureType)
+  abstract fun score(
+    decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
+    supportStructure: ScoringGlobalStructureType)
 }

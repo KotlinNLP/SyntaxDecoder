@@ -13,7 +13,7 @@ import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 
 /**
  * The features extractor.
@@ -24,25 +24,31 @@ abstract class FeaturesExtractor<
   InputContextType : InputContext<InputContextType, ItemType>,
   ItemType : StateItem<ItemType, *, *>,
   FeaturesType : Features<*, *>,
-  out ScoringGlobalStructureType : ScoringGlobalSupportStructure,
-  in ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType>> {
+  in ScoringGlobalStructureType : ScoringGlobalSupportStructure> {
 
   /**
-   * Set the features property in the given [supportStructure].
+   * Set the features property in the given [decodingContext] using the given [supportStructure].
    *
-   * @param supportStructure the scoring support structure in which to set the extracted features
+   * @param decodingContext the decoding context in which to set the extracted features
+   * @param supportStructure the decoding support structure
    */
-  fun setFeatures(supportStructure: ScoringStructureType) {
-    supportStructure.features = this.extract(supportStructure)
+  fun setFeatures(
+    decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
+    supportStructure: ScoringGlobalStructureType
+  ) {
+    decodingContext.features = this.extract(decodingContext = decodingContext, supportStructure = supportStructure)
   }
 
   /**
-   * Extract features using the given [structure].
+   * Extract features using the given [decodingContext] amd [supportStructure].
    *
-   * @param structure the scoring support structure
+   * @param decodingContext the decoding context
+   * @param supportStructure the decoding support structure
    *
-   * @return the extracted [Features]
+   * @return the extracted features
    */
-  abstract protected fun extract(structure: ScoringStructureType): FeaturesType
+  abstract protected fun extract(
+    decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
+    supportStructure: ScoringGlobalStructureType
+  ): FeaturesType
 }

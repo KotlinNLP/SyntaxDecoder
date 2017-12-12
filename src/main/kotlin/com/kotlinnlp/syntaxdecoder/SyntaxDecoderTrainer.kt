@@ -21,7 +21,7 @@ import com.kotlinnlp.syntaxdecoder.utils.scheduling.EpochScheduling
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTrainable
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringSupportStructure
+import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
 import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
@@ -37,12 +37,10 @@ class SyntaxDecoderTrainer<
   ItemType : StateItem<ItemType, *, *>,
   FeaturesErrorsType: FeaturesErrors,
   FeaturesType : Features<FeaturesErrorsType, *>,
-  out ScoringGlobalStructureType: ScoringGlobalSupportStructure,
-  ScoringStructureType : ScoringSupportStructure<StateType, TransitionType, InputContextType, ItemType,
-    FeaturesType, ScoringGlobalStructureType>>
+  out ScoringGlobalStructureType : ScoringGlobalSupportStructure>
 (
   private val syntaxDecoder: SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
-    ScoringGlobalStructureType, ScoringStructureType>,
+    ScoringGlobalStructureType>,
   private val actionsErrorsSetter: ActionsErrorsSetter<StateType, TransitionType, ItemType, InputContextType>,
   private val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, InputContextType>,
   private val oracleFactory: OracleFactory<StateType, TransitionType>
@@ -77,7 +75,7 @@ class SyntaxDecoderTrainer<
    */
   @Suppress("UNCHECKED_CAST")
   private val actionsScorer = this.syntaxDecoder.actionsScorer as ActionsScorerTrainable<StateType, TransitionType,
-    InputContextType, ItemType, FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType, ScoringStructureType>
+    InputContextType, ItemType, FeaturesErrorsType, FeaturesType, ScoringGlobalStructureType>
 
   /**
    *
@@ -148,19 +146,17 @@ class SyntaxDecoderTrainer<
                            beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                 context: InputContextType) -> Unit)?) {
 
-    val scoringSupportStructure = this.supportStructuresFactory.localStructure(
-      scoringGlobalSupportStructure = this.scoringGlobalSupportStructure,
-      actions = this.actionsGenerator.generateFrom(
-        transitions = this.transitionSystem.generateTransitions(extendedState.state)),
+    val decodingContext = DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>(
+      actions = this.actionsGenerator.generateFrom(this.transitionSystem.generateTransitions(extendedState.state)),
       extendedState = extendedState)
 
-    this.scoreActions(structure = scoringSupportStructure)
+    this.scoreActions(decodingContext = decodingContext)
 
-    this.calculateAndPropagateErrors(structure = scoringSupportStructure, propagateToInput = propagateToInput)
+    this.calculateAndPropagateErrors(decodingContext = decodingContext, propagateToInput = propagateToInput)
 
     this.applyAction(
       action = this.bestActionSelector.select(
-        sortedActions = scoringSupportStructure.sortedActions,
+        sortedActions = decodingContext.sortedActions,
         extendedState = extendedState),
       extendedState = extendedState,
       beforeApplyAction = beforeApplyAction)
@@ -169,35 +165,54 @@ class SyntaxDecoderTrainer<
   /**
    * Score the actions allowed in a given state.
    *
-   * @param structure the scoring support structure
+   * @param decodingContext the decoding context in which to set the extracted features and scored actions
    */
-  private fun scoreActions(structure: ScoringStructureType) {
+  private fun scoreActions(
+    decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>
+  ) {
 
-    this.featuresExtractor.setFeatures(structure)
-    this.actionsScorer.score(structure)
+    this.featuresExtractor.setFeatures(
+      decodingContext = decodingContext,
+      supportStructure = this.scoringGlobalSupportStructure)
+
+    this.actionsScorer.score(
+      decodingContext = decodingContext,
+      supportStructure = this.scoringGlobalSupportStructure)
   }
 
   /**
    * Calculate and propagate the errors of the actions in the given support structure respect to a current state.
    *
-   * @param structure the scoring support structure
+   * @param decodingContext the decoding context that contains the extracted features and the scored actions
    * @param propagateToInput a Boolean indicating whether errors must be propagated to the input
    */
-  private fun calculateAndPropagateErrors(structure: ScoringStructureType, propagateToInput: Boolean){
+  private fun calculateAndPropagateErrors(
+    decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
+    propagateToInput: Boolean){
 
     this.actionsErrorsSetter.setErrors(
-      sortedActions = structure.sortedActions,
-      extendedState = structure.extendedState)
+      sortedActions = decodingContext.sortedActions,
+      extendedState = decodingContext.extendedState)
 
     if (this.actionsErrorsSetter.areErrorsRelevant) {
 
       this.relevantErrorsCount++
 
-      this.actionsScorer.backward(structure = structure, propagateToInput = propagateToInput)
+      this.actionsScorer.backward(
+        decodingContext = decodingContext,
+        supportStructure = this.scoringGlobalSupportStructure,
+        propagateToInput = propagateToInput)
 
       if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
-        structure.features.errors = this.actionsScorer.getFeaturesErrors(structure)
-        this.featuresExtractor.backward(structure = structure, propagateToInput = propagateToInput)
+
+        decodingContext.features.errors = this.actionsScorer.getFeaturesErrors(
+          decodingContext = decodingContext,
+          supportStructure = this.scoringGlobalSupportStructure)
+
+        this.featuresExtractor.backward(
+          decodingContext = decodingContext,
+          supportStructure = this.scoringGlobalSupportStructure,
+          propagateToInput = propagateToInput)
       }
     }
   }

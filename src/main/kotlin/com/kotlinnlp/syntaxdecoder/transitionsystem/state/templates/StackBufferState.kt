@@ -13,8 +13,12 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * The StackBufferState.
  *
  * @property itemIds the list of item ids used to initialize the state
+ * @property size the size of the sentence used to initialize the state
  */
-class StackBufferState(itemIds: List<Int>) : State<StackBufferState>(itemIds) {
+class StackBufferState(
+  itemIds: List<Int>,
+  size: Int
+) : State<StackBufferState>(itemIds, size) {
 
   /**
    * The buffer.
@@ -41,7 +45,7 @@ class StackBufferState(itemIds: List<Int>) : State<StackBufferState>(itemIds) {
    */
   override fun copy(): StackBufferState {
 
-    val clonedState = StackBufferState(this.itemIds)
+    val clonedState = StackBufferState(this.itemIds, this.size)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
     clonedState.buffer = ArrayList(this.buffer)

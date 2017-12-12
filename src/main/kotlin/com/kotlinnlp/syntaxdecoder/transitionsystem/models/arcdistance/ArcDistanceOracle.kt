@@ -86,7 +86,7 @@ class ArcDistanceOracle(goldDependencyTree: DependencyTree)
     }
 
   /**
-   * Update the Oracle (the loss and its support structures) with a given [transition].
+   * Update the Oracle (the loss and its support structure) with a given [transition].
    * Make sure that the [transition] is allowed before calling the method.
    * Note that it is crucial to update the oracle before applying the [transition] to a state.
    *

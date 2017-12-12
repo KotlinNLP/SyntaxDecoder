@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder
 
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
@@ -16,7 +16,7 @@ import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.MultiActionsSelector
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.SupportStructureFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
@@ -37,7 +37,7 @@ import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
  * @param featuresExtractor a features extractor
  * @param actionsScorer an actions scorer
  * @param multiActionsSelector a multiple actions selector
- * @param supportStructuresFactory a support structures factory
+ * @param supportStructureFactory a support structure factory
  */
 class BeamDecoderThread<
   StateType : State<StateType>,
@@ -54,7 +54,7 @@ class BeamDecoderThread<
   private val actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType>,
   private val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, InputContextType>,
-  private val supportStructuresFactory: SupportStructuresFactory<ScoringGlobalStructureType>
+  private val supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>
 ) :
   DaemonThread<
     BeamDecoderThreadInput<StateType, TransitionType, InputContextType, ItemType>,
@@ -64,7 +64,7 @@ class BeamDecoderThread<
    * The global support structure to score actions and extract features.
    */
   private val scoringGlobalSupportStructure: ScoringGlobalStructureType
-    = this.supportStructuresFactory.globalStructure()
+    = this.supportStructureFactory.globalStructure()
 
   /**
    * Called every time a new input is written into this thread.

@@ -12,7 +12,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
@@ -20,7 +20,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.MultiActionsSelector
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.SupportStructureFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 import com.kotlinnlp.syntaxdecoder.utils.DaemonThread
 import com.kotlinnlp.syntaxdecoder.utils.groupBySize
@@ -41,7 +41,7 @@ import com.kotlinnlp.syntaxdecoder.utils.groupBySize
  * @property featuresExtractor a features extractor
  * @property actionsScorer an actions scorer
  * @property multiActionsSelector a multiple actions selector
- * @property supportStructuresFactory a support structures factory
+ * @property supportStructureFactory a support structure factory
  * @property scoreAccumulatorFactory a factory of score accumulators
  */
 class BeamDecoder<
@@ -61,7 +61,7 @@ class BeamDecoder<
   actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType>,
   val multiActionsSelector: MultiActionsSelector<StateType, TransitionType, ItemType, InputContextType>,
-  supportStructuresFactory: SupportStructuresFactory<ScoringGlobalStructureType>,
+  supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>,
   scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
   SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>
@@ -70,7 +70,7 @@ class BeamDecoder<
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,
-    supportStructuresFactory = supportStructuresFactory,
+    supportStructureFactory = supportStructureFactory,
     scoreAccumulatorFactory = scoreAccumulatorFactory
   ) {
 
@@ -189,7 +189,7 @@ class BeamDecoder<
       featuresExtractor = this.featuresExtractor,
       actionsScorer = this.actionsScorer,
       multiActionsSelector = this.multiActionsSelector,
-      supportStructuresFactory = this.supportStructuresFactory)
+      supportStructureFactory = this.supportStructureFactory)
 
     thread.start()
 

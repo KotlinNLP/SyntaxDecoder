@@ -18,7 +18,7 @@ import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
 
 /**
  * The trainable [ActionsScorer].

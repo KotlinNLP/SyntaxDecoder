@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-package com.kotlinnlp.syntaxdecoder.modules.supportstructures
+package com.kotlinnlp.syntaxdecoder.modules.supportstructure
 
 import com.kotlinnlp.syntaxdecoder.SyntaxDecoder
 

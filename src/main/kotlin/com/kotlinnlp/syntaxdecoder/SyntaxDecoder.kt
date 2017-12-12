@@ -13,12 +13,12 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
 import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.SupportStructureFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
@@ -33,7 +33,7 @@ import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
  * @property actionsGenerator an actions generator
  * @property featuresExtractor a features extractor
  * @property actionsScorer an actions scorer
- * @property supportStructuresFactory a support structures factory
+ * @property supportStructureFactory a support structure factory
  * @property scoreAccumulatorFactory a factory of score accumulators
  */
 abstract class SyntaxDecoder<
@@ -50,7 +50,7 @@ abstract class SyntaxDecoder<
     ScoringGlobalStructureType>,
   val actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType>,
-  val supportStructuresFactory: SupportStructuresFactory<ScoringGlobalStructureType>,
+  val supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>,
   val scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) {
 

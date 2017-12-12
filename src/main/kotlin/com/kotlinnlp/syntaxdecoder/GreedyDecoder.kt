@@ -13,14 +13,14 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.TransitionSystem
 import com.kotlinnlp.syntaxdecoder.transitionsystem.ActionsGenerator
 import com.kotlinnlp.syntaxdecoder.modules.bestactionselector.BestActionSelector
 import com.kotlinnlp.syntaxdecoder.modules.actionsscorer.ActionsScorer
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractor
 import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.features.Features
 import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.SupportStructuresFactory
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.SupportStructureFactory
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.ScoreAccumulator
 
 /**
@@ -36,7 +36,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator.Score
  * @property featuresExtractor a features extractor
  * @property actionsScorer an actions scorer
  * @property bestActionSelector a best action selector
- * @property supportStructuresFactory a support structures factory
+ * @property supportStructureFactory a support structure factory
  * @property scoreAccumulatorFactory a factory of score accumulators
  */
 class GreedyDecoder<
@@ -54,7 +54,7 @@ class GreedyDecoder<
   actionsScorer: ActionsScorer<StateType, TransitionType, InputContextType, ItemType, FeaturesType,
     ScoringGlobalStructureType>,
   val bestActionSelector: BestActionSelector<StateType, TransitionType, ItemType, InputContextType>,
-  supportStructuresFactory: SupportStructuresFactory<ScoringGlobalStructureType>,
+  supportStructureFactory: SupportStructureFactory<ScoringGlobalStructureType>,
   scoreAccumulatorFactory: ScoreAccumulator.Factory
 ) :
   SyntaxDecoder<StateType, TransitionType, InputContextType, ItemType, FeaturesType, ScoringGlobalStructureType>
@@ -63,14 +63,14 @@ class GreedyDecoder<
     actionsGenerator = actionsGenerator,
     featuresExtractor = featuresExtractor,
     actionsScorer = actionsScorer,
-    supportStructuresFactory = supportStructuresFactory,
+    supportStructureFactory = supportStructureFactory,
     scoreAccumulatorFactory = scoreAccumulatorFactory
   ) {
 
   /**
    * The support structure to score actions and extract features.
    */
-  private val scoringGlobalSupportStructure = this.supportStructuresFactory.globalStructure()
+  private val scoringGlobalSupportStructure = this.supportStructureFactory.globalStructure()
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.

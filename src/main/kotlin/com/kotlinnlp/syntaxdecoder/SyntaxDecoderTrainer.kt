@@ -22,7 +22,7 @@ import com.kotlinnlp.syntaxdecoder.modules.featuresextractor.FeaturesExtractorTr
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
 import com.kotlinnlp.syntaxdecoder.utils.DecodingContext
-import com.kotlinnlp.syntaxdecoder.modules.supportstructures.ScoringGlobalSupportStructure
+import com.kotlinnlp.syntaxdecoder.modules.supportstructure.ScoringGlobalSupportStructure
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.ExtendedState
 import com.kotlinnlp.syntaxdecoder.utils.Updatable
 
@@ -80,14 +80,14 @@ class SyntaxDecoderTrainer<
   /**
    *
    */
-  private val supportStructuresFactory = this.syntaxDecoder.supportStructuresFactory
+  private val supportStructureFactory = this.syntaxDecoder.supportStructureFactory
 
 
   /**
    * The support structure of the [actionsScorer].
    */
   private val scoringGlobalSupportStructure: ScoringGlobalStructureType
-    = this.supportStructuresFactory.globalStructure()
+    = this.supportStructureFactory.globalStructure()
 
   /**
    * Learn from a single example composed by a list of items and the expected gold [DependencyTree].

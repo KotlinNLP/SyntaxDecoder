@@ -232,6 +232,7 @@ class SyntaxDecoderTrainer<
     beforeApplyAction?.invoke(action, extendedState.context)  // external callback
 
     extendedState.oracle!!.apply(action.transition)
+    extendedState.addAction(action)
 
     action.apply()
   }

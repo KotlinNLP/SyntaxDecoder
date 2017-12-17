@@ -43,11 +43,16 @@ data class ExtendedState<
   val appliedActions = mutableListOf<Transition<TransitionType, StateType>.Action>()
 
   /**
-   * Accumulate the given [addingScore] into this state .
+   * Add the given [appliedAction] to this state.
    *
-   * @param addingScore the adding score
+   * @param appliedAction the last action applied to this state
    */
-  fun accumulateScore(addingScore: Double) = this.scoreAccumulator.accumulate(addingScore)
+  fun addAction(appliedAction: Transition<TransitionType, StateType>.Action) {
+
+    this.scoreAccumulator.accumulate(appliedAction.score)
+
+    this.appliedActions.add(appliedAction)
+  }
 
   /**
    * Simulate the application of a given [action] to the [state], returning the estimated future score.

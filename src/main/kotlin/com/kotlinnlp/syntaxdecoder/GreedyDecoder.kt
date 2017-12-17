@@ -92,7 +92,7 @@ class GreedyDecoder<
       beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback
 
       bestAction.apply()
-      extendedState.accumulateScore(bestAction.score)
+      extendedState.addAction(bestAction)
     }
 
     return extendedState.state.dependencyTree

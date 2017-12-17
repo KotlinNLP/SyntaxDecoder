@@ -323,7 +323,7 @@ class BeamDecoder<
     val newState: StateType = this.action.apply(copyState = true)
     val newExtendedState = this@BeamDecoder.beamStates[this.stateIndex]!!.clone(state = newState)
 
-    newExtendedState.accumulateScore(this.action.score)
+    newExtendedState.addAction(this.action)
 
     beforeApplyAction?.invoke(this.action, newExtendedState.context) // external callback
 

@@ -38,6 +38,11 @@ data class ExtendedState<
   val score: Double get() = this.scoreAccumulator.getCurrent()
 
   /**
+   * The list of the actions that have been applied to this state since its creation.
+   */
+  val appliedActions = mutableListOf<Transition<TransitionType, StateType>.Action>()
+
+  /**
    * Accumulate the given [addingScore] into this state .
    *
    * @param addingScore the adding score
@@ -59,9 +64,16 @@ data class ExtendedState<
    *
    * @return a clone of this [ExtendedState] replacing its state with the given [state]
    */
-  fun clone(state: StateType): ExtendedState<StateType, TransitionType, ItemType, InputContextType> = ExtendedState(
-    state = state,
-    context = this.context.copy(),
-    oracle = this.oracle?.copy(),
-    scoreAccumulator = this.scoreAccumulator.copy())
+  fun clone(state: StateType): ExtendedState<StateType, TransitionType, ItemType, InputContextType> {
+
+    val clonedState = ExtendedState(
+      state = state,
+      context = this.context.copy(),
+      oracle = this.oracle?.copy(),
+      scoreAccumulator = this.scoreAccumulator.copy())
+
+    clonedState.appliedActions.addAll(this.appliedActions)
+
+    return clonedState
+  }
 }

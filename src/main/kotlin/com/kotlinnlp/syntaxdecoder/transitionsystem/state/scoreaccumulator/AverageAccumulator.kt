@@ -8,7 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state.scoreaccumulator
 
 /**
- * The score accumulator that does the average of the accumulations.
+ * The score accumulator that executes the average of the accumulations.
  */
 class AverageAccumulator : ScoreAccumulator<AverageAccumulator>() {
 

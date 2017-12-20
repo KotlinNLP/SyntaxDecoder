@@ -35,7 +35,7 @@ class MultliActionsSelectorByScore<
                       extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                       scoreThreshold: Double?): List<Transition<TransitionType, StateType>.Action> {
 
-    assert(scoreThreshold == null || scoreThreshold <= 0.0) {
+    require(scoreThreshold == null || scoreThreshold <= 0.0) {
       "The score threshold must be <= 0.0 (given $scoreThreshold)."
     }
 

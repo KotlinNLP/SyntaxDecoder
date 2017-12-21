@@ -82,5 +82,5 @@ class LogarithmicAccumulator : ScoreAccumulator<LogarithmicAccumulator>() {
    *
    * @return the score in the new domain
    */
-  private fun convertDomain(score: Double): Double = 1 / (-0.1 * this.getNextAccumulatedScore(score) + 1)
+  private fun convertDomain(score: Double): Double = 1 / (-0.1 * score + 1)
 }

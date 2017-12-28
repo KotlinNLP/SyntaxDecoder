@@ -23,6 +23,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwift
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcswift.ArcSwiftOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.ArcDistance
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcdistance.ArcDistanceOracle
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcrelocate.ArcRelocate
+import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arcrelocate.ArcRelocateOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.Covington
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.CovingtonOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.NLCovington
@@ -91,7 +93,10 @@ fun main(args: Array<String>){
       oracleFactory = EasyFirstOracle.Factory,
       errorExploring = false)
 
-    TransitionSystemType.ARC_RELOCATE -> TODO("not-implemented")
+    TransitionSystemType.ARC_RELOCATE -> TransitionSystemCoverage(
+      transitionSystem = ArcRelocate(),
+      oracleFactory = ArcRelocateOracle.Factory,
+      errorExploring = false)
 
     TransitionSystemType.COVINGTON ->  TransitionSystemCoverage(
       transitionSystem = Covington(),

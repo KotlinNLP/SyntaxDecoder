@@ -17,6 +17,19 @@ unstudied systems. Different types of oracle (*static*, *non-deterministic*, *dy
 them.
 
 
+## Getting Started
+
+### Import with Maven
+
+```xml
+<dependency>
+    <groupId>com.kotlinnlp</groupId>
+    <artifactId>syntaxdecoder</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+
 ## License
 
 This software is released under the terms of the

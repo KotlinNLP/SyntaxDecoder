@@ -1,4 +1,4 @@
-# SyntaxDecoder
+# SyntaxDecoder [![GitHub version](https://badge.fury.io/gh/KotlinNLP%2FSyntaxDecoder.svg)](https://badge.fury.io/gh/KotlinNLP%2FSyntaxDecoder) [![Build Status](https://travis-ci.org/KotlinNLP/SyntaxDecoder.svg?branch=master)](https://travis-ci.org/KotlinNLP/SyntaxDecoder)
 
 SyntaxDecoder is a generalized transition-based parsing framework designed to simplify the development of 
 statistical transition-based dependency parsers.

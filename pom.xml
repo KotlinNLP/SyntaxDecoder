@@ -57,7 +57,6 @@
         <maven-source-plugin.version>3.0.0</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
         <kotlin.version>1.2.41</kotlin.version>
-        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <surfire.version>2.19.1</surfire.version>
         <spek.version>1.1.5</spek.version>
         <dokka.version>0.9.16</dokka.version>

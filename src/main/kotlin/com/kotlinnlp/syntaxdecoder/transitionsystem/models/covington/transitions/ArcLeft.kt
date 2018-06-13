@@ -54,7 +54,7 @@ class ArcLeft(
   override val isAllowed: Boolean get() = this.refState.buffer.isNotEmpty()
     && this.refState.stack1.size >= this.dependentStack1Index
     && this.refState.dependencyTree.heads[this.dependentId] == null
-    && !this.refState.dependencyTree.checkCycleWith(dependent = this.dependentId, governor = this.governorId)
+    && !this.refState.dependencyTree.introduceCycle(dependent = this.dependentId, governor = this.governorId)
 
   /**
    * Perform this [Transition] on the given [state].

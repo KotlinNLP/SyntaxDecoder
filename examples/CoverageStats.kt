@@ -6,7 +6,6 @@
  * ------------------------------------------------------------------*/
 
 import com.kotlinnlp.conllio.CoNLLReader
-import com.kotlinnlp.progressindicator.ProgressIndicatorBar
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpine
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.arceagerspine.ArcEagerSpineOracle
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.archybrid.ArcHybrid
@@ -30,6 +29,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.CovingtonOr
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.NLCovington
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirst
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstOracle
+import com.kotlinnlp.utils.progressindicator.ProgressIndicatorBar
 
 /**
  * Test the coverage a Transition System for the language with the given tree-bank.

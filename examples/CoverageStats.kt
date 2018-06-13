@@ -30,6 +30,7 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.models.covington.NLCovington
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirst
 import com.kotlinnlp.syntaxdecoder.transitionsystem.models.easyfirst.EasyFirstOracle
 import com.kotlinnlp.utils.progressindicator.ProgressIndicatorBar
+import java.io.File
 
 /**
  * Test the coverage a Transition System for the language with the given tree-bank.
@@ -137,7 +138,7 @@ fun main(args: Array<String>){
  * @param filePath a tree-bank file path.
  */
 fun ArrayList<Sentence>.loadFromTreeBank(filePath: String) =
-  CoNLLReader.fromFile(filePath).forEach { it ->
+  CoNLLReader.forEachSentence(File(filePath)) { it ->
     if (it.hasAnnotatedHeads()) it.assertValidCoNLLTree()
     this.add(Sentence.fromCoNLL(it))
   }

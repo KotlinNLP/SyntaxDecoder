@@ -86,7 +86,7 @@ abstract class SyntaxDecoder<
    *
    * @return a dependency tree
    */
-  abstract protected fun processState(
+  protected abstract fun processState(
     extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
     beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                          context: InputContextType) -> Unit)?): DependencyTree

@@ -45,7 +45,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @property id a unique id that identifies this action within others generated at the same time
    */
-  inner abstract class Action internal constructor(val id: Int = -1) {
+  abstract inner class Action internal constructor(val id: Int = -1) {
 
     /**
      * The [Transition] from which this [Action] originated.
@@ -104,7 +104,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
      *
      * @param state a State
      */
-    abstract protected fun perform(state: StateType)
+    protected abstract fun perform(state: StateType)
   }
 
   /**
@@ -323,7 +323,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @param state a State
    */
-  abstract protected fun perform(state: StateType)
+  protected abstract fun perform(state: StateType)
 
   /**
    * @param id the id of the action

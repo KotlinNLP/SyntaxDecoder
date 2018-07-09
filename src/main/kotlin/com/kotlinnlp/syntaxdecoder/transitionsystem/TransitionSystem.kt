@@ -18,12 +18,12 @@ abstract class TransitionSystem<StateType : State<StateType>, TransitionType : T
   /**
    * The [KClass] of the StateType used in the [getInitialState] function.
    */
-  abstract protected val stateClass: KClass<StateType>
+  protected abstract val stateClass: KClass<StateType>
 
   /**
    * The [TransitionsGenerator] used to generate the next valid transitions given a [State].
    */
-  abstract protected val transitionsGenerator: TransitionsGenerator<StateType, TransitionType>
+  protected abstract val transitionsGenerator: TransitionsGenerator<StateType, TransitionType>
 
   /**
    * Initialization function, mapping an ordered list of [itemIds] to an initial state.

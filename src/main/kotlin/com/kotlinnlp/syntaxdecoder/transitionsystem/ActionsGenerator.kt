@@ -40,7 +40,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
    *
    * @return a list of Actions
    */
-  abstract protected fun Transition<TransitionType, StateType>.generateActions(startId: Int):
+  protected abstract fun Transition<TransitionType, StateType>.generateActions(startId: Int):
     List<Transition<TransitionType, StateType>.Action>
 
   /**

@@ -48,6 +48,6 @@ abstract class ActionsErrorsSetter<
    * @param sortedActions a list with the last scored actions, sorted by score and then by transition priority
    * @param extendedState the extended state of the last scored actions
    */
-  abstract protected fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
+  protected abstract fun assignErrors(sortedActions: List<Transition<TransitionType, StateType>.Action>,
                                       extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>)
 }

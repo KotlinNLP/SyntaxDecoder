@@ -47,7 +47,7 @@ abstract class FeaturesExtractor<
    *
    * @return the extracted features
    */
-  abstract protected fun extract(
+  protected abstract fun extract(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
     supportStructure: SupportStructureType
   ): FeaturesType

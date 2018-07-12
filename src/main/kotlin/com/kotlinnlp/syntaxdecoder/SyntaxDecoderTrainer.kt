@@ -200,8 +200,7 @@ class SyntaxDecoderTrainer<
 
       this.actionsScorer.backward(
         decodingContext = decodingContext,
-        supportStructure = this.supportStructure,
-        propagateToInput = propagateToInput)
+        supportStructure = this.supportStructure)
 
       if (propagateToInput && this.featuresExtractor is FeaturesExtractorTrainable) {
 
@@ -211,8 +210,7 @@ class SyntaxDecoderTrainer<
 
         this.featuresExtractor.backward(
           decodingContext = decodingContext,
-          supportStructure = this.supportStructure,
-          propagateToInput = propagateToInput)
+          supportStructure = this.supportStructure)
       }
     }
   }

@@ -43,10 +43,8 @@ abstract class FeaturesExtractorTrainable<
    *
    * @param decodingContext the decoding context that contains extracted features with their errors
    * @param supportStructure the decoding support structure
-   * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: SupportStructureType,
-    propagateToInput: Boolean)
+    supportStructure: SupportStructureType)
 }

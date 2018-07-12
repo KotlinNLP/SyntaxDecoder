@@ -44,12 +44,10 @@ abstract class ActionsScorerTrainable<
    *
    * @param decodingContext the decoding context that contains the scored actions
    * @param supportStructure the decoding support structure
-   * @param propagateToInput a Boolean indicating whether errors must be propagated to the input items
    */
   abstract fun backward(
     decodingContext: DecodingContext<StateType, TransitionType, InputContextType, ItemType, FeaturesType>,
-    supportStructure: SupportStructureType,
-    propagateToInput: Boolean)
+    supportStructure: SupportStructureType)
 
   /**
    * @param decodingContext the decoding context that contains the scored actions

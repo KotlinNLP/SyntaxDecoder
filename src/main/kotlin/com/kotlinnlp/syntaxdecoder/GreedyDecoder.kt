@@ -75,44 +75,44 @@ class GreedyDecoder<
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
    *
-   * @param extendedState the [ExtendedState] containing items, context and state
+   * @param state the [ExtendedState] containing items, context and state
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a dependency tree
    */
   override fun processState(
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
+    state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
     beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                          context: InputContextType) -> Unit)?): DependencyTree {
 
-    while (!extendedState.state.isTerminal) {
+    while (!state.isTerminal) {
 
-      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(extendedState)
+      val bestAction: Transition<TransitionType, StateType>.Action = this.getBestAction(state)
 
-      beforeApplyAction?.invoke(bestAction, extendedState.context) // external callback
+      beforeApplyAction?.invoke(bestAction, state.context) // external callback
 
       bestAction.apply()
-      extendedState.addAction(bestAction)
+      state.addAction(bestAction)
     }
 
-    return extendedState.state.dependencyTree
+    return state.dependencyTree
   }
 
   /**
    * Get the best action to apply, given the scoring support structure and an [ExtendedState].
    *
-   * @param extendedState the [ExtendedState] containing items, context and state
+   * @param state the [ExtendedState] containing items, context and state
    *
    * @return the best action to apply to the given state
    */
   private fun getBestAction(
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>
+    state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>
   ): Transition<TransitionType, StateType>.Action {
 
     val scoredActions: List<Transition<TransitionType, StateType>.Action> = this.getScoredActions(
       supportStructure = this.supportStructure,
-      extendedState = extendedState)
+      extendedState = state)
 
-    return this.bestActionSelector.select(sortedActions = scoredActions, extendedState = extendedState)
+    return this.bestActionSelector.select(sortedActions = scoredActions, extendedState = state)
   }
 }

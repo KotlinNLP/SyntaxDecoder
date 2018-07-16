@@ -7,6 +7,7 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem.state
 
+import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.syntaxdecoder.context.InputContext
 import com.kotlinnlp.syntaxdecoder.transitionsystem.oracle.Oracle
 import com.kotlinnlp.syntaxdecoder.context.items.StateItem
@@ -31,6 +32,16 @@ data class ExtendedState<
   val context: InputContextType,
   val scoreAccumulator: ScoreAccumulator<*>,
   val oracle: Oracle<StateType, TransitionType>? = null) {
+
+  /**
+   * Contains the set of arcs already created.
+   */
+  val dependencyTree: DependencyTree get() = this.state.dependencyTree
+
+  /**
+   * True when the state reach the end.
+   */
+  val isTerminal: Boolean get() = this.state.isTerminal
 
   /**
    * The score of goodness of this state.

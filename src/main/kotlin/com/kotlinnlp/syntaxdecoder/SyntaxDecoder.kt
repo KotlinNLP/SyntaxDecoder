@@ -75,19 +75,19 @@ abstract class SyntaxDecoder<
       oracle = null,
       scoreAccumulator = this.scoreAccumulatorFactory())
 
-    return this.processState(extendedState = extendedState, beforeApplyAction = beforeApplyAction)
+    return this.processState(state = extendedState, beforeApplyAction = beforeApplyAction)
   }
 
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
    *
-   * @param extendedState the [ExtendedState] containing items, context and state
+   * @param state the [ExtendedState] containing items, context and state
    * @param beforeApplyAction callback called before applying the best action (optional)
    *
    * @return a dependency tree
    */
   protected abstract fun processState(
-    extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
+    state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
     beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                          context: InputContextType) -> Unit)?): DependencyTree
 

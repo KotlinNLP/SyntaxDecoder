@@ -129,18 +129,18 @@ class BeamDecoder<
   /**
    * Decode the syntax starting from an initial state building a dependency tree.
    *
-   * @param extendedState the [ExtendedState] containing items, context and state
+   * @param state the [ExtendedState] containing items, context and state
    * @param beforeApplyAction a callback called before applying each best action (optional)
    *
    * @return a dependency tree
    */
-  override fun processState(extendedState: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
+  override fun processState(state: ExtendedState<StateType, TransitionType, ItemType, InputContextType>,
                             beforeApplyAction: ((action: Transition<TransitionType, StateType>.Action,
                                                  context: InputContextType) -> Unit)?): DependencyTree {
 
     try {
 
-      this.initBeam(extendedState)
+      this.initBeam(state)
 
       while (this.beamStates.any { it != null && !it.state.isTerminal }) {
 

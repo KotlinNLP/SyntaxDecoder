@@ -17,7 +17,7 @@ import com.kotlinnlp.dependencytree.Deprel
  * @param tokens a list of consecutive id.
  * @param dependencyTree the dependency tree associated to the [tokens] (can be null).
  */
-data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? = null){
+data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? = null) {
 
   companion object {
 

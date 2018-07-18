@@ -120,10 +120,7 @@ fun main(args: Array<String>){
 
   println("Start 'Coverage Stats'")
 
-  val sentences = ArrayList<Sentence>()
-
-  sentences.loadFromTreeBank(args[0])
-
+  val sentences: List<Sentence> = loadSentencesFromTreeBank(args[0])
   val progress = ProgressIndicatorBar(sentences.size)
 
   sentences.forEach {
@@ -135,10 +132,18 @@ fun main(args: Array<String>){
 /**
  * Populate an array of sentences from a tree-bank.
  *
- * @param filePath a tree-bank file path.
+ * @param filePath a tree-bank file path
+ *
+ * @return the list of sentences read from the given file
  */
-fun ArrayList<Sentence>.loadFromTreeBank(filePath: String) =
+private fun loadSentencesFromTreeBank(filePath: String): List<Sentence> {
+
+  val sentences = mutableListOf<Sentence>()
+
   CoNLLReader.forEachSentence(File(filePath)) { it ->
     if (it.hasAnnotatedHeads()) it.assertValidCoNLLTree()
-    this.add(Sentence.fromCoNLL(it))
+    sentences.add(Sentence.fromCoNLL(it))
   }
+
+  return sentences
+}

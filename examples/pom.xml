@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.2.41</kotlin.version>
         <syntaxdecoder.version>0.2.1</syntaxdecoder.version>
-        <conllio.version>0.2.1</conllio.version>
+        <conllio.version>0.2.2</conllio.version>
         <dependencytree.version>0.3.1</dependencytree.version>
         <utils.version>2.1.0</utils.version>
     </properties>

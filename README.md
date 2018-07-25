@@ -25,7 +25,7 @@ them.
 <dependency>
     <groupId>com.kotlinnlp</groupId>
     <artifactId>syntaxdecoder</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 

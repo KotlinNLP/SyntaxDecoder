@@ -88,7 +88,9 @@ class ArcSpineState(
   /**
    * Initialize the state.
    */
-  init { this.itemIds.mapTo(this.buffer, { it }) }
+  init {
+    this.itemIds.mapTo(this.buffer) { it }
+  }
 
   /**
    * @return a new copy of this [State]

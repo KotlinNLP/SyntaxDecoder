@@ -33,7 +33,9 @@ class PendingListState(
   /**
    * Initialize the state.
    */
-  init { this.itemIds.mapTo(this.pendingList, { it }) }
+  init {
+    this.itemIds.mapTo(this.pendingList) { it }
+  }
 
   /**
    * @return a new copy of this [State]

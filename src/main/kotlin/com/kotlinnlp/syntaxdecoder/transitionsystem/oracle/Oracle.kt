@@ -78,71 +78,79 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
   abstract fun copy(): Oracle<StateType, TransitionType>
 
   /**
-   * True if the transition has zero cost.
+   * @param transition a transition
+   *
+   * @return whether the given transition has zero cost
    */
   fun hasZeroCost(transition: TransitionType): Boolean = this.cost(transition) == 0
 
   /**
-   *  True if the action has zero cost.
+   * @param action an action
+   *
+   * @return whether the given action has zero cost
    */
   fun hasZeroCost(action: Transition<TransitionType, StateType>.Action): Boolean = this.hasZeroCost(action.transition)
 
   /**
-   * True if the transition is correct.
-   */
-  fun isCorrect(transition: TransitionType): Boolean
-    = this.hasZeroCost(transition) && (transition !is SyntacticDependency || transition.isArcCorrect)
-
-  /**
-   * True if the action is correct.
-   */
-  fun isCorrect(action: Transition<TransitionType, StateType>.Action): Boolean
-    = action.transition.isAllowed && this.isCorrect(action.transition)
-    && (action !is DependencyRelation || action.isCorrect())
-
-  /**
-   * @param dependentId a dependentId.
-   * @param governorId a governorId.
+   * @param action an action
    *
-   * @return True if the arc defined by the given [dependentId] and [governorId] is correct.
+   * @return whether the given action is correct.
    */
-  fun isArcCorrect(dependentId: Int, governorId: Int?): Boolean
-    = this.goldDependencyTree.heads[dependentId] == governorId
+  fun isCorrect(action: Transition<TransitionType, StateType>.Action): Boolean =
+    action.transition.isAllowed && this.isCorrect(action.transition)
+      && (action !is DependencyRelation || action.isCorrect())
 
   /**
-   * @return True if the arc is correct.
+   * @param dependentId the dependent id
+   * @param governorId the governor id
+   *
+   * @return whether the arc defined by the given [dependentId] and [governorId] is correct
+   */
+  fun isArcCorrect(dependentId: Int, governorId: Int?): Boolean =
+    this.goldDependencyTree.getHead(dependentId) == governorId
+
+  /**
+   * @return whether the arc of this dependency is correct
    */
   val SyntacticDependency.isArcCorrect: Boolean get() =
     isArcCorrect(dependentId = this.dependentId!!, governorId = this.governorId)
 
   /**
-   * @return True if the dependency relation (deprel and posTag) is correct.
+   * @param transition a transition
+   *
+   * @return whether the given transition is correct
+   */
+  private fun isCorrect(transition: TransitionType): Boolean =
+    this.hasZeroCost(transition) && (transition !is SyntacticDependency || transition.isArcCorrect)
+
+  /**
+   * @return whether the dependency relation (deprel and posTag) is correct
    */
   private fun DependencyRelation.isCorrect(): Boolean = this.isDeprelCorrect() && this.isPosTagCorrect()
 
   /**
-   * @return True if the syntactic component of a dependency relation (deprel) is correct.
+   * @return whether the syntactic component of a dependency relation (deprel) is correct
    */
-  private fun DependencyRelation.isDeprelCorrect(): Boolean
-    = this.deprel == null || this.deprel == this@Oracle.getGoldDeprel(this.dependentId!!)
+  private fun DependencyRelation.isDeprelCorrect(): Boolean =
+    this.deprel == null || this.deprel == this@Oracle.getGoldDeprel(this.dependentId!!)
 
   /**
-   * @return True if the morphological component of a dependency relation (posTag) is correct.
+   * @return whether the morphological component of a dependency relation (posTag) is correct
    */
-  private fun DependencyRelation.isPosTagCorrect(): Boolean
-    = this.posTag == null || this.posTag == this@Oracle.getGoldPosTag(this.dependentId!!)
+  private fun DependencyRelation.isPosTagCorrect(): Boolean =
+    this.posTag == null || this.posTag == this@Oracle.getGoldPosTag(this.dependentId!!)
 
   /**
-   * @param dependent a dependent id.
+   * @param dependentId the id of a dependent
    *
-   * @return the deprel of this dependent on the gold dependency tree (can be null).
+   * @return the deprel of this dependent on the gold dependency tree (can be null)
    */
-  private fun getGoldDeprel(dependent: Int): Deprel? = this.goldDependencyTree.deprels[dependent]
+  private fun getGoldDeprel(dependentId: Int): Deprel? = this.goldDependencyTree.getDeprel(dependentId)
 
   /**
-   * @param dependent a dependent id.
+   * @param dependentId the id of a dependent
    *
-   * @return the pos tag of this dependent on the gold dependency tree (can be null).
+   * @return the pos tag of this dependent on the gold dependency tree (can be null)
    */
-  private fun getGoldPosTag(dependent: Int): POSTag? = this.goldDependencyTree.posTags[dependent]
+  private fun getGoldPosTag(dependentId: Int): POSTag? = this.goldDependencyTree.getPosTag(dependentId)
 }

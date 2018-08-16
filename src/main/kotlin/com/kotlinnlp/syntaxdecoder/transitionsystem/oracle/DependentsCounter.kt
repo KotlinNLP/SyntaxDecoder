@@ -12,9 +12,9 @@ import com.kotlinnlp.dependencytree.DependencyTree
 /**
  * The DependentsCounter.
  *
- * @property countList
+ * @property counter
  */
-class DependentsCounter(private val countList: ArrayList<Int>) {
+class DependentsCounter(private val counter: MutableMap<Int, Int>) {
 
   companion object {
 
@@ -25,13 +25,13 @@ class DependentsCounter(private val countList: ArrayList<Int>) {
      */
     operator fun invoke(dependencyTree: DependencyTree): DependentsCounter {
 
-      val countList = ArrayList<Int>()
+      val counter = mutableMapOf<Int, Int>()
 
       dependencyTree.elements.forEach {
-        countList.add(dependencyTree.dependentsOf(it).size)
+        counter[it] = dependencyTree.getDependents(it).size
       }
 
-      return DependentsCounter(countList)
+      return DependentsCounter(counter)
     }
   }
 
@@ -40,7 +40,7 @@ class DependentsCounter(private val countList: ArrayList<Int>) {
    *
    * @return the number of dependents of the given [elementId]
    */
-  operator fun get(elementId: Int): Int = this.countList[elementId]
+  operator fun get(elementId: Int): Int = this.counter.getValue(elementId)
 
   /**
    * Decrease by one the dependents of the the given [elementId].
@@ -48,8 +48,8 @@ class DependentsCounter(private val countList: ArrayList<Int>) {
    * @param elementId an element id
    */
   fun decrease(elementId: Int) {
-    require(this.countList[elementId] > 0)
-    this.countList[elementId]--
+    require(this.counter.getValue(elementId) > 0)
+    this.counter[elementId] = this.counter.getValue(elementId) - 1
   }
 
   /**
@@ -62,5 +62,5 @@ class DependentsCounter(private val countList: ArrayList<Int>) {
   /**
    * @return a new copy of this [DependentsCounter]
    */
-  fun clone(): DependentsCounter = DependentsCounter(ArrayList(this.countList))
+  fun clone(): DependentsCounter = DependentsCounter(this.counter.toMutableMap())
 }

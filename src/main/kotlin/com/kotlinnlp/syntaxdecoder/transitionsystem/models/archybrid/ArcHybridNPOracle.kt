@@ -50,9 +50,9 @@ class ArcHybridNPOracle(goldDependencyTree: DependencyTree)
   private var dependentsCounter = DependentsCounter(this.goldDependencyTree)
 
   /**
-   * It contains the position of element i in the projective order
+   * It maps each element to its projective order position.
    */
-  private var projectiveOrder: List<Int> = this.goldDependencyTree.projectiveOrder()
+  private var projectiveOrderMap: Map<Int, Int> = this.goldDependencyTree.elementsToInOrderIndex()
 
   /**
    * @return a copy of this Oracle
@@ -63,7 +63,7 @@ class ArcHybridNPOracle(goldDependencyTree: DependencyTree)
 
     clone.loss = this.loss
     clone.dependentsCounter = this.dependentsCounter.clone()
-    clone.projectiveOrder = this.projectiveOrder
+    clone.projectiveOrderMap = this.projectiveOrderMap
 
     return clone
   }
@@ -120,7 +120,7 @@ class ArcHybridNPOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  private fun Root.calculateCost(): Int = if (goldDependencyTree.heads[this.dependentId] == null) 0 else 1
+  private fun Root.calculateCost(): Int = if (goldDependencyTree.getHead(this.dependentId) == null) 0 else 1
 
   /**
    * Calculate the cost of the Shift transition.
@@ -156,6 +156,8 @@ class ArcHybridNPOracle(goldDependencyTree: DependencyTree)
    *
    * @return a Boolean indicating whether the Swap is the optimal transition for the given [state]
    */
-  private fun isSwapOptimal(state: StackBufferState): Boolean = Swap(state, id = -1).isAllowed
-    && this.projectiveOrder[state.stack.last()] > this.projectiveOrder[state.buffer.first()]
+  private fun isSwapOptimal(state: StackBufferState): Boolean =
+    Swap(state, id = -1).isAllowed
+      &&
+      this.projectiveOrderMap.getValue(state.stack.last()) > this.projectiveOrderMap.getValue(state.buffer.first())
 }

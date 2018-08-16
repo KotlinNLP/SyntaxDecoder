@@ -110,11 +110,11 @@ open class CovingtonOracle(goldDependencyTree: DependencyTree)
    */
   private fun Shift.calculateCost(): Int {
 
-    val j: Int = this.refState.buffer.first()
+    val b0: Int = this.refState.buffer.first()
 
     return when {
       this.refState.stack1.isEmpty() -> 0
-      this.refState.stack1.none { goldDependencyTree.heads[it] == j || goldDependencyTree.heads[j] == it } -> 0
+      this.refState.stack1.none { goldDependencyTree.getHead(it) == b0 || goldDependencyTree.getHead(b0) == it } -> 0
       else -> 1
     }
   }

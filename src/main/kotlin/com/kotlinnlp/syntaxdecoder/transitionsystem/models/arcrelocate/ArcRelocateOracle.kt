@@ -130,14 +130,14 @@ open class ArcRelocateOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  private fun Root.calculateCost(): Int = if (goldDependencyTree.heads[this.dependentId] == null) 0 else 1
+  private fun Root.calculateCost(): Int = if (goldDependencyTree.getHead(this.dependentId) == null) 0 else 1
 
   /**
    * Calculate the cost of the Shift transition.
    *
    * @return the cost of this transition.
    */
-  open protected fun Shift.calculateCost(): Int =
+  protected open fun Shift.calculateCost(): Int =
     if (this@ArcRelocateOracle.thereAreCorrectArcs(this.refState)) 1 else 0
 
   /**
@@ -145,7 +145,7 @@ open class ArcRelocateOracle(goldDependencyTree: DependencyTree)
    *
    * @return True if there are any zero-cost arc-transition in the given [state] configuration.
    */
-  protected fun thereAreCorrectArcs(state: StackBufferState): Boolean =
+  private fun thereAreCorrectArcs(state: StackBufferState): Boolean =
     ArcRelocateTransitionsGenerator().generate(state)
       .filter { it is ArcLeft || it is ArcRight || it is Wait }
       .any { it.isAllowed && hasZeroCost(it) }

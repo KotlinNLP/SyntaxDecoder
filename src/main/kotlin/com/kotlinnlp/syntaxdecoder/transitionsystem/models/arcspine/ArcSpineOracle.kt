@@ -111,22 +111,26 @@ open class ArcSpineOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  private fun Root.calculateCost(): Int = if (goldDependencyTree.heads[this.dependentId] == null) 0 else 1
+  private fun Root.calculateCost(): Int = if (goldDependencyTree.getHead(this.dependentId) == null) 0 else 1
 
   /**
    * Calculate the cost of the Shift transition.
    *
    * @return the cost of this transition.
    */
-  open protected fun Shift.calculateCost(): Int =
-    if (this.refState.stack.size <= 1) 0 else {
+  protected open fun Shift.calculateCost(): Int =
 
-      val s0h = goldDependencyTree.heads[this.refState.stack.last().root]
-      val s1h = goldDependencyTree.heads[this.refState.stack.secondToLast().root]
+    if (this.refState.stack.size > 1) {
+
+      val s0h = goldDependencyTree.getHead(this.refState.stack.last().root)
+      val s1h = goldDependencyTree.getHead(this.refState.stack.secondToLast().root)
 
       val s0ls = this.refState.stack.last().leftSpine
       val s1rs = this.refState.stack.secondToLast().rightSpine
 
       if (s0ls.contains(s1h) || s1rs.contains(s0h)) 1 else 0
+
+    } else {
+      0
     }
 }

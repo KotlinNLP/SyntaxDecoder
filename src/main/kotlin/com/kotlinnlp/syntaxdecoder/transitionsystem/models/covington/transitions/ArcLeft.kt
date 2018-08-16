@@ -19,7 +19,7 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFrom
  * (λ1|ik|...|i1, λ2, j|B, A) ⇒ (λ1, ik|...|i1|λ2, j|B, A ∪ {j → ik})
  *
  * @property refState the [State] on which this transition operates
- * @property dependentStack1Index the position in the stack of the governor element
+ * @property dependentStack1Index the position in the stack 1 of the governor element
  * @property id the transition id
  */
 class ArcLeft(
@@ -53,7 +53,7 @@ class ArcLeft(
    */
   override val isAllowed: Boolean get() = this.refState.buffer.isNotEmpty()
     && this.refState.stack1.size >= this.dependentStack1Index
-    && this.refState.dependencyTree.heads[this.dependentId] == null
+    && this.refState.dependencyTree.getHead(this.dependentId) == null
     && !this.refState.dependencyTree.introduceCycle(dependent = this.dependentId, governor = this.governorId)
 
   /**

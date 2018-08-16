@@ -29,7 +29,7 @@ abstract class State<SelfType: State<SelfType>>(
   /**
    * Contains the set of arcs already created.
    */
-  var dependencyTree: DependencyTree = DependencyTree(this.size)
+  var dependencyTree: DependencyTree = DependencyTree(this.itemIds)
     protected set
 
   /**

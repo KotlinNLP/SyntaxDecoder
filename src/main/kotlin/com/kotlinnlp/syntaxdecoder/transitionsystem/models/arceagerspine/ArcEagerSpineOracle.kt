@@ -88,6 +88,7 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
    * @param transition a transition
    */
   override fun apply(transition: ArcEagerSpineTransition) {
+
     this.loss += this.cost(transition)
 
     when (transition) {
@@ -109,7 +110,7 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
     if (this.isDependentReachable && !this.isArcCorrect) cost += 1
 
     cost += this.refState.stack.last().sumBy {
-      reachableDependents.intersect(goldDependencyTree.rightDependents[it]).size
+      reachableDependents.intersect(goldDependencyTree.getRightDependents(it)).size
     }
 
     return cost
@@ -124,11 +125,10 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
 
     if (this.isDependentReachable && !this.isArcCorrect) cost += 1
 
-    cost += reachableDependents.intersect(
-      goldDependencyTree.leftDependents[this.dependentId]).size
+    cost += reachableDependents.intersect(goldDependencyTree.getLeftDependents(this.dependentId)).size
 
     cost += this.refState.stack.last().subListFrom(this.governorSpineIndex + 1)?.sumBy {
-      reachableDependents.intersect(goldDependencyTree.rightDependents[it]).size
+      reachableDependents.intersect(goldDependencyTree.getRightDependents(it)).size
     } ?: 0
 
     return cost
@@ -144,10 +144,10 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
     val b0: Int = this.refState.buffer.first()
 
     if (reachableDependents.contains(b0)
-      && (goldDependencyTree.heads[b0] != null
-       && goldDependencyTree.heads[b0]!! < b0)) cost += 1
+      && (goldDependencyTree.getHead(b0) != null
+       && goldDependencyTree.getHead(b0)!! < b0)) cost += 1
 
-    cost += reachableDependents.intersect(goldDependencyTree.leftDependents[b0]).size
+    cost += reachableDependents.intersect(goldDependencyTree.getLeftDependents(b0)).size
 
     return cost
   }
@@ -161,10 +161,11 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
    * Removes from [reachableDependents] the dependents that would no longer be reachable by applying this transition.
    */
   private fun ArcLeft.removeUnreachableDependents() {
+
     reachableDependents.remove(this.dependentId)
 
     this.refState.stack.last().forEach {
-      reachableDependents.removeAll(goldDependencyTree.rightDependents[it])
+      reachableDependents.removeAll(goldDependencyTree.getRightDependents(it))
     }
   }
 
@@ -172,11 +173,12 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
    * Removes from [reachableDependents] the dependents that would no longer be reachable by applying this transition.
    */
   private fun ArcRight.removeUnreachableDependents() {
+
     reachableDependents.remove(this.dependentId)
-    reachableDependents.removeAll(goldDependencyTree.leftDependents[this.dependentId])
+    reachableDependents.removeAll(goldDependencyTree.getLeftDependents(this.dependentId))
 
     this.refState.stack.last().subListFrom(this.governorSpineIndex + 1)?.forEach {
-      reachableDependents.removeAll(goldDependencyTree.rightDependents[it])
+      reachableDependents.removeAll(goldDependencyTree.getRightDependents(it))
     }
   }
 
@@ -184,13 +186,15 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
    * Removes from [reachableDependents] the dependents that would no longer be reachable by applying this transition.
    */
   private fun Shift.removeUnreachableDependents() {
-    val b0: Int = this.refState.buffer.first()
 
-    if (goldDependencyTree.heads[b0] != null && goldDependencyTree.heads[b0]!! < b0) {
+    val b0: Int = this.refState.buffer.first()
+    val b0Head: Int? = goldDependencyTree.getHead(b0)
+
+    if (b0Head != null && goldDependencyTree.getPosition(b0Head) < goldDependencyTree.getPosition(b0)) {
       reachableDependents.remove(b0)
     }
 
-    reachableDependents.removeAll(goldDependencyTree.leftDependents[b0])
+    reachableDependents.removeAll(goldDependencyTree.getLeftDependents(b0))
   }
 
   /**

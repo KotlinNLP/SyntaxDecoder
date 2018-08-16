@@ -5,7 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * ------------------------------------------------------------------*/
 
-import com.kotlinnlp.conllio.Token
+import com.kotlinnlp.conllio.Token as CoNLLToken
+import com.kotlinnlp.conllio.Sentence as CoNLLSentence
 import com.kotlinnlp.dependencytree.DependencyTree
 import com.kotlinnlp.dependencytree.Deprel
 
@@ -24,25 +25,25 @@ data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? =
     /**
      * Build a sentence from a CoNLL Sentence.
      *
-     * @param sentence a ConLL Sentence.
+     * @param sentence a ConLL Sentence
      *
-     * @return a new sentence.
+     * @return a new sentence
      */
-    fun fromCoNLL(sentence: com.kotlinnlp.conllio.Sentence) = Sentence(
-      tokens = sentence.tokens.map { it.id - 1 },
+    fun fromCoNLL(sentence: CoNLLSentence) = Sentence(
+      tokens = sentence.tokens.map { it.id },
       dependencyTree = if (sentence.hasAnnotatedHeads()) buildDependencyTree(sentence) else null
     )
 
     /**
-     * Build a Dependency Tree from a [sentence].
+     * Build a Dependency Tree from a [CoNLLSentence].
      *
-     * @param sentence a sentence.
+     * @param sentence a sentence
      *
-     * @return a new DependencyTree.
+     * @return a new dependency tree
      */
-    private fun buildDependencyTree(sentence: com.kotlinnlp.conllio.Sentence): DependencyTree {
+    private fun buildDependencyTree(sentence: CoNLLSentence): DependencyTree {
 
-      val dependencyTree = DependencyTree(size = sentence.tokens.size)
+      val dependencyTree = DependencyTree(sentence.tokens.map { it.id })
 
       sentence.tokens.forEach { token -> dependencyTree.addArc(token) }
 
@@ -50,28 +51,26 @@ data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? =
     }
 
     /**
-     * Add the arc defined by the id, head and deprel of a given [token].
+     * Add the arc defined by the id, head and deprel of a given [CoNLLToken].
      *
-     * @param token a token.
+     * @param token a CoNLL token
      */
-    private fun DependencyTree.addArc(token: Token) {
+    private fun DependencyTree.addArc(token: CoNLLToken) {
 
-      val id = token.id - 1
-      val head = if (token.head!! == 0) null else token.head!! - 1
+      val head: Int = token.head!!
 
       val deprel = Deprel(
         label = token.deprel,
         direction = when {
-          head == null -> Deprel.Position.ROOT
-          head > id -> Deprel.Position.LEFT
+          head == 0 -> Deprel.Position.ROOT
+          head > token.id -> Deprel.Position.LEFT
           else -> Deprel.Position.RIGHT
         })
 
-      if (head != null) {
-        this.setArc(dependent = id, governor = head, deprel = deprel)
-      } else {
-        this.setDeprel(dependent = id, deprel = deprel)
-      }
+      if (head > 0)
+        this.setArc(dependent = token.id, governor = head, deprel = deprel)
+      else
+        this.setDeprel(dependent = token.id, deprel = deprel)
     }
   }
 }

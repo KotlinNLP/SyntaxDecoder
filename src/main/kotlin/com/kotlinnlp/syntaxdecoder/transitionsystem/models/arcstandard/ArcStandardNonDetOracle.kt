@@ -65,7 +65,7 @@ open class ArcStandardNonDetOracle(goldDependencyTree: DependencyTree)
   override fun Shift.calculateCost(): Int =
     when {
       !this@ArcStandardNonDetOracle.thereAreCorrectArcs(this.refState) -> 0
-      this.refState.buffer.any { goldDependencyTree.heads[it] == this.refState.stack.last() } -> 0
+      this.refState.buffer.any { goldDependencyTree.getHead(it) == this.refState.stack.last() } -> 0
       else -> 1
     }
 }

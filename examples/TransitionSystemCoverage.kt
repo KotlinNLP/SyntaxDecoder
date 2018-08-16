@@ -52,7 +52,7 @@ class TransitionSystemCoverage<StateType: State<StateType>, TransitionType: Tran
     }
 
     if (!this.errorExploring) {
-      require(state.dependencyTree.matchHeads(sentence.dependencyTree.heads)) {
+      require(state.dependencyTree.matchHeads(sentence.dependencyTree)) {
         println("Found:\n${state.dependencyTree}\n\nExpected:\n${sentence.dependencyTree}")
       }
     }

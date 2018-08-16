@@ -39,11 +39,11 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
 
     state.stack1.indices.forEach { k ->
 
-      if (state.dependencyTree.heads[state.buffer.first()] == null) {
+      if (state.dependencyTree.getHead(state.buffer.first()) == null) {
         this.add(ArcRight(state, governorStack1Index = k + 1, id = this.getNextId()))
       }
 
-      if (state.dependencyTree.heads[state.stack1[state.stack1.lastIndex - k]] == null){
+      if (state.dependencyTree.getHead(state.stack1[state.stack1.lastIndex - k]) == null){
         this.add(ArcLeft(state, dependentStack1Index = k + 1, id = this.getNextId()))
       }
     }

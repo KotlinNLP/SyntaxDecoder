@@ -119,7 +119,7 @@ open class ArcStandardOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  private fun Root.calculateCost(): Int = if (goldDependencyTree.heads[this.dependentId] == null) 0 else 1
+  private fun Root.calculateCost(): Int = if (goldDependencyTree.getHead(this.dependentId) == null) 0 else 1
 
   /**
    * Calculate the cost of the Shift transition.

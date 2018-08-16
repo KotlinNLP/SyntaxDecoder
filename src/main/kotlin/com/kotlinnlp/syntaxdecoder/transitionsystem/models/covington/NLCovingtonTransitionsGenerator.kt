@@ -24,7 +24,7 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
    */
   override fun generate(state: CovingtonState): List<CovingtonTransition> {
 
-    val transitions = ArrayList<CovingtonTransition>()
+    val transitions: MutableList<CovingtonTransition> = mutableListOf()
 
     transitions.add(Shift(state, id = transitions.getNextId()))
     transitions.addArcs(state)
@@ -35,7 +35,7 @@ class NLCovingtonTransitionsGenerator : TransitionsGenerator<CovingtonState, Cov
   /**
    * Add multiple ArcLeft and ArcRight transitions.
    */
-  private fun ArrayList<CovingtonTransition>.addArcs(state: CovingtonState){
+  private fun MutableList<CovingtonTransition>.addArcs(state: CovingtonState) {
 
     state.stack1.indices.forEach { k ->
 

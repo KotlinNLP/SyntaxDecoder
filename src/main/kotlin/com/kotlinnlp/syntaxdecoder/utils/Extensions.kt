@@ -56,14 +56,14 @@ fun <TransitionType: Transition<TransitionType, StateType>, StateType: State<Sta
 /**
  * Remove the last element
  */
-fun <E>ArrayList<E>.removeLast() {
+fun <E>MutableList<E>.removeLast() {
   this.removeAt(this.lastIndex)
 }
 
 /**
  *
  */
-fun <E>ArrayList<E>.removeFrom(index: Int): ArrayList<E> {
+fun <E>MutableList<E>.removeFrom(index: Int): MutableList<E> {
   this.subList(index, this.size).clear()
   return this
 }
@@ -71,7 +71,7 @@ fun <E>ArrayList<E>.removeFrom(index: Int): ArrayList<E> {
 /**
  * Returns a list containing elements at indices in the specified [indices] range removing them from the origin.
  */
-fun <E>ArrayList<E>.extractAndRemove(indices: IntRange): List<E> {
+fun <E>MutableList<E>.extractAndRemove(indices: IntRange): List<E> {
   val elements = this.slice(indices)
   indices.reversed().forEach { this.removeAt(it) }
   return elements
@@ -80,7 +80,7 @@ fun <E>ArrayList<E>.extractAndRemove(indices: IntRange): List<E> {
 /**
  *
  */
-fun <E>ArrayList<E>.subListFrom(fromIndex: Int): MutableList<E>? =
+fun <E>MutableList<E>.subListFrom(fromIndex: Int): MutableList<E>? =
   if (fromIndex > this.lastIndex){
     null
   } else {
@@ -90,7 +90,7 @@ fun <E>ArrayList<E>.subListFrom(fromIndex: Int): MutableList<E>? =
 /**
  * @return the last element removing it
  */
-fun <E>ArrayList<E>.pop(): E {
+fun <E>MutableList<E>.pop(): E {
   val element = this.last()
   this.removeAt(this.lastIndex)
   return element
@@ -100,7 +100,7 @@ fun <E>ArrayList<E>.pop(): E {
  * removes the first element from an items and returns that element.
  * This method changes the length of the items.
  */
-fun <E>ArrayList<E>.removeFirst(): E {
+fun <E>MutableList<E>.removeFirst(): E {
   val element = this.first()
   this.removeAt(0)
   return element
@@ -109,14 +109,14 @@ fun <E>ArrayList<E>.removeFirst(): E {
 /**
  * @return the second to last element
  */
-fun <E>ArrayList<E>.secondToLast(): E = this[this.lastIndex - 1]
+fun <E>MutableList<E>.secondToLast(): E = this[this.lastIndex - 1]
 
 /**
  * @param  index gets the nth element
  *         -index gets the nth-to-last element
  * @return the element at the given index or null if the index is not in the array range
  */
-fun <E>ArrayList<E>.getItemOrNull(index: Int): E? {
+fun <E>MutableList<E>.getItemOrNull(index: Int): E? {
   val accessIndex = if (index < 0) this.size + index else index
   return if (accessIndex in 0..this.lastIndex) this[accessIndex] else null
 }

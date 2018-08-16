@@ -24,5 +24,5 @@ abstract class TransitionsGenerator<StateType: State<StateType>, TransitionType:
   /**
    * @return the next id
    */
-  protected fun ArrayList<TransitionType>.getNextId(): Int = this.lastIndex + 1
+  protected fun MutableList<TransitionType>.getNextId(): Int = this.lastIndex + 1
 }

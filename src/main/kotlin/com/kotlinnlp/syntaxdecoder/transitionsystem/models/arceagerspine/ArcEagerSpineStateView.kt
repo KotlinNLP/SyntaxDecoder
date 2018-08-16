@@ -136,7 +136,7 @@ class ArcEagerSpineStateView(
   /**
    *
    */
-  private fun ArrayList<ArcEagerSpineState.StackElement>.getTokenRightSpine(index: Int, k: Int): Int? {
+  private fun MutableList<ArcEagerSpineState.StackElement>.getTokenRightSpine(index: Int, k: Int): Int? {
     return if (index in 0 .. this.lastIndex && k in 0 .. this[index].lastIndex){
       this[index][k]
     } else {

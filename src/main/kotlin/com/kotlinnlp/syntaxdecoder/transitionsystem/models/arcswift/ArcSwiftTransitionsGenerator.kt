@@ -26,7 +26,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
    */
   override fun generate(state: StackBufferState): List<ArcSwiftTransition> {
 
-    val transitions = ArrayList<ArcSwiftTransition>()
+    val transitions: MutableList<ArcSwiftTransition> = mutableListOf()
 
     transitions.add(Root(state, id = transitions.getNextId()))
     transitions.add(Shift(state, id = transitions.getNextId()))
@@ -39,7 +39,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
   /**
    * Add ArcLeft transitions (if allowed)
    */
-  private fun ArrayList<ArcSwiftTransition>.addArcLeft(state: StackBufferState) {
+  private fun MutableList<ArcSwiftTransition>.addArcLeft(state: StackBufferState) {
 
     val dependentStackIndex: Int = state.stack.indexOfFirst { state.dependencyTree.isNotAssigned(it) }
 
@@ -51,7 +51,7 @@ class ArcSwiftTransitionsGenerator : TransitionsGenerator<StackBufferState, ArcS
   /**
    * Add multiple transitions of type RightArc (if allowed)
    */
-  private fun ArrayList<ArcSwiftTransition>.addArcRight(state: StackBufferState) {
+  private fun MutableList<ArcSwiftTransition>.addArcRight(state: StackBufferState) {
 
    // if (state.buffer.size > 1 || (state.buffer.size == 1 && state.unattachedStackElements.size == 1)){
       loop@for (si in 0 until state.stack.size){

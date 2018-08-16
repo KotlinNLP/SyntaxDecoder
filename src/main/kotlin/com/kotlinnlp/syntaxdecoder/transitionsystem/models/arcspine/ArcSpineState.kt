@@ -16,10 +16,7 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFrom
  * @property itemIds the list of item ids used to initialize the state
  * @property size the size of the sentence used to initialize the state
  */
-class ArcSpineState(
-  itemIds: List<Int>,
-  size: Int
-) : State<ArcSpineState>(itemIds, size) {
+class ArcSpineState(itemIds: List<Int>, size: Int) : State<ArcSpineState>(itemIds, size) {
 
   /**
    * StackElement.
@@ -33,12 +30,12 @@ class ArcSpineState(
     /**
      * The left spine.
      */
-    val leftSpine = arrayListOf(root)
+    val leftSpine: MutableList<Int> = mutableListOf(root)
 
     /**
      * The right spine.
      */
-    val rightSpine = arrayListOf(root)
+    val rightSpine: MutableList<Int> = mutableListOf(root)
 
     /**
      * @param k the index from which to add the [elements].
@@ -46,7 +43,7 @@ class ArcSpineState(
      *
      * @return this [StackElement].
      */
-    fun addToLeftSpine(k: Int, elements: ArrayList<Int>): StackElement {
+    fun addToLeftSpine(k: Int, elements: MutableList<Int>): StackElement {
       this.leftSpine.removeFrom(k + 1).addAll(elements)
       return this
     }
@@ -57,7 +54,7 @@ class ArcSpineState(
      *
      * @return this [StackElement].
      */
-    fun addToRightSpine(k: Int, elements: ArrayList<Int>): StackElement {
+    fun addToRightSpine(k: Int, elements: MutableList<Int>): StackElement {
       this.rightSpine.removeFrom(k + 1).addAll(elements)
       return this
     }
@@ -73,24 +70,17 @@ class ArcSpineState(
   /**
    * The buffer.
    */
-  var buffer = ArrayList<Int>()
+  var buffer: MutableList<Int> = itemIds.toMutableList()
 
   /**
    * The stack.
    */
-  var stack = ArrayList<StackElement>()
+  var stack: MutableList<StackElement> = mutableListOf()
 
   /**
    * True when the state reach the end.
    */
   override val isTerminal get() = this.stack.isEmpty() && this.buffer.isEmpty()
-
-  /**
-   * Initialize the state.
-   */
-  init {
-    this.itemIds.mapTo(this.buffer) { it }
-  }
 
   /**
    * @return a new copy of this [State]
@@ -100,8 +90,7 @@ class ArcSpineState(
     val clonedState = ArcSpineState(this.itemIds, this.size)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
-    clonedState.buffer = ArrayList(this.buffer)
-    clonedState.stack = ArrayList(this.stack)
+    clonedState.stack = this.stack.toMutableList()
 
     return clonedState
   }

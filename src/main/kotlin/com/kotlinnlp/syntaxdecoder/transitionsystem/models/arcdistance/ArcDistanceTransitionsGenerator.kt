@@ -23,7 +23,7 @@ class ArcDistanceTransitionsGenerator : TransitionsGenerator<StackBufferState, A
    */
   override fun generate(state: StackBufferState): List<ArcDistanceTransition> {
 
-    val transitions = ArrayList<ArcDistanceTransition>()
+    val transitions: MutableList<ArcDistanceTransition> = mutableListOf()
 
     transitions.add(Root(state, id = transitions.getNextId()))
     transitions.add(Shift(state, id = transitions.getNextId()))
@@ -35,7 +35,7 @@ class ArcDistanceTransitionsGenerator : TransitionsGenerator<StackBufferState, A
   /**
    * Add multiple ArcLeft and ArcRight transitions.
    */
-  private fun ArrayList<ArcDistanceTransition>.addArcs(state: StackBufferState) {
+  private fun MutableList<ArcDistanceTransition>.addArcs(state: StackBufferState) {
 
     (0 until ArcDistance.maxTransitionDegree).reversed().forEach {
       (0 until minOf(state.stack.size, ArcDistance.maxTransitionDegree)).reversed().forEach {

@@ -16,9 +16,7 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFrom
  * @property itemIds the list of item ids used to initialize the state
  * @property size the size of the sentence used to initialize the state
  */
-class ArcEagerSpineState(
-  idemIds: List<Int>,
-  size: Int) : State<ArcEagerSpineState>(idemIds, size) {
+class ArcEagerSpineState(idemIds: List<Int>, size: Int) : State<ArcEagerSpineState>(idemIds, size) {
 
   /**
    * The StackElement for the ArcEagerSpine.
@@ -50,24 +48,17 @@ class ArcEagerSpineState(
   /**
    * The buffer.
    */
-  var buffer = ArrayList<Int>()
+  var buffer: MutableList<Int> = itemIds.toMutableList()
 
   /**
    * The stack.
    */
-  var stack = ArrayList<StackElement>()
+  var stack: MutableList<StackElement> = mutableListOf()
 
   /**
    * True when the state reach the end.
    */
   override val isTerminal get() = this.stack.isEmpty() && this.buffer.isEmpty()
-
-  /**
-   * Initialize the state.
-   */
-  init {
-    this.itemIds.mapTo(this.buffer) { it }
-  }
 
   /**
    * @return a new copy of this [State]
@@ -77,8 +68,7 @@ class ArcEagerSpineState(
     val clonedState = ArcEagerSpineState(this.itemIds, this.size)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
-    clonedState.buffer = ArrayList(this.buffer)
-    clonedState.stack = ArrayList(this.stack)
+    clonedState.stack = this.stack.toMutableList()
 
     return clonedState
   }

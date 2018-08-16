@@ -68,7 +68,7 @@ class ArcLeft(
    * @param state a State
    */
   override fun perform(state: StackBufferState) {
-    state.stack = ArrayList(state.stack.slice(this.dependentStackIndex + 1 .. state.stack.lastIndex))
+    state.stack = state.stack.slice(this.dependentStackIndex + 1 .. state.stack.lastIndex).toMutableList()
   }
 
   /**

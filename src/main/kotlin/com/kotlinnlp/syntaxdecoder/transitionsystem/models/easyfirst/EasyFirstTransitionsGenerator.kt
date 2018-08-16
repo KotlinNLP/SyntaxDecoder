@@ -25,7 +25,7 @@ class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, Eas
    */
   override fun generate(state: PendingListState): List<EasyFirstTransition>  {
 
-    val transitions = ArrayList<EasyFirstTransition>()
+    val transitions: MutableList<EasyFirstTransition> = mutableListOf()
 
     transitions.add(Root(state, id = transitions.getNextId()))
     transitions.addArcs(state)
@@ -36,9 +36,9 @@ class EasyFirstTransitionsGenerator : TransitionsGenerator<PendingListState, Eas
   /**
    * Add multiple arc-left and arc-right transitions.
    */
-  private fun ArrayList<EasyFirstTransition>.addArcs(state: PendingListState) {
+  private fun MutableList<EasyFirstTransition>.addArcs(state: PendingListState) {
 
-    for (i in 0 until state.pendingList.lastIndex) {
+    (0 until state.pendingList.lastIndex).forEach { i ->
       this.add(ArcLeft(state, pendingListFocus = i, id = this.getNextId()))
       this.add(ArcRight(state, pendingListFocus = i, id = this.getNextId()))
     }

@@ -76,7 +76,7 @@ class ArcRight(
    * @param state a State
    */
   override fun perform(state: StackBufferState) {
-    state.stack = ArrayList(state.stack.slice(this.governorStackIndex.. state.stack.lastIndex))
+    state.stack = state.stack.slice(this.governorStackIndex.. state.stack.lastIndex).toMutableList()
     state.stack.add(0, state.buffer.removeFirst())
   }
 

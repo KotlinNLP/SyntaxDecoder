@@ -71,8 +71,12 @@ class ArcRight(
    * @param state a State
    */
   override fun perform(state: StackBufferState) {
+
+    val stackRemoved: List<Int> =
+      state.stack.extractAndRemove(this.stackSize - 1 - this.degree .. this.refState.stack.lastIndex)
+
     state.buffer.removeFirst()
-    state.buffer.addAll(0, state.stack.extractAndRemove(this.stackSize - 1 - this.degree .. this.refState.stack.lastIndex))
+    state.buffer.addAll(0, stackRemoved)
   }
 
   /**

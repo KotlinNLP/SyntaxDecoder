@@ -15,32 +15,23 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * @property itemIds the list of item ids used to initialize the state
  * @property size the size of the sentence used to initialize the state
  */
-class StackBufferState(
-  itemIds: List<Int>,
-  size: Int
-) : State<StackBufferState>(itemIds, size) {
+class StackBufferState(itemIds: List<Int>, size: Int) : State<StackBufferState>(itemIds, size) {
 
   /**
    * The buffer.
    */
-  var buffer = ArrayList<Int>()
+  val buffer: MutableList<Int> = itemIds.toMutableList()
 
   /**
    * The stack.
    */
-  var stack = ArrayList<Int>()
+  var stack: MutableList<Int> = mutableListOf()
+    internal set
 
   /**
    * True when the state reach the end.
    */
   override val isTerminal get() = this.stack.isEmpty() && this.buffer.isEmpty()
-
-  /**
-   * Initialize the state.
-   */
-  init {
-    this.itemIds.mapTo(this.buffer) { it }
-  }
 
   /**
    * @return a new copy of this [State]
@@ -50,8 +41,7 @@ class StackBufferState(
     val clonedState = StackBufferState(this.itemIds, this.size)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
-    clonedState.buffer = ArrayList(this.buffer)
-    clonedState.stack = ArrayList(this.stack)
+    clonedState.stack = this.stack.toMutableList()
 
     return clonedState
   }

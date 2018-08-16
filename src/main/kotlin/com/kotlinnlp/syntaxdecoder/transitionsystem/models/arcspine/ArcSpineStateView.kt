@@ -37,14 +37,12 @@ class ArcSpineStateView(
   /**
    * Grandparent (can be null)
    */
-  var grandparent: Int? = null
-    private set
+  private var grandparent: Int? = null
 
   /**
    * Great Grandparent (can be null)
    */
-  var greatGrandparent: Int? = null
-    private set
+  private var greatGrandparent: Int? = null
 
   /**
    * Initialize the virtual stack and buffer respect to the current 'stateView'.
@@ -168,22 +166,12 @@ class ArcSpineStateView(
   /**
    *
    */
-  private fun ArrayList<ArcSpineState.StackElement>.getTokenLeftSpine(index: Int, k: Int): Int? {
-    return if (index in 0 .. this.lastIndex && k in 0 .. this[index].leftSpine.lastIndex){
-      this[index].leftSpine[k]
-    } else {
-      null
-    }
-  }
+  private fun MutableList<ArcSpineState.StackElement>.getTokenLeftSpine(index: Int, k: Int): Int? =
+    if (index in 0 .. this.lastIndex && k in 0 .. this[index].leftSpine.lastIndex) this[index].leftSpine[k] else null
 
   /**
    *
    */
-  private fun ArrayList<ArcSpineState.StackElement>.getTokenRightSpine(index: Int, k: Int): Int? {
-    return if (index in 0 .. this.lastIndex && k in 0 .. this[index].rightSpine.lastIndex){
-      this[index].rightSpine[k]
-    } else {
-      null
-    }
-  }
+  private fun MutableList<ArcSpineState.StackElement>.getTokenRightSpine(index: Int, k: Int): Int? =
+    if (index in 0 .. this.lastIndex && k in 0 .. this[index].rightSpine.lastIndex) this[index].rightSpine[k] else null
 }

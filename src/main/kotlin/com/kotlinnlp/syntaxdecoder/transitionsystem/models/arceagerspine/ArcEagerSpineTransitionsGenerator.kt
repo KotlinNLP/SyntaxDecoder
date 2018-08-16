@@ -22,7 +22,7 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
    */
   override fun generate(state: ArcEagerSpineState): List<ArcEagerSpineTransition> {
 
-    val transitions = ArrayList<ArcEagerSpineTransition>()
+    val transitions: MutableList<ArcEagerSpineTransition> = mutableListOf()
 
     transitions.add(Root(state, id = transitions.getNextId()))
     transitions.add(Shift(state, id = transitions.getNextId()))
@@ -36,7 +36,7 @@ class ArcEagerSpineTransitionsGenerator : TransitionsGenerator<ArcEagerSpineStat
   /**
    * Add multiple ArcRight transitions
    */
-  private fun ArrayList<ArcEagerSpineTransition>.addArcsRight(state: ArcEagerSpineState) {
+  private fun MutableList<ArcEagerSpineTransition>.addArcsRight(state: ArcEagerSpineState) {
 
     if (state.stack.isNotEmpty()) {
 

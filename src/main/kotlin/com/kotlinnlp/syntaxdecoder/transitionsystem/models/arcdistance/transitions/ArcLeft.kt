@@ -82,7 +82,11 @@ class ArcLeft(
         state.stack.removeAt(this.refState.stack.lastIndex - 1)
 
       else -> {
-        state.buffer.addAll(0, state.stack.extractAndRemove(this.stackSize - this.degree .. this.refState.stack.lastIndex))
+
+        val stackRemoved: List<Int> =
+          state.stack.extractAndRemove(this.stackSize - this.degree .. this.refState.stack.lastIndex)
+
+        state.buffer.addAll(0, stackRemoved)
         state.stack.removeLast()
       }
     }

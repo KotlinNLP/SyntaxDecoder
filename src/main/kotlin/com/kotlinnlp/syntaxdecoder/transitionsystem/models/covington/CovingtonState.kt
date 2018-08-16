@@ -15,40 +15,32 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * @property itemIds the list of item ids used to initialize the state
  * @property size the size of the sentence used to initialize the state
  */
-class CovingtonState(
-  itemIds: List<Int>,
-  size: Int
-) : State<CovingtonState>(itemIds, size) {
+class CovingtonState(itemIds: List<Int>, size: Int) : State<CovingtonState>(itemIds, size) {
 
   /**
    * Contains the words to be processed.
    */
-  var buffer = ArrayList<Int>()
+  val buffer: MutableList<Int> = itemIds.toMutableList()
 
   /**
    * Contains the already processed words for which the parser
    * still has not decided, in the current state, the type of relation
    * with respect to the focus word j, located at the top of Buffer.
    */
-  var stack1 = ArrayList<Int>()
+  var stack1: MutableList<Int> = mutableListOf()
+    private set
 
   /**
    * Contains the already processed words for which the parser has already
    * determined the type of relation with respect to j in the current step.
    */
-  var stack2 = ArrayList<Int>()
+  var stack2: MutableList<Int> = mutableListOf()
+    private set
 
   /**
    * True when the state reach the end.
    */
   override val isTerminal get() = this.buffer.isEmpty()
-
-  /**
-   * Initialize the state.
-   */
-  init {
-    this.itemIds.mapTo(this.buffer) { it }
-  }
 
   /**
    * @return a new copy of this [State].
@@ -59,9 +51,8 @@ class CovingtonState(
 
     clonedState.dependencyTree = this.dependencyTree.clone()
 
-    clonedState.buffer = ArrayList(this.buffer)
-    clonedState.stack1 = ArrayList(this.stack1)
-    clonedState.stack2 = ArrayList(this.stack2)
+    clonedState.stack1 = this.stack1.toMutableList()
+    clonedState.stack2 = this.stack2.toMutableList()
 
     return clonedState
   }

@@ -68,6 +68,7 @@ class ArcLeft(
    * @param state a State
    */
   override fun perform(state: ArcSpineState) {
+
     val s0: ArcSpineState.StackElement = state.stack.pop()
     val s1: ArcSpineState.StackElement = state.stack.pop()
 

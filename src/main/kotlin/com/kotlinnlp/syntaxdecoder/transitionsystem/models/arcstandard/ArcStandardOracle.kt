@@ -126,7 +126,7 @@ open class ArcStandardOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  open protected fun Shift.calculateCost(): Int =
+  protected open fun Shift.calculateCost(): Int =
     if (this@ArcStandardOracle.thereAreCorrectArcs(this.refState)) 1 else 0
 
   /**

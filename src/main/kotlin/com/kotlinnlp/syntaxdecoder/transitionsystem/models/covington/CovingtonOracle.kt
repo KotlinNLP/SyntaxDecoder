@@ -98,7 +98,7 @@ open class CovingtonOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  open protected fun NoArc.calculateCost(): Int =
+  protected open fun NoArc.calculateCost(): Int =
     if (this@CovingtonOracle.thereAreCorrectArcs(this.refState)) 1 else 0
 
   /**

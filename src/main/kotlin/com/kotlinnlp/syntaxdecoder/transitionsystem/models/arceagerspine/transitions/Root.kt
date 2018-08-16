@@ -47,8 +47,7 @@ class Root(refState: ArcEagerSpineState, id: Int) : ArcEagerSpineTransition(refS
   /**
    * Returns True if the action is allowed in the given parser state.
    */
-  override val isAllowed: Boolean get() =
-    this.refState.stack.size == 1 && this.refState.buffer.isEmpty()
+  override val isAllowed: Boolean get() = this.refState.stack.size == 1 && this.refState.buffer.isEmpty()
 
   /**
    * Perform this [Transition] on the given [state].

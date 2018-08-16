@@ -26,7 +26,7 @@ class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpin
    */
   override fun generate(state: ArcSpineState): List<ArcSpineTransition> {
 
-    val transitions = ArrayList<ArcSpineTransition>()
+    val transitions: MutableList<ArcSpineTransition> = mutableListOf()
 
     transitions.add(Root(state, id = transitions.getNextId()))
     transitions.add(Shift(state, id = transitions.getNextId()))
@@ -38,7 +38,7 @@ class ArcSpineTransitionsGenerator : TransitionsGenerator<ArcSpineState, ArcSpin
   /**
    * Add multiple ArcLeft and ArcRight transitions.
    */
-  private fun ArrayList<ArcSpineTransition>.addArcs(state: ArcSpineState){
+  private fun MutableList<ArcSpineTransition>.addArcs(state: ArcSpineState){
 
     if (state.stack.size > 1) {
 

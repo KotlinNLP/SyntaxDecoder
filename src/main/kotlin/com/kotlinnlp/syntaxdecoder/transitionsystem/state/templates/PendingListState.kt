@@ -15,27 +15,17 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * @property itemIds the list of item ids used to initialize the state
  * @property size the size of the sentence used to initialize the state
  */
-class PendingListState(
-  itemIds: List<Int>,
-  size: Int
-) : State<PendingListState>(itemIds, size), Focusable {
+class PendingListState(itemIds: List<Int>, size: Int) : State<PendingListState>(itemIds, size), Focusable {
 
   /**
-   * The PendingList.
+   * The pending list.
    */
-  var pendingList = ArrayList<Int>()
+  val pendingList: MutableList<Int> = itemIds.toMutableList()
 
   /**
    * True when the state reach the end.
    */
   override val isTerminal get() = this.pendingList.isEmpty()
-
-  /**
-   * Initialize the state.
-   */
-  init {
-    this.itemIds.mapTo(this.pendingList) { it }
-  }
 
   /**
    * @return a new copy of this [State]
@@ -45,7 +35,6 @@ class PendingListState(
     val clonedState = PendingListState(this.itemIds, this.size)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
-    clonedState.pendingList = ArrayList(this.pendingList)
 
     return clonedState
   }

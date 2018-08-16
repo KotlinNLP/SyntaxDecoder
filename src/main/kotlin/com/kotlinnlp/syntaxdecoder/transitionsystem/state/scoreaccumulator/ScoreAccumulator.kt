@@ -65,5 +65,5 @@ abstract class ScoreAccumulator<SelfType: ScoreAccumulator<SelfType>> : Clonable
    *
    * @return the replacing value of the [accumulatedScore]
    */
-  abstract protected fun getNextAccumulatedScore(addingScore: Double): Double
+  protected abstract fun getNextAccumulatedScore(addingScore: Double): Double
 }

@@ -34,9 +34,8 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override operator fun invoke(goldDependencyTree: DependencyTree): Oracle<
-      ArcEagerSpineState, ArcEagerSpineTransition
-      > = ArcEagerSpineOracle(goldDependencyTree)
+    override operator fun invoke(goldDependencyTree: DependencyTree)
+      : Oracle<ArcEagerSpineState, ArcEagerSpineTransition> = ArcEagerSpineOracle(goldDependencyTree)
   }
 
   /**

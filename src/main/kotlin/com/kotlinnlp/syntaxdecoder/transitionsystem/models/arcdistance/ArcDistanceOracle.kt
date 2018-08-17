@@ -41,8 +41,8 @@ class ArcDistanceOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcDistanceTransition>
-      = ArcDistanceOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcDistanceTransition> =
+      ArcDistanceOracle(goldDependencyTree)
   }
 
   /**
@@ -93,9 +93,9 @@ class ArcDistanceOracle(goldDependencyTree: DependencyTree)
    * @param transition a transition
    */
   override fun apply(transition: ArcDistanceTransition) {
-    if (transition is SyntacticDependency && transition.governorId != null){
+
+    if (transition is SyntacticDependency && transition.governorId != null)
       dependentsCounter.decrease(transition.governorId!!)
-    }
   }
 
   /**

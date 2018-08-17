@@ -32,8 +32,8 @@ open class CovingtonOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<CovingtonState, CovingtonTransition>
-      = CovingtonOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<CovingtonState, CovingtonTransition> =
+      CovingtonOracle(goldDependencyTree)
   }
 
   /**

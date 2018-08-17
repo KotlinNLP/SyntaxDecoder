@@ -116,6 +116,30 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
     isArcCorrect(dependentId = this.dependentId!!, governorId = this.governorId)
 
   /**
+   * @param item an item of the [goldDependencyTree]
+   *
+   * @return whether the head of the given item is on its left
+   */
+  protected fun headOnLeft(item: Int): Boolean {
+
+    val head: Int? = goldDependencyTree.getHead(item)
+
+    return head != null && goldDependencyTree.getPosition(head) < goldDependencyTree.getPosition(item)
+  }
+
+  /**
+   * @param item an item of the [goldDependencyTree]
+   *
+   * @return whether the head of the given item is on its right
+   */
+  protected fun headOnRight(item: Int): Boolean {
+
+    val head: Int? = goldDependencyTree.getHead(item)
+
+    return head != null && goldDependencyTree.getPosition(head) > goldDependencyTree.getPosition(item)
+  }
+
+  /**
    * @param transition a transition
    *
    * @return whether the given transition is correct

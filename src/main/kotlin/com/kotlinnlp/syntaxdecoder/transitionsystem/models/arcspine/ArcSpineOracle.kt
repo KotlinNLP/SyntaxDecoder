@@ -35,8 +35,8 @@ open class ArcSpineOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition>
-      = ArcSpineOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition> =
+      ArcSpineOracle(goldDependencyTree)
   }
 
   /**
@@ -87,9 +87,9 @@ open class ArcSpineOracle(goldDependencyTree: DependencyTree)
    * @param transition a transition
    */
   override fun apply(transition: ArcSpineTransition) {
-    if (transition is SyntacticDependency && transition.governorId != null){
+
+    if (transition is SyntacticDependency && transition.governorId != null)
       this.dependentsCounter.decrease(transition.governorId!!)
-    }
   }
 
   /**

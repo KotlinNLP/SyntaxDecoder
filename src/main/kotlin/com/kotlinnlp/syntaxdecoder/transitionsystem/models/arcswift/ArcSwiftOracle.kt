@@ -41,8 +41,8 @@ class ArcSwiftOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcSwiftTransition>
-      = ArcSwiftOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcSwiftTransition> =
+      ArcSwiftOracle(goldDependencyTree)
   }
 
   /**
@@ -93,9 +93,9 @@ class ArcSwiftOracle(goldDependencyTree: DependencyTree)
    * @param transition a transition
    */
   override fun apply(transition: ArcSwiftTransition) {
-    if (transition is SyntacticDependency && transition.governorId != null){
+
+    if (transition is SyntacticDependency && transition.governorId != null)
       dependentsCounter.decrease(transition.governorId!!)
-    }
   }
 
   /**

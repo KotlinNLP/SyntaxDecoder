@@ -41,8 +41,8 @@ class ArcHybridOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcHybridTransition>
-      = ArcHybridOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcHybridTransition> =
+      ArcHybridOracle(goldDependencyTree)
   }
 
   /**
@@ -93,9 +93,9 @@ class ArcHybridOracle(goldDependencyTree: DependencyTree)
    * @param transition a transition
    */
   override fun apply(transition: ArcHybridTransition) {
-    if (transition is SyntacticDependency && transition.governorId != null){
+
+    if (transition is SyntacticDependency && transition.governorId != null)
       this.dependentsCounter.decrease(transition.governorId!!)
-    }
   }
 
   /**
@@ -103,16 +103,16 @@ class ArcHybridOracle(goldDependencyTree: DependencyTree)
    *
    * @return the cost of this transition.
    */
-  private fun ArcLeft.calculateCost(): Int
-    = if (this.isAllowed && this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
+  private fun ArcLeft.calculateCost(): Int =
+    if (this.isAllowed && this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
 
   /**
    * Calculate the cost of the ArcRight transition.
    *
    * @return the cost of this transition.
    */
-  private fun ArcRight.calculateCost(): Int
-    = if (this.isAllowed &&this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
+  private fun ArcRight.calculateCost(): Int =
+    if (this.isAllowed &&this.isArcCorrect && dependentsCounter.isResolved(this.dependentId)) 0 else 1
 
   /**
    * Calculate the cost of the Root transition.

@@ -37,8 +37,8 @@ open class ArcStandardNonDetOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcStandardTransition>
-      = ArcStandardNonDetOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<StackBufferState, ArcStandardTransition> =
+      ArcStandardNonDetOracle(goldDependencyTree)
   }
 
   /**
@@ -62,10 +62,9 @@ open class ArcStandardNonDetOracle(goldDependencyTree: DependencyTree)
   /**
    * Calculate the cost of the Shift transition.
    */
-  override fun Shift.calculateCost(): Int =
-    when {
-      !this@ArcStandardNonDetOracle.thereAreCorrectArcs(this.refState) -> 0
-      this.refState.buffer.any { goldDependencyTree.getHead(it) == this.refState.stack.last() } -> 0
-      else -> 1
-    }
+  override fun Shift.calculateCost(): Int = when {
+    !this@ArcStandardNonDetOracle.thereAreCorrectArcs(this.refState) -> 0
+    this.refState.buffer.any { goldDependencyTree.getHead(it) == this.refState.stack.last() } -> 0
+    else -> 1
+  }
 }

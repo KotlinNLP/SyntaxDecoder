@@ -32,8 +32,8 @@ class ArcSpineNonDetOracle(goldDependencyTree: DependencyTree)
      *
      * @return a new Oracle
      */
-    override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition>
-      = ArcSpineNonDetOracle(goldDependencyTree)
+    override fun invoke(goldDependencyTree: DependencyTree): Oracle<ArcSpineState, ArcSpineTransition> =
+      ArcSpineNonDetOracle(goldDependencyTree)
   }
 
   /**

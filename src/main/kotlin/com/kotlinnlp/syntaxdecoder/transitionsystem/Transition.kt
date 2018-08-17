@@ -98,7 +98,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
-     *
      * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
      * compatible with this [Action] as it can only be the [refState] or a copy of it.
      *
@@ -114,7 +113,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
-     *
      * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
      * compatible with this [Action] as it can only be the [refState] or a copy of it.
      *
@@ -123,7 +121,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     override fun perform(state: StateType) = Unit
 
     /**
-     * @return its string representation.
+     * @return its string representation
      */
     override fun toString(): String = "shift"
   }
@@ -135,7 +133,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
-     *
      * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
      * compatible with this [Action] as it can only be the [refState] or a copy of it.
      *
@@ -144,7 +141,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     override fun perform(state: StateType) = Unit
 
     /**
-     * @return its string representation.
+     * @return its string representation
      */
     override fun toString(): String = "unshift"
   }
@@ -156,7 +153,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
-     *
      * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
      * compatible with this [Action] as it can only be the [refState] or a copy of it.
      *
@@ -165,7 +161,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     override fun perform(state: StateType) = Unit
 
     /**
-     * @return its string representation.
+     * @return its string representation
      */
     override fun toString(): String = "relocate"
   }
@@ -177,7 +173,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
     /**
      * Perform this [Action] modifying the DependencyTree of the given [state].
-     *
      * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
      * compatible with this [Action] as it can only be the [refState] or a copy of it.
      *
@@ -186,7 +181,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
     override fun perform(state: StateType) = Unit
 
     /**
-     * @return its string representation.
+     * @return its string representation
      */
     override fun toString(): String = "no-arc"
   }
@@ -209,12 +204,12 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
       private set
 
     /**
-     * The syntactic component of a dependency relation (can be null)
+     * The syntactic component of a dependency relation (can be null).
      */
     override var deprel: Deprel? = null
 
     /**
-     * The morphological component of a dependency relation (can be null)
+     * The morphological component of a dependency relation (can be null).
      */
     override var posTag: POSTag? = null
 
@@ -274,9 +269,8 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   }
 
   /**
-   * The 'track' of the [State] at the time this [Transition] is created.
-   *
-   * You can apply an action / transition to the [refState] or a copy of it only if its 'track' has not changed.
+   * The 'track' of the [State] at the time this [Transition] has been created.
+   * An action or a transition can be applied to the [refState] or a copy of it only if its 'track' has not changed.
    */
   val refStateTrack: Int = this.refState.track.get()
 
@@ -291,14 +285,14 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   abstract val priority: Int
 
   /**
-   *  True if the transition is allowed in the given parser state.
+   *  Whether the transition is allowed in the given parser state.
    */
   abstract val isAllowed: Boolean
 
   /**
    * @param id the id of the action
    *
-   * @return a new [Action] tied to this transition.
+   * @return a new [Action] tied to this transition
    */
   fun actionFactory(id: Int = -1, deprel: Deprel? = null, posTag: POSTag? = null): Action {
 
@@ -317,7 +311,6 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
   /**
    * Perform this [Transition] on the given [state].
-   *
    * It requires that the transition [isAllowed] on the given [state], however it is guaranteed that the [state] is
    * compatible with this [Transition] as it can only be the [refState] or a copy of it.
    *
@@ -328,7 +321,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * @param id the id of the action
    *
-   * @return a new [Action] tied to this transition.
+   * @return a new [Action] tied to this transition
    */
   private fun buildAction(id: Int = -1): Action = when (this.type) {
     Type.ARC_LEFT, Type.ARC_RIGHT, Type.ROOT -> this.buildArc(id)
@@ -341,7 +334,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * @param id the id of the action
    *
-   * @return a new [Shift] tied to this transition.
+   * @return a new [Shift] tied to this transition
    */
   private fun buildShift(id: Int = -1) = this.Shift(id)
 
@@ -355,21 +348,21 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
   /**
    * @param id the id of the action
    *
-   * @return a new [Relocate] tied to this transition.
+   * @return a new [Relocate] tied to this transition
    */
   private fun buildRelocate(id: Int = -1) = this.Relocate(id)
 
   /**
    * @param id the id of the action
    *
-   * @return a new [Arc] tied to this transition.
+   * @return a new [Arc] tied to this transition
    */
   private fun buildNoArc(id: Int = -1) = this.NoArc(id)
 
   /**
    * @param id the id of the action
    *
-   * @return a new [Arc] tied to this transition.
+   * @return a new [Arc] tied to this transition
    */
   private fun buildArc(id: Int = -1) = this.Arc(id)
 }

@@ -27,7 +27,7 @@ interface InputContext<SelfType: InputContext<SelfType, ItemType>, ItemType: Sta
   val length: Int
 
   /**
-   * @return the items id to initialize a [State]
+   * @return the item ids used to initialize a [State]
    */
-  fun getInitialStateItemsId() = this.items.map { it.id }
+  fun getInitialStateItemIds() = this.items.map { it.id }
 }

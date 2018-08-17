@@ -66,7 +66,7 @@ class ArcSpineNonDetOracle(goldDependencyTree: DependencyTree)
       val s0: ArcSpineState.StackElement = this.refState.stack.last()
 
       when {
-        s0.root < goldDependencyTree.getHead(s0.root) ?: -1 -> 0
+        headOnRight(s0.root) -> 0
         this.refState.buffer.any { s0.rightSpine.contains(goldDependencyTree.getHead(it)) } -> 0
         else -> 1
       }

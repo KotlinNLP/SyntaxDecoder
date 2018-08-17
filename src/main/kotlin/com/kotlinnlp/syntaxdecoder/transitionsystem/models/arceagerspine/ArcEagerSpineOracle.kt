@@ -139,12 +139,9 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
   private fun Shift.calculateCost(): Int {
 
     var cost = 0
-
     val b0: Int = this.refState.buffer.first()
 
-    if (reachableDependents.contains(b0)
-      && (goldDependencyTree.getHead(b0) != null
-       && goldDependencyTree.getHead(b0)!! < b0)) cost += 1
+    if (reachableDependents.contains(b0) && headOnLeft(b0)) cost += 1
 
     cost += reachableDependents.intersect(goldDependencyTree.getLeftDependents(b0)).size
 
@@ -187,11 +184,8 @@ class ArcEagerSpineOracle(goldDependencyTree: DependencyTree)
   private fun Shift.removeUnreachableDependents() {
 
     val b0: Int = this.refState.buffer.first()
-    val b0Head: Int? = goldDependencyTree.getHead(b0)
 
-    if (b0Head != null && goldDependencyTree.getPosition(b0Head) < goldDependencyTree.getPosition(b0)) {
-      reachableDependents.remove(b0)
-    }
+    if (headOnLeft(b0)) reachableDependents.remove(b0)
 
     reachableDependents.removeAll(goldDependencyTree.getLeftDependents(b0))
   }

@@ -82,10 +82,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
           "Expected: ${this@Transition.refStateTrack} Found: ${this@Transition.refState.track.get()}"
       }
 
-      val state: StateType = if (copyState)
-        this.transition.refState.copy()
-      else
-        this.transition.refState
+      val state: StateType = this.transition.refState.let { if (copyState) it.copy() else it }
 
       this@Transition.perform(state)
 

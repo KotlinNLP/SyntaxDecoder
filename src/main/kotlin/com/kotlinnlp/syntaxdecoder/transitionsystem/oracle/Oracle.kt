@@ -101,18 +101,9 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
       && (action !is DependencyRelation || action.isCorrect())
 
   /**
-   * @param dependentId the dependent id
-   * @param governorId the governor id
-   *
-   * @return whether the arc defined by the given [dependentId] and [governorId] is correct
-   */
-  fun isArcCorrect(dependentId: Int, governorId: Int?): Boolean =
-    this.goldDependencyTree.getHead(dependentId) == governorId
-
-  /**
    * @return whether the arc of this dependency is correct
    */
-  val SyntacticDependency.isArcCorrect: Boolean get() =
+  protected val SyntacticDependency.isArcCorrect: Boolean get() =
     isArcCorrect(dependentId = this.dependentId!!, governorId = this.governorId)
 
   /**
@@ -138,6 +129,15 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
 
     return head != null && goldDependencyTree.getPosition(head) > goldDependencyTree.getPosition(item)
   }
+
+  /**
+   * @param dependentId the dependent id
+   * @param governorId the governor id
+   *
+   * @return whether the arc defined by the given [dependentId] and [governorId] is correct
+   */
+  private fun isArcCorrect(dependentId: Int, governorId: Int?): Boolean =
+    this.goldDependencyTree.getHead(dependentId) == governorId
 
   /**
    * @param transition a transition

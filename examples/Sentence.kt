@@ -62,9 +62,9 @@ data class Sentence(val tokens: List<Int>, val dependencyTree: DependencyTree? =
       val deprel = Deprel(
         label = token.deprel,
         direction = when {
-          head == 0 -> Deprel.Position.ROOT
-          head > token.id -> Deprel.Position.LEFT
-          else -> Deprel.Position.RIGHT
+          head == 0 -> Deprel.Direction.ROOT
+          head > token.id -> Deprel.Direction.LEFT
+          else -> Deprel.Direction.RIGHT
         })
 
       if (head > 0)

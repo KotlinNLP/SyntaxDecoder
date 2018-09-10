@@ -66,7 +66,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
    * and N is the number of 'deprels' associated to the transition direction (left, right, root).
    */
   class Labeled<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
-    private val deprels: Map<Deprel.Position, List<Deprel>>
+    private val deprels: Map<Deprel.Direction, List<Deprel>>
   ) : ActionsGenerator<StateType, TransitionType>(){
 
     /**
@@ -98,7 +98,7 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
    * and N is the number of [deprelPosTagCombinations].
    */
   class MorphoSyntacticLabeled<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
-    private val deprels: Map<Deprel.Position, List<Deprel>>,
+    private val deprels: Map<Deprel.Direction, List<Deprel>>,
     private val deprelPosTagCombinations: HashMultimap<Deprel, POSTag>
   ) : ActionsGenerator<StateType, TransitionType>(){
 

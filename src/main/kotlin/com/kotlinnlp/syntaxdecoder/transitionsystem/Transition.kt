@@ -29,15 +29,15 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @property direction
    */
-  enum class Type(val direction: Deprel.Position) {
-    SHIFT(direction = Deprel.Position.NULL),
-    RELOCATE(direction = Deprel.Position.NULL),
-    WAIT(direction = Deprel.Position.NULL),
-    UNSHIFT(direction = Deprel.Position.NULL),
-    NO_ARC(direction = Deprel.Position.NULL),
-    ARC_LEFT(direction = Deprel.Position.LEFT),
-    ARC_RIGHT(direction = Deprel.Position.RIGHT),
-    ROOT(direction = Deprel.Position.ROOT)
+  enum class Type(val direction: Deprel.Direction) {
+    SHIFT(direction = Deprel.Direction.NULL),
+    RELOCATE(direction = Deprel.Direction.NULL),
+    WAIT(direction = Deprel.Direction.NULL),
+    UNSHIFT(direction = Deprel.Direction.NULL),
+    NO_ARC(direction = Deprel.Direction.NULL),
+    ARC_LEFT(direction = Deprel.Direction.LEFT),
+    ARC_RIGHT(direction = Deprel.Direction.RIGHT),
+    ROOT(direction = Deprel.Direction.ROOT)
   }
 
   /**

@@ -78,9 +78,9 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
       val actions = mutableListOf<Transition<TransitionType, StateType>.Action>()
       var actionId = startId
 
-      if (this is SyntacticDependency && this.type.direction in this@Labeled.deprels) {
+      if (this is SyntacticDependency && this.type.direction in deprels) {
 
-        this@Labeled.deprels.getValue(this.type.direction).forEach { deprel ->
+        deprels.getValue(this.type.direction).forEach { deprel ->
           actions.add(this.actionFactory(id = actionId++, deprel = deprel))
         }
 
@@ -111,10 +111,10 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
       val actions = mutableListOf<Transition<TransitionType, StateType>.Action>()
       var actionId = startId
 
-      if (this is SyntacticDependency && this.type.direction in this@MorphoSyntacticLabeled.deprels) {
+      if (this is SyntacticDependency && this.type.direction in deprels) {
 
-        this@MorphoSyntacticLabeled.deprels.getValue(this.type.direction).forEach { deprel ->
-          this@MorphoSyntacticLabeled.deprelPosTagCombinations.get(deprel).forEach { posTag ->
+        deprels.getValue(this.type.direction).forEach { deprel ->
+          deprelPosTagCombinations.get(deprel).forEach { posTag ->
 
             actions.add(this.actionFactory(id = actionId++, deprel = deprel, posTag = posTag))
           }

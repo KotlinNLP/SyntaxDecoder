@@ -14,9 +14,8 @@ import com.kotlinnlp.syntaxdecoder.utils.removeFrom
  * The ArcEagerSpine State.
  *
  * @property itemIds the list of item ids used to initialize the state
- * @property size the size of the sentence used to initialize the state
  */
-class ArcEagerSpineState(idemIds: List<Int>, size: Int) : State<ArcEagerSpineState>(idemIds, size) {
+class ArcEagerSpineState(idemIds: List<Int>) : State<ArcEagerSpineState>(idemIds) {
 
   /**
    * The StackElement for the ArcEagerSpine.
@@ -65,7 +64,7 @@ class ArcEagerSpineState(idemIds: List<Int>, size: Int) : State<ArcEagerSpineSta
    */
   override fun copy(): ArcEagerSpineState {
 
-    val clonedState = ArcEagerSpineState(this.itemIds, this.size)
+    val clonedState = ArcEagerSpineState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
     clonedState.stack = this.stack.toMutableList()

@@ -14,9 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * The State.
  *
  * @property itemIds the list of item ids used to initialize the state
- * @property size the size of the sentence used to initialize the state
  */
-abstract class State<SelfType: State<SelfType>>(val itemIds: List<Int>, val size: Int) {
+abstract class State<SelfType: State<SelfType>>(val itemIds: List<Int>) {
 
   /**
    * Used to keep track of a state configuration at a certain time.

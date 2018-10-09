@@ -13,9 +13,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * The PendingListState.
  *
  * @property itemIds the list of item ids used to initialize the state
- * @property size the size of the sentence used to initialize the state
  */
-class PendingListState(itemIds: List<Int>, size: Int) : State<PendingListState>(itemIds, size), Focusable {
+class PendingListState(itemIds: List<Int>) : State<PendingListState>(itemIds), Focusable {
 
   /**
    * The pending list.
@@ -32,7 +31,7 @@ class PendingListState(itemIds: List<Int>, size: Int) : State<PendingListState>(
    */
   override fun copy(): PendingListState {
 
-    val clonedState = PendingListState(this.itemIds, this.size)
+    val clonedState = PendingListState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
 

@@ -62,8 +62,9 @@
         <dokka.version>0.9.16</dokka.version>
         <google-guava.version>23.2-jre</google-guava.version>
         <utils.version>2.1.0</utils.version>
-        <conllio.version>0.2.4</conllio.version>
-        <dependencytree.version>0.3.2</dependencytree.version>
+        <conllio.version>0.2.5</conllio.version>
+        <dependencytree.version>0.4.0</dependencytree.version>
+        <linguisticdescription.version>0.10.0</linguisticdescription.version>
     </properties>
 
     <pluginRepositories>

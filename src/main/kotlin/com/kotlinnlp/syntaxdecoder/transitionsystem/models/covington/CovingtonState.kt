@@ -13,9 +13,8 @@ import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
  * The Covington State.
  *
  * @property itemIds the list of item ids used to initialize the state
- * @property size the size of the sentence used to initialize the state
  */
-class CovingtonState(itemIds: List<Int>, size: Int) : State<CovingtonState>(itemIds, size) {
+class CovingtonState(itemIds: List<Int>) : State<CovingtonState>(itemIds) {
 
   /**
    * Contains the words to be processed.
@@ -47,7 +46,7 @@ class CovingtonState(itemIds: List<Int>, size: Int) : State<CovingtonState>(item
    */
   override fun copy(): CovingtonState {
 
-    val clonedState = CovingtonState(this.itemIds, this.size)
+    val clonedState = CovingtonState(this.itemIds)
 
     clonedState.dependencyTree = this.dependencyTree.clone()
 

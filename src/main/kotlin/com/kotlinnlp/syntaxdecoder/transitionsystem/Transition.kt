@@ -7,11 +7,11 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem
 
-import com.kotlinnlp.dependencytree.Deprel
-import com.kotlinnlp.dependencytree.POSTag
+import com.kotlinnlp.linguisticdescription.GrammaticalConfiguration
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
+import com.kotlinnlp.linguisticdescription.syntax.SyntacticDependency.Direction
 
 /**
  * The State Transition.
@@ -29,15 +29,15 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @property direction
    */
-  enum class Type(val direction: Deprel.Direction) {
-    SHIFT(direction = Deprel.Direction.NULL),
-    RELOCATE(direction = Deprel.Direction.NULL),
-    WAIT(direction = Deprel.Direction.NULL),
-    UNSHIFT(direction = Deprel.Direction.NULL),
-    NO_ARC(direction = Deprel.Direction.NULL),
-    ARC_LEFT(direction = Deprel.Direction.LEFT),
-    ARC_RIGHT(direction = Deprel.Direction.RIGHT),
-    ROOT(direction = Deprel.Direction.ROOT)
+  enum class Type(val direction: Direction) {
+    SHIFT(direction = Direction.NULL),
+    RELOCATE(direction = Direction.NULL),
+    WAIT(direction = Direction.NULL),
+    UNSHIFT(direction = Direction.NULL),
+    NO_ARC(direction = Direction.NULL),
+    ARC_LEFT(direction = Direction.LEFT),
+    ARC_RIGHT(direction = Direction.RIGHT),
+    ROOT(direction = Direction.ROOT)
   }
 
   /**
@@ -201,14 +201,9 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
       private set
 
     /**
-     * The syntactic component of a dependency relation (can be null).
+     * The morpho-syntactic component of a dependency relation (can be null).
      */
-    override var deprel: Deprel? = null
-
-    /**
-     * The morphological component of a dependency relation (can be null).
-     */
-    override var posTag: POSTag? = null
+    override var grammaticalConfiguration: GrammaticalConfiguration? = null
 
     /**
      * Initialize the action.
@@ -237,32 +232,20 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
         state.dependencyTree.setArc(
           dependent = this.dependentId!!,
           governor = this.governorId!!,
-          deprel = this.deprel,
-          posTag = this.posTag)
+          grammaticalConfiguration = this.grammaticalConfiguration)
 
-      } else if (this.deprel != null) {
+      } else if (this.grammaticalConfiguration != null) {
 
-        state.dependencyTree.setDeprel(
+        state.dependencyTree.setGrammaticalConfiguration(
           dependent = this.dependentId!!,
-          deprel = this.deprel!!)
-
-        if (this.posTag != null) {
-
-          state.dependencyTree.setPosTag(
-            dependent = this.dependentId!!,
-            posTag = this.posTag!!
-          )
-        }
+          configuration = this.grammaticalConfiguration!!)
       }
     }
 
     /**
      * @return its string representation.
      */
-    override fun toString(): String = if (this.posTag != null)
-      "${this.posTag!!}~${this.deprel!!}(${this.governorId} -> ${this.dependentId})"
-    else
-      "${this.deprel?:"arc"}(${this.governorId} -> ${this.dependentId})"
+    override fun toString(): String = "${this.grammaticalConfiguration?:"arc"}(${this.governorId} -> ${this.dependentId})"
   }
 
   /**
@@ -291,7 +274,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
    *
    * @return a new [Action] tied to this transition
    */
-  fun actionFactory(id: Int = -1, deprel: Deprel? = null, posTag: POSTag? = null): Action {
+  fun actionFactory(id: Int = -1, grammaticalConfiguration: GrammaticalConfiguration? = null): Action {
 
     val action: Action = this.buildAction(id)
 
@@ -299,8 +282,7 @@ abstract class Transition<SelfType: Transition<SelfType, StateType>, StateType: 
 
       action as DependencyRelation // An arc Transition must be associated to a DependencyRelation
 
-      action.deprel = deprel
-      action.posTag = posTag
+      action.grammaticalConfiguration = grammaticalConfiguration
     }
 
     return action

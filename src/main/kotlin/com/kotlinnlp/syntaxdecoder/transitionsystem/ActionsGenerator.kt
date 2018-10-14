@@ -7,11 +7,10 @@
 
 package com.kotlinnlp.syntaxdecoder.transitionsystem
 
-import com.google.common.collect.HashMultimap
-import com.kotlinnlp.dependencytree.Deprel
-import com.kotlinnlp.dependencytree.POSTag
+import com.kotlinnlp.linguisticdescription.GrammaticalConfiguration
 import com.kotlinnlp.syntaxdecoder.transitionsystem.state.State
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
+import com.kotlinnlp.linguisticdescription.syntax.SyntacticDependency.Direction
 
 /**
  * The ActionsGenerator.
@@ -63,11 +62,17 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
   /**
    * The Labeled Actions Generator can generate multiple actions for each transition, resulting in a 1:N
    * transition-actions relation, where N > 1 in case of transitions that create a syntactic dependency
-   * and N is the number of 'deprels' associated to the transition direction (left, right, root).
+   * and N is the number of 'grammaticalConfigurations'.
    */
   class Labeled<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
-    private val deprels: Map<Deprel.Direction, List<Deprel>>
+    private val grammaticalConfigurations: List<GrammaticalConfiguration>
   ) : ActionsGenerator<StateType, TransitionType>(){
+
+    /**
+     * Group the grammatical configurations by their direction (left, right, root).
+     */
+    private val directionalGrammaticalConfigurations: Map<Direction, List<GrammaticalConfiguration>>
+      = this.grammaticalConfigurations.groupBy { it.direction }
 
     /**
      * @return a list of Actions
@@ -78,46 +83,10 @@ sealed class ActionsGenerator<StateType: State<StateType>, TransitionType: Trans
       val actions = mutableListOf<Transition<TransitionType, StateType>.Action>()
       var actionId = startId
 
-      if (this is SyntacticDependency && this.type.direction in deprels) {
+      if (this is SyntacticDependency && this.type.direction in directionalGrammaticalConfigurations) {
 
-        deprels.getValue(this.type.direction).forEach { deprel ->
-          actions.add(this.actionFactory(id = actionId++, deprel = deprel))
-        }
-
-      } else {
-        actions.add(this.actionFactory(id = actionId++))
-      }
-
-      return actions
-    }
-  }
-
-  /**
-   * The Labeled Actions Generator can generate multiple actions for each transition, resulting in a 1:N
-   * transition-actions relation, where N > 1 in case of transitions that create a syntactic dependency
-   * and N is the number of [deprelPosTagCombinations].
-   */
-  class MorphoSyntacticLabeled<StateType: State<StateType>, TransitionType: Transition<TransitionType, StateType>>(
-    private val deprels: Map<Deprel.Direction, List<Deprel>>,
-    private val deprelPosTagCombinations: HashMultimap<Deprel, POSTag>
-  ) : ActionsGenerator<StateType, TransitionType>(){
-
-    /**
-     * @return a list of Actions
-     */
-    override fun Transition<TransitionType, StateType>.generateActions(startId: Int):
-      List<Transition<TransitionType, StateType>.Action> {
-
-      val actions = mutableListOf<Transition<TransitionType, StateType>.Action>()
-      var actionId = startId
-
-      if (this is SyntacticDependency && this.type.direction in deprels) {
-
-        deprels.getValue(this.type.direction).forEach { deprel ->
-          deprelPosTagCombinations.get(deprel).forEach { posTag ->
-
-            actions.add(this.actionFactory(id = actionId++, deprel = deprel, posTag = posTag))
-          }
+        directionalGrammaticalConfigurations.getValue(this.type.direction).forEach {
+          actions.add(this.actionFactory(id = actionId++, grammaticalConfiguration = it))
         }
 
       } else {

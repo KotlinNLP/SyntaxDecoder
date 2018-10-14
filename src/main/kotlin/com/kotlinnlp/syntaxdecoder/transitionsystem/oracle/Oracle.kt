@@ -8,8 +8,7 @@
 package com.kotlinnlp.syntaxdecoder.transitionsystem.oracle
 
 import com.kotlinnlp.dependencytree.DependencyTree
-import com.kotlinnlp.dependencytree.Deprel
-import com.kotlinnlp.dependencytree.POSTag
+import com.kotlinnlp.linguisticdescription.GrammaticalConfiguration
 import com.kotlinnlp.syntaxdecoder.syntax.DependencyRelation
 import com.kotlinnlp.syntaxdecoder.syntax.SyntacticDependency
 import com.kotlinnlp.syntaxdecoder.transitionsystem.Transition
@@ -148,33 +147,17 @@ abstract class Oracle<StateType: State<StateType>, TransitionType: Transition<Tr
     this.hasZeroCost(transition) && (transition !is SyntacticDependency || transition.isArcCorrect)
 
   /**
-   * @return whether the dependency relation (deprel and posTag) is correct
-   */
-  private fun DependencyRelation.isCorrect(): Boolean = this.isDeprelCorrect() && this.isPosTagCorrect()
-
-  /**
    * @return whether the syntactic component of a dependency relation (deprel) is correct
    */
-  private fun DependencyRelation.isDeprelCorrect(): Boolean =
-    this.deprel == null || this.deprel == this@Oracle.getGoldDeprel(this.dependentId!!)
-
-  /**
-   * @return whether the morphological component of a dependency relation (posTag) is correct
-   */
-  private fun DependencyRelation.isPosTagCorrect(): Boolean =
-    this.posTag == null || this.posTag == this@Oracle.getGoldPosTag(this.dependentId!!)
+  private fun DependencyRelation.isCorrect(): Boolean =
+    this.grammaticalConfiguration == null ||
+      this.grammaticalConfiguration == this@Oracle.getGoldGrammaticalConfiguration(this.dependentId!!)
 
   /**
    * @param dependentId the id of a dependent
    *
    * @return the deprel of this dependent on the gold dependency tree (can be null)
    */
-  private fun getGoldDeprel(dependentId: Int): Deprel? = this.goldDependencyTree.getDeprel(dependentId)
-
-  /**
-   * @param dependentId the id of a dependent
-   *
-   * @return the pos tag of this dependent on the gold dependency tree (can be null)
-   */
-  private fun getGoldPosTag(dependentId: Int): POSTag? = this.goldDependencyTree.getPosTag(dependentId)
+  private fun getGoldGrammaticalConfiguration(dependentId: Int): GrammaticalConfiguration? =
+    this.goldDependencyTree.getConfiguration(dependentId)
 }

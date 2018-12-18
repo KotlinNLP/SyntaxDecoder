@@ -21,7 +21,7 @@ object StackBufferStateSpec: Spek({
     context("initialization with empty Sentence") {
 
       val sentence = Utils.buildEmptySentence()
-      val state = StackBufferState(sentence, sentence.size)
+      val state = StackBufferState(sentence)
 
       it("should be the finale state") {
         assertEquals(true, state.isTerminal)
@@ -44,7 +44,7 @@ object StackBufferStateSpec: Spek({
     context("initialization with Sentence of 5 Tokens") {
 
       val sentence = Utils.buildSentence5()
-      val state = StackBufferState(sentence, sentence.size)
+      val state = StackBufferState(sentence)
 
       it("should not be the finale state") {
         assertEquals(false, state.isTerminal)
@@ -68,7 +68,7 @@ object StackBufferStateSpec: Spek({
 
       val sentence = Utils.buildSentence5()
 
-      val state = StackBufferState(sentence, sentence.size)
+      val state = StackBufferState(sentence)
 
       on("copy") {
         val clonedState = state.copy()
